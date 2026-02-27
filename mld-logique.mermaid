@@ -1,0 +1,84 @@
+erDiagram
+    parti {
+        varchar tag PK
+        varchar nom
+        boolean actif
+        varchar couleur_fond
+        varchar couleur_texte
+        varchar couleur_accent
+        varchar couleur_graphique
+    }
+
+    candidat {
+        varchar id PK
+        varchar parti_tag FK
+        int indice_variante
+        varchar nom
+        varchar initiales
+        boolean sonde_individuellement
+        varchar groupe_sondage
+        float attractivite
+        float tendance
+        float ideologie_gauche
+        float ideologie_centre
+        float ideologie_droite
+        float taux_barrage
+        float start_agrege
+        float start_debiaise
+        float start_personnalise
+    }
+
+    source_sondage {
+        varchar type PK
+        varchar libelle
+        varchar description
+        varchar icone
+    }
+
+    simulation {
+        uuid id PK
+        varchar source_sondage_type FK
+        datetime date_creation
+        int nb_simulations
+        int nb_jours
+        float niveau_confiance
+    }
+
+    config_simulation_candidat {
+        uuid simulation_id FK
+        varchar parti_tag FK
+        int indice_variante
+        float point_depart
+        float attractivite
+        float tendance
+        float taux_barrage
+        float ideologie_G
+        float ideologie_C
+        float ideologie_D
+    }
+
+    resultat_candidat {
+        uuid simulation_id FK
+        varchar parti_tag FK
+        float p_qualification_2nd_tour
+        float p_victoire
+        float valeur_finale_moyenne
+    }
+
+    trajectoire {
+        uuid simulation_id FK
+        varchar parti_tag FK
+        int jour
+        float valeur_moyenne
+        float borne_haute_ic75
+        float borne_basse_ic75
+    }
+
+    parti ||--o{ candidat : "a pour variantes"
+    source_sondage ||--o{ simulation : "utilisee par"
+    simulation ||--o{ config_simulation_candidat : "configure"
+    parti ||--o{ config_simulation_candidat : "concerne"
+    simulation ||--o{ resultat_candidat : "produit"
+    parti ||--o{ resultat_candidat : "concerne"
+    simulation ||--o{ trajectoire : "genere"
+    parti ||--o{ trajectoire : "concerne"
