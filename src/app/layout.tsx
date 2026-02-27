@@ -3,9 +3,11 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { Header } from "@/app/components/layout/Header";
 import { Footer } from "@/app/components/layout/Footer";
+import { SimulationProvider } from "@/lib/simulation-context";
 
-const APP_NAME = "SimuPresident";
-const APP_DESCRIPTION = "Simulateur de président - Application interactive";
+const APP_NAME = "quiprésident.fr";
+const APP_DESCRIPTION =
+  "Simulez l'élection présidentielle 2027 grâce à notre modèle Monte Carlo interactif.";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
@@ -34,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1e3a5f",
+  themeColor: "#556C96",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -44,10 +46,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" dir="ltr">
       <head />
-      <body className="flex min-h-screen flex-col bg-white text-gray-900 antialiased">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body className="flex min-h-screen flex-col bg-secondary text-primary-dark antialiased">
+        <SimulationProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </SimulationProvider>
       </body>
     </html>
   );

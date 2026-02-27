@@ -1,0 +1,263 @@
+import Link from "next/link";
+
+/* ------------------------------------------------------------------ */
+/*  About page (server component)                                      */
+/* ------------------------------------------------------------------ */
+export default function AProposPage() {
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Back */}
+      <Link
+        href="/"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 transition-colors hover:text-primary-dark"
+      >
+        <svg
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        Retour
+      </Link>
+
+      {/* Badge */}
+      <div className="mb-4 text-center">
+        <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
+          QUI SOMMES-NOUS
+        </span>
+      </div>
+
+      {/* Title */}
+      <div className="mb-12 text-center">
+        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
+          &Agrave; propos
+        </h1>
+        <p className="text-gray-500">
+          D&eacute;couvrez l&rsquo;&eacute;quipe et la mission derri&egrave;re
+          quipr&eacute;sident.fr.
+        </p>
+      </div>
+
+      <div className="space-y-8">
+        {/* ---- Mission ---- */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-3 text-lg font-bold text-primary-dark">
+            Notre mission
+          </h2>
+          <p className="text-sm leading-relaxed text-gray-600">
+            quipr&eacute;sident.fr a pour objectif de rendre
+            l&rsquo;analyse &eacute;lectorale accessible &agrave; tous.
+            Gr&acirc;ce &agrave; notre simulateur interactif, chacun peut
+            explorer les diff&eacute;rents sc&eacute;narios de
+            l&rsquo;&eacute;lection pr&eacute;sidentielle 2027, comprendre
+            l&rsquo;impact des param&egrave;tres sur les r&eacute;sultats et se
+            familiariser avec les m&eacute;thodes de simulation statistique.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-600">
+            Nous croyons que la transparence m&eacute;thodologique est
+            essentielle : tous nos mod&egrave;les sont document&eacute;s et les
+            param&egrave;tres sont ajustables par l&rsquo;utilisateur.
+          </p>
+        </div>
+
+        {/* ---- Team ---- */}
+        <div>
+          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+            L&rsquo;&eacute;quipe
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Profile 1 */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-light text-2xl font-bold text-white shadow-lg">
+                TD
+              </div>
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Thomas Dupont
+              </h3>
+              <p className="mb-2 text-xs font-medium text-accent">
+                Data Scientist &amp; Fondateur
+              </p>
+              <p className="text-xs leading-relaxed text-gray-500">
+                Sp&eacute;cialiste en mod&eacute;lisation statistique et
+                analyse &eacute;lectorale. Dipl&ocirc;m&eacute; de
+                l&rsquo;ENSAE.
+              </p>
+            </div>
+
+            {/* Profile 2 */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-accent to-[#FF7B73] text-2xl font-bold text-white shadow-lg">
+                CM
+              </div>
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Claire Martin
+              </h3>
+              <p className="mb-2 text-xs font-medium text-accent">
+                Ing&eacute;nieure Full-Stack
+              </p>
+              <p className="text-xs leading-relaxed text-gray-500">
+                D&eacute;veloppeuse passionn&eacute;e par les outils
+                p&eacute;dagogiques et la visualisation de donn&eacute;es.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ---- How it works ---- */}
+        <div>
+          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+            Comment &ccedil;a marche
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-xl font-bold text-primary">
+                1
+              </div>
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Configurez
+              </h3>
+              <p className="text-xs text-gray-500">
+                S&eacute;lectionnez les candidats et ajustez les
+                param&egrave;tres de la simulation.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-xl font-bold text-accent">
+                2
+              </div>
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Simulez
+              </h3>
+              <p className="text-xs text-gray-500">
+                10 000 simulations Monte Carlo sont
+                g&eacute;n&eacute;r&eacute;es en quelques secondes.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
+                3
+              </div>
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Analysez
+              </h3>
+              <p className="text-xs text-gray-500">
+                Explorez les trajectoires, probabilit&eacute;s et intervalles
+                de confiance.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ---- FAQ ---- */}
+        <div>
+          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+            Questions fr&eacute;quentes
+          </h2>
+          <div className="space-y-3">
+            {[
+              {
+                q: "Est-ce que le simulateur pr\u00e9dit le r\u00e9sultat de l'\u00e9lection ?",
+                a: "Non. C'est un outil p\u00e9dagogique qui explore des sc\u00e9narios possibles, pas une pr\u00e9vision.",
+              },
+              {
+                q: "D'o\u00f9 viennent les donn\u00e9es de sondages ?",
+                a: "Les sondages sont agr\u00e9g\u00e9s \u00e0 partir des publications des principaux instituts fran\u00e7ais (IFOP, Ipsos, Elabe, etc.).",
+              },
+              {
+                q: "Que signifie le coefficient barrage ?",
+                a: "Il repr\u00e9sente la r\u00e9sistance qu'un candidat rencontre au second tour due au vote strat\u00e9gique de l'\u00e9lectorat adverse.",
+              },
+              {
+                q: "Puis-je modifier tous les param\u00e8tres ?",
+                a: "Oui ! L'assistant de configuration vous permet d'ajuster chaque param\u00e8tre pour chaque candidat.",
+              },
+              {
+                q: "Le site est-il gratuit ?",
+                a: "Enti\u00e8rement gratuit et sans publicit\u00e9. Le code source sera publi\u00e9 en open source.",
+              },
+            ].map((faq) => (
+              <div
+                key={faq.q}
+                className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+              >
+                <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                  {faq.q}
+                </h3>
+                <p className="text-xs leading-relaxed text-gray-500">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ---- Contact ---- */}
+        <div>
+          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+            Contact
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Suggestion card */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <h3 className="mb-2 text-sm font-bold text-primary-dark">
+                Une id&eacute;e d&rsquo;am&eacute;lioration ?
+              </h3>
+              <p className="mb-3 text-xs text-gray-500">
+                Partagez vos suggestions pour am&eacute;liorer la plateforme.
+              </p>
+              <a
+                href="mailto:contact@quipresident.fr"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
+              >
+                contact@quipresident.fr &rarr;
+              </a>
+            </div>
+
+            {/* Project card */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <h3 className="mb-2 text-sm font-bold text-primary-dark">
+                Un projet informatique ?
+              </h3>
+              <p className="mb-3 text-xs text-gray-500">
+                Nous pouvons vous accompagner sur des projets de data science,
+                simulation ou visualisation.
+              </p>
+              <a
+                href="mailto:projet@quipresident.fr"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
+              >
+                projet@quipresident.fr &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* ---- Bottom banner ---- */}
+        <div className="rounded-2xl bg-gradient-to-br from-primary-dark to-primary p-8 text-center">
+          <h2 className="mb-2 text-xl font-bold text-white">
+            Envie de contribuer ?
+          </h2>
+          <p className="mb-4 text-sm text-primary-light/80">
+            Le projet est en d&eacute;veloppement actif. Contactez-nous pour
+            participer ou proposer des am&eacute;liorations.
+          </p>
+          <a
+            href="mailto:contact@quipresident.fr"
+            className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+          >
+            contact@quipresident.fr
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
