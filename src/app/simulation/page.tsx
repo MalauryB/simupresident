@@ -27,133 +27,117 @@ function PartySelectCard({
   const colors = partyColors[party.tag];
   const hasVariants = party.variants.length > 1;
 
-  const goPrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const prev = (party.selectedIdx - 1 + party.variants.length) % party.variants.length;
-    switchVariant(party.tag, prev);
-  };
-  const goNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const next = (party.selectedIdx + 1) % party.variants.length;
-    switchVariant(party.tag, next);
-  };
-
   return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className={`group relative w-full overflow-hidden rounded-2xl border-2 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
-        party.active
-          ? "border-accent bg-white shadow-md"
-          : "border-gray-200 bg-white/60 opacity-60 hover:opacity-80"
-      }`}
+    <div
+      className="relative overflow-hidden rounded-2xl transition-all duration-300"
+      style={{
+        background: party.active ? "#fff" : "rgba(243,244,246,0.13)",
+        border: party.active
+          ? `2.5px solid ${colors.accent}`
+          : "2.5px solid transparent",
+        opacity: party.active ? 1 : 0.5,
+        transform: party.active ? "scale(1)" : "scale(0.97)",
+        boxShadow: party.active
+          ? `0 4px 20px ${colors.accent}20`
+          : "0 2px 8px rgba(0,0,0,0.04)",
+      }}
     >
-      {/* Top gradient bar */}
+      {/* Clickable top area */}
       <div
-        className="h-1.5"
-        style={{
-          background: `linear-gradient(90deg, ${colors.accent}, ${colors.chart})`,
-        }}
-      />
+        role="button"
+        tabIndex={0}
+        onClick={onToggle}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onToggle(); }}
+        className="cursor-pointer px-4 pt-[18px] text-center"
+      >
+        {/* Checkmark */}
+        <div
+          className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-bold text-white"
+          style={{
+            background: party.active ? colors.accent : "rgba(209,213,219,0.5)",
+          }}
+        >
+          {party.active ? "\u2713" : ""}
+        </div>
 
-      <div className="flex flex-col items-center px-3 py-4">
-        {/* Avatar with variant arrows */}
-        <div className="mb-2 flex items-center gap-1">
-          {hasVariants && (
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={goPrev}
-              onKeyDown={(e) => { if (e.key === "Enter") goPrev(e as unknown as React.MouseEvent); }}
-              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
-            >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </div>
-          )}
-
-          <div className="relative h-12 w-12 flex-shrink-0">
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold shadow-sm"
-              style={{ backgroundColor: colors.bg, color: colors.fg }}
-            >
-              {candidate.initials}
-            </div>
-            {candidate.photoUrl && (
-              <img
-                src={candidate.photoUrl}
-                alt={candidate.name}
-                className="absolute inset-0 h-12 w-12 rounded-full object-cover shadow-sm"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-              />
-            )}
-          </div>
-
-          {hasVariants && (
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={goNext}
-              onKeyDown={(e) => { if (e.key === "Enter") goNext(e as unknown as React.MouseEvent); }}
-              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
-            >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
+        {/* Gradient avatar */}
+        <div
+          className="relative mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full"
+          style={{
+            background: `linear-gradient(135deg, ${colors.bg}, ${colors.accent})`,
+            filter: party.active ? "none" : "grayscale(0.8)",
+          }}
+        >
+          <span
+            className="font-extrabold"
+            style={{
+              color: colors.fg,
+              fontSize: candidate.initials.length > 2 ? "14px" : "18px",
+            }}
+          >
+            {candidate.initials}
+          </span>
+          {candidate.photoUrl && (
+            <img
+              src={candidate.photoUrl}
+              alt={candidate.name}
+              className="absolute inset-0 h-14 w-14 rounded-full object-cover"
+              style={{ filter: party.active ? "none" : "grayscale(0.8)" }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
           )}
         </div>
 
-        <h3 className="mb-0.5 text-center text-sm font-semibold text-primary-dark">
+        {/* Name */}
+        <div className="flex min-h-[34px] items-center justify-center text-sm font-bold leading-tight text-primary-dark">
           {candidate.name}
-        </h3>
+        </div>
+
+        {/* Tag badge */}
         <span
-          className="mb-0.5 rounded-full px-2 py-0.5 text-[10px] font-bold"
+          className="mt-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
           style={{
-            backgroundColor: `${colors.accent}18`,
-            color: colors.accent,
+            background: party.active ? `${colors.bg}15` : "rgba(209,213,219,0.25)",
+            color: party.active ? colors.bg : "#9ca3af",
           }}
         >
           {party.tag}
         </span>
-        <p className="text-center text-[11px] text-gray-400">{party.party}</p>
-
-        {/* Variant dots indicator */}
-        {hasVariants && (
-          <div className="mt-1 flex gap-1">
-            {party.variants.map((_, idx) => (
-              <div
-                key={idx}
-                className="h-1.5 w-1.5 rounded-full transition-colors"
-                style={{
-                  backgroundColor: idx === party.selectedIdx ? colors.accent : "#d1d5db",
-                }}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
-      {/* Checkmark overlay */}
-      {party.active && (
-        <div className="absolute right-2 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-white">
-          <svg
-            className="h-3 w-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={3}
+      {/* Variant tabs (only when active and multiple variants) */}
+      {hasVariants && party.active ? (
+        <div className="mt-2 px-2.5 pb-3">
+          <div
+            className="flex overflow-hidden rounded-[10px]"
+            style={{
+              background: `${colors.bg}10`,
+              border: `1px solid ${colors.accent}20`,
+            }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
+            {party.variants.map((v, idx) => {
+              const isSelected = party.selectedIdx === idx;
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); switchVariant(party.tag, idx); }}
+                  className="flex-1 truncate py-[7px] px-1 text-[11px] font-bold transition-colors"
+                  style={{
+                    background: isSelected ? colors.accent : "transparent",
+                    color: isSelected ? colors.fg : colors.bg,
+                  }}
+                >
+                  {v.name.split(" ").pop()}
+                </button>
+              );
+            })}
+          </div>
         </div>
+      ) : (
+        <div className="h-3.5" />
       )}
-    </button>
+    </div>
   );
 }
 
@@ -313,8 +297,8 @@ function StartingPointRow({
 function ReviewTable({ parties }: { parties: PartyData[] }) {
   const { partyColors } = useSimulation();
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200">
-      <table className="w-full text-left text-sm">
+    <div className="overflow-x-auto rounded-xl border border-gray-200">
+      <table className="w-full min-w-[500px] text-left text-sm">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
             <th className="px-4 py-3 font-semibold text-gray-600">Candidat</th>
@@ -576,7 +560,7 @@ export default function SimulationPage() {
               <span className="text-gray-500">Total :</span>
               <span
                 className={`font-mono font-bold ${
-                  Math.abs(total - 100) < 2
+                  total === 100
                     ? "text-green-600"
                     : "text-amber-600"
                 }`}
@@ -637,7 +621,8 @@ export default function SimulationPage() {
           <button
             type="button"
             onClick={() => setStep((s) => Math.min(3, s + 1))}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+            disabled={step === 2 && pollSource === "custom" && total !== 100}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
           >
             Suivant
             <svg
