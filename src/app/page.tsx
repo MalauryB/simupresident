@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
 import { getSelected } from "@/lib/simulation";
@@ -140,12 +141,12 @@ export default function HomePage() {
             Nous sommes toujours &agrave; l&rsquo;&eacute;coute pour
             am&eacute;liorer la plateforme.
           </p>
-          <a
-            href="mailto:contact@quipresident.fr"
+          <Link
+            href="/contact"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-accent/80"
           >
             Nous &eacute;crire &rarr;
-          </a>
+          </Link>
         </div>
 
         {/* Project card */}
