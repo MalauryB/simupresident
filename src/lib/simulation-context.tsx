@@ -73,7 +73,10 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
           setParties(merged);
         }
         if (data.partyColors) setPartyColors((prev) => ({ ...prev, ...data.partyColors }));
-        if (data.pollSources?.length) setPollSources(data.pollSources);
+        if (data.pollSources?.length) {
+          const validIds = new Set(POLL_SOURCES.map((s) => s.id));
+          setPollSources(data.pollSources.filter((s: PollSource) => validIds.has(s.id)));
+        }
       })
       .catch(() => {
         // En cas d'erreur, on garde les fallback (constantes)
