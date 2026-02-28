@@ -151,7 +151,8 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* Chart */}
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="min-w-[600px]">
             <ResponsiveContainer width="100%" height={400}>
               <AreaChart data={trajectory}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -224,6 +225,7 @@ export default function ResultatsPage() {
                 })}
               </AreaChart>
             </ResponsiveContainer>
+            </div>
           </div>
 
           {/* Side panel */}
@@ -262,13 +264,14 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* P(qualification) */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               P(qualification au 2nd tour)
             </h3>
             <p className="mb-4 text-xs text-gray-400">
               Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </p>
+            <div className="min-w-[400px]">
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
                 data={sortedByQualif}
@@ -310,16 +313,18 @@ export default function ResultatsPage() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
 
           {/* P(victoire) */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               P(victoire finale)
             </h3>
             <p className="mb-4 text-xs text-gray-400">
               Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </p>
+            <div className="min-w-[400px]">
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
                 data={sortedByVictoire}
@@ -361,6 +366,7 @@ export default function ResultatsPage() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
@@ -381,8 +387,8 @@ export default function ResultatsPage() {
             Duels les plus probables au second tour
           </h2>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <table className="w-full min-w-[500px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/50">
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">
