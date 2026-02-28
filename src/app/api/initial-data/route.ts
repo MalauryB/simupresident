@@ -17,11 +17,11 @@ export async function GET() {
   ]);
 
   if (partisRes.error)
-    return NextResponse.json({ error: partisRes.error.message }, { status: 500 });
+    return NextResponse.json({ error: "Database error" }, { status: 500 });
   if (candidatsRes.error)
-    return NextResponse.json({ error: candidatsRes.error.message }, { status: 500 });
+    return NextResponse.json({ error: "Database error" }, { status: 500 });
   if (sourcesRes.error)
-    return NextResponse.json({ error: sourcesRes.error.message }, { status: 500 });
+    return NextResponse.json({ error: "Database error" }, { status: 500 });
 
   // Grouper les candidats par parti
   const candidatsByParti: Record<string, CandidatRow[]> = {};

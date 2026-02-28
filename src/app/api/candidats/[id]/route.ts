@@ -19,7 +19,7 @@ export async function GET(_request: Request, { params }: Params) {
     .eq("id", id)
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 404 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 404 });
   return NextResponse.json(data);
 }
 
@@ -40,7 +40,7 @@ export async function PUT(request: Request, { params }: Params) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 400 });
   return NextResponse.json(data);
 }
 
@@ -51,6 +51,6 @@ export async function DELETE(_request: Request, { params }: Params) {
 
   const { error } = await supabase.from("candidat").delete().eq("id", id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 400 });
   return NextResponse.json({ success: true });
 }
