@@ -213,6 +213,7 @@ export default function ResultatsPage() {
                       dot={false}
                       activeDot={false}
                       legendType="none"
+                      tooltipType="none"
                     />
                   );
                 })}
@@ -230,6 +231,7 @@ export default function ResultatsPage() {
                       dot={false}
                       activeDot={false}
                       legendType="none"
+                      tooltipType="none"
                     />
                   );
                 })}
@@ -412,7 +414,7 @@ export default function ResultatsPage() {
           </h2>
 
           <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-            <table className="w-full min-w-[500px] text-sm">
+            <table className="w-full min-w-[600px] text-sm">
               <caption className="sr-only">Les 5 duels les plus probables au second tour</caption>
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/50">
@@ -421,6 +423,9 @@ export default function ResultatsPage() {
                   </th>
                   <th className="px-4 py-3 text-right font-semibold text-gray-600">
                     Probabilit&eacute;
+                  </th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-600">
+                    P(victoire)
                   </th>
                   <th className="px-4 py-3 text-right font-semibold text-gray-600">
                     Score moyen (exprim&eacute;s)
@@ -464,6 +469,10 @@ export default function ResultatsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right text-xs text-gray-600">
+                      {(d.pWinA * 100).toFixed(1)}% &ndash;{" "}
+                      {(d.pWinB * 100).toFixed(1)}%
+                    </td>
+                    <td className="px-4 py-3 text-right text-xs text-gray-600">
                       {(d.avgShareA * 100).toFixed(1)}% &ndash;{" "}
                       {(d.avgShareB * 100).toFixed(1)}%
                     </td>
@@ -475,54 +484,6 @@ export default function ResultatsPage() {
         </section>
       )}
 
-      {/* ---- Section 4: R&eacute;sum&eacute; second tour ---- */}
-      {secondRound.participation.median > 0 && (
-        <section className="mb-16">
-          <h2 className="mb-6 text-xl font-bold text-primary-dark">
-            Second tour : participation et non-exprim&eacute;s
-          </h2>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            {/* Participation */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
-                Participation estim&eacute;e
-              </h3>
-              <p className="mb-4 text-xs text-gray-500">
-                Sur l&rsquo;&eacute;chelle des inscrits (IC 75%)
-              </p>
-              <div className="flex items-end gap-3">
-                <span className="text-4xl font-extrabold text-primary-dark">
-                  {(secondRound.participation.median * 100).toFixed(1)}%
-                </span>
-                <span className="mb-1 text-sm text-gray-500">
-                  [{(secondRound.participation.lo * 100).toFixed(1)}% &ndash;{" "}
-                  {(secondRound.participation.hi * 100).toFixed(1)}%]
-                </span>
-              </div>
-            </div>
-
-            {/* Non-exprimés */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
-                Non-exprim&eacute;s estim&eacute;s
-              </h3>
-              <p className="mb-4 text-xs text-gray-500">
-                Abstention + blanc/nul sur inscrits (IC 75%)
-              </p>
-              <div className="flex items-end gap-3">
-                <span className="text-4xl font-extrabold text-primary-dark">
-                  {(secondRound.nonExpr.median * 100).toFixed(1)}%
-                </span>
-                <span className="mb-1 text-sm text-gray-500">
-                  [{(secondRound.nonExpr.lo * 100).toFixed(1)}% &ndash;{" "}
-                  {(secondRound.nonExpr.hi * 100).toFixed(1)}%]
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ---- Section 5: Methodology note ---- */}
       <section className="mb-16">

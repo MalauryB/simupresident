@@ -607,7 +607,7 @@ export function generateSimData(
   if (K >= 2) {
     const duelMap = new Map<
       string,
-      { count: number; sharesA: number[]; sharesB: number[]; a: number; b: number }
+      { count: number; winsA: number; sharesA: number[]; sharesB: number[]; a: number; b: number }
     >();
 
     for (let s = 0; s < S; s++) {
@@ -616,7 +616,7 @@ export function generateSimData(
       const key = `${a}-${b}`;
 
       if (!duelMap.has(key)) {
-        duelMap.set(key, { count: 0, sharesA: [], sharesB: [], a, b });
+        duelMap.set(key, { count: 0, winsA: 0, sharesA: [], sharesB: [], a, b });
       }
       const d = duelMap.get(key)!;
       d.count++;
@@ -624,9 +624,11 @@ export function generateSimData(
       if (A_ids[s] === a) {
         d.sharesA.push(pA_expr[s]);
         d.sharesB.push(pB_expr[s]);
+        if (pA_expr[s] > pB_expr[s]) d.winsA++;
       } else {
         d.sharesA.push(pB_expr[s]);
         d.sharesB.push(pA_expr[s]);
+        if (pB_expr[s] > pA_expr[s]) d.winsA++;
       }
     }
 
@@ -641,6 +643,8 @@ export function generateSimData(
           d.sharesA.reduce((a, b) => a + b, 0) / d.sharesA.length,
         avgShareB:
           d.sharesB.reduce((a, b) => a + b, 0) / d.sharesB.length,
+        pWinA: d.winsA / d.count,
+        pWinB: 1 - d.winsA / d.count,
       });
     }
 

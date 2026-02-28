@@ -10,9 +10,9 @@ export interface TutorialStep {
 
 export const PARAMS_TUTORIAL_STEPS: TutorialStep[] = [
   {
-    target: "attractivite",
-    title: "Attractivit\u00e9",
-    desc: "Mesure la stabilit\u00e9 de l\u2019\u00e9lectorat. Une forte attractivit\u00e9 signifie que le candidat garde ses \u00e9lecteurs\u00a0: l\u2019intervalle de confiance sera plus serr\u00e9.",
+    target: "ideologie",
+    title: "Profil id\u00e9ologique",
+    desc: "Position du candidat sur l\u2019axe gauche\u2011centre\u2011droite. Ce vecteur d\u00e9termine les reports de voix et le vote barrage au second tour.",
   },
   {
     target: "tendance",
@@ -20,9 +20,9 @@ export const PARAMS_TUTORIAL_STEPS: TutorialStep[] = [
     desc: "Repr\u00e9sente la dynamique de long terme du candidat. Au-dessus de 0.5, il progresse dans les sondages\u00a0; en dessous, il recule.",
   },
   {
-    target: "ideologie",
-    title: "Profil id\u00e9ologique",
-    desc: "Position du candidat sur l\u2019axe gauche\u2011centre\u2011droite. Ce vecteur d\u00e9termine les reports de voix et le vote barrage au second tour.",
+    target: "attractivite",
+    title: "Effet vote utile",
+    desc: "Sur les derniers jours de la campagne, une portion des \u00e9lecteurs d\u00e9cide de voter pour le candidat le mieux plac\u00e9 pour se qualifier au second tour. Plus l\u2019effet vote utile est \u00e9lev\u00e9, plus le candidat capte les \u00e9lecteurs strat\u00e9giques.",
   },
 ];
 

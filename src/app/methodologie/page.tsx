@@ -333,15 +333,16 @@ export default function MethodologiePage() {
             </ParamCard>
 
             <ParamCard
-              title="Attractivit&eacute;"
-              tagLabel="volatilit&eacute;"
+              title="Effet vote utile"
+              tagLabel="strat&eacute;gie"
               tagColor="#FFB800"
             >
               <p>
-                Mesure la stabilit&eacute; de l&rsquo;&eacute;lectorat. Une
-                forte attractivit&eacute; r&eacute;duit la dispersion de
-                l&rsquo;intervalle de confiance : l&rsquo;&eacute;lectorat est
-                plus fid&egrave;le.
+                Sur les derniers jours de la campagne, une portion des
+                &eacute;lecteurs d&eacute;cide de voter pour le candidat le
+                mieux plac&eacute; pour se qualifier au second tour. Plus
+                l&rsquo;effet vote utile est &eacute;lev&eacute;, plus le
+                candidat capte les &eacute;lecteurs strat&eacute;giques.
               </p>
             </ParamCard>
 

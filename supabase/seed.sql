@@ -11,7 +11,7 @@ DELETE FROM source_sondage;
 -- 1. Partis politiques (7 blocs)
 INSERT INTO parti (tag, nom, actif, couleur_fond, couleur_texte, couleur_accent, couleur_graphique) VALUES
   ('LFI',  'La France Insoumise',         true, '#CC2443', '#FFFFFF', '#E63946', '#E63946'),
-  ('EELV', 'EELV / Debout / L''Après',  true, '#00A86B', '#FFFFFF', '#008C57', '#00A86B'),
+  ('EELV', 'Primaire union de la gauche',  true, '#00A86B', '#FFFFFF', '#008C57', '#00A86B'),
   ('PS',   'PS / Place Publique',        true, '#FF6B9D', '#FFFFFF', '#E0476E', '#FF6B9D'),
   ('REN',  'Renaissance / Horizons',     true, '#FFD600', '#1a1a1a', '#FFB800', '#FFB800'),
   ('LR',   'Les Républicains',       true, '#0066CC', '#FFFFFF', '#004A99', '#0066CC'),
@@ -22,6 +22,9 @@ INSERT INTO parti (tag, nom, actif, couleur_fond, couleur_texte, couleur_accent,
 INSERT INTO candidat (id, parti_tag, indice_variante, nom, initiales, sonde_individuellement, groupe_sondage, attractivite, tendance, ideologie_gauche, ideologie_centre, ideologie_droite, taux_barrage, start_agrege, start_debiaise, start_personnalise, photo_url) VALUES
   -- LFI  (R: Ideo=(1,0,0), delta=0.5, psi=1, v0=0.12)
   ('lfi-0',  'LFI',  0, 'Jean-Luc Mélenchon', 'JLM', true,  NULL,                       1.0,  1.0,  1.0,  0.0,  0.0,  0.35, 12, 13, 12, NULL),
+  ('lfi-1',  'LFI',  1, 'Mathilde Panot',     'MP',  false, NULL,                       1.0,  1.0,  1.0,  0.0,  0.0,  0.35, 12, 13, 12, NULL),
+  ('lfi-2',  'LFI',  2, 'Clémence Guetté',    'CG',  false, NULL,                       1.0,  1.0,  1.0,  0.0,  0.0,  0.35, 12, 13, 12, NULL),
+  ('lfi-3',  'LFI',  3, 'Manuel Bompard',     'MB',  false, NULL,                       1.0,  1.0,  1.0,  0.0,  0.0,  0.35, 12, 13, 12, NULL),
   -- EELV (R: Ideo=(0.8,0.2,0), delta=0, psi=0, v0=0.09)
   ('eelv-0', 'EELV', 0, 'Marine Tondelier',   'MT',  false, 'Les Écologistes',           0.0,  0.5,  0.8,  0.2,  0.0,  0.1,   9,  9,  9, NULL),
   ('eelv-1', 'EELV', 1, 'François Ruffin',    'FR',  false, 'Debout',                    0.1,  0.55, 0.8,  0.2,  0.0,  0.12,  7,  7,  7, NULL),
