@@ -69,12 +69,12 @@ export const RESULTS_TUTORIAL_STEPS: TutorialStep[] = [
   {
     target: "res-trajectoires",
     title: "Trajectoires",
-    desc: "Chaque ligne repr\u00e9sente l\u2019\u00e9volution m\u00e9diane d\u2019un candidat sur 365\u00a0jours. Les zones color\u00e9es montrent l\u2019intervalle de confiance \u00e0 80\u00a0% (quantiles 10\u201190\u00a0%).",
+    desc: "Chaque ligne repr\u00e9sente l\u2019\u00e9volution m\u00e9diane d\u2019un candidat sur la p\u00e9riode choisie. Les zones color\u00e9es montrent l\u2019intervalle de confiance \u00e0 80\u00a0% (quantiles 10\u201190\u00a0%).",
   },
   {
     target: "res-qualif",
     title: "P(qualification)",
-    desc: "Fr\u00e9quence \u00e0 laquelle le candidat termine dans les deux premiers au 1er tour, sur 200\u00a0simulations. Plus la barre est longue, plus il a de chances d\u2019acc\u00e9der au second tour.",
+    desc: "Fr\u00e9quence \u00e0 laquelle le candidat termine dans les deux premiers au 1er tour, sur l\u2019ensemble des simulations. Plus la barre est longue, plus il a de chances d\u2019acc\u00e9der au second tour.",
   },
   {
     target: "res-victoire",
@@ -124,10 +124,19 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
     return () => clearTimeout(timer);
   }, [currentStep, updateRect]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     localStorage.setItem(storageKey, "1");
     onClose();
-  };
+  }, [storageKey, onClose]);
+
+  // Escape key to close
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleClose]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {

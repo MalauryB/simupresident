@@ -29,7 +29,7 @@ export function Slider({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-gray-700">{label}</label>
+        <label htmlFor={id} className="text-sm font-medium text-gray-700">{label}</label>
         <span
           className="rounded-md px-2 py-0.5 font-mono text-sm font-semibold"
           style={{ color, backgroundColor: `${color}15` }}
@@ -50,6 +50,7 @@ export function Slider({
           step={step}
           value={v}
           onChange={(e) => onChange(parseFloat(e.target.value))}
+          id={id}
           data-slider={id}
           className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent
             [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:appearance-none

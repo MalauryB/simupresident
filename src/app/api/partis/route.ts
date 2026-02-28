@@ -12,9 +12,16 @@ export async function GET() {
 
 // POST /api/partis — Crée un parti
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient();
-  const body = await request.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
+  try { body = await request.json(); } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  if (typeof body !== "object" || body === null) {
+    return NextResponse.json({ error: "Body must be a JSON object" }, { status: 400 });
+  }
 
+  const supabase = createServerSupabaseClient();
   const { data, error } = await supabase.from("parti").insert(body).select().single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

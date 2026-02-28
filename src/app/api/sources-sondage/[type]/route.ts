@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import type { Database } from "@/types/database";
-
-type SourceSondageUpdate = Database["public"]["Tables"]["source_sondage"]["Update"];
 
 interface Params {
   params: Promise<{ type: string }>;
@@ -26,9 +23,19 @@ export async function GET(_request: Request, { params }: Params) {
 // PUT /api/sources-sondage/:type
 export async function PUT(request: Request, { params }: Params) {
   const { type } = await params;
-  const supabase = createServerSupabaseClient();
-  const body: SourceSondageUpdate = await request.json();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  if (typeof body !== "object" || body === null) {
+    return NextResponse.json({ error: "Body must be a JSON object" }, { status: 400 });
+  }
+
+  const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("source_sondage")
     .update(body)

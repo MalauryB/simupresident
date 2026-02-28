@@ -103,3 +103,11 @@ export const ALLIANCE_PRESETS = [
   { id: "nfp", label: "Gauche unie (NFP)", desc: "Un seul candidat de gauche (LFI)", inactive: ["PS", "PP", "EELV", "REC"] },
   { id: "droite-unie", label: "Droite unie", desc: "Un seul candidat à droite (HOR)", inactive: ["LR", "REN"] },
 ];
+
+export const DEFAULT_COLORS: PartyColors = { bg: "#556C96", fg: "#FFFFFF", accent: "#556C96", chart: "#556C96" };
+
+export const ELECTION_DATE = new Date(2027, 3, 10); // 10 avril 2027
+
+export const DAY_PRESETS = [30, 90, 180, 365];
+
+export const SIM_COUNT = 200;

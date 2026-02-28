@@ -22,12 +22,17 @@ export async function GET(_request: Request, { params }: Params) {
 // POST /api/simulations/:id/resultats — Enregistre les résultats (batch)
 export async function POST(request: Request, { params }: Params) {
   const { id } = await params;
-  const supabase = createServerSupabaseClient();
-  const body = await request.json();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
+  try { body = await request.json(); } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
 
   const items = Array.isArray(body) ? body : [body];
-  const withSimId = items.map((item) => ({ ...item, simulation_id: id }));
+  const withSimId = items.map((item: any) => ({ ...item, simulation_id: id }));
 
+  const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("resultat_candidat")
     .insert(withSimId)

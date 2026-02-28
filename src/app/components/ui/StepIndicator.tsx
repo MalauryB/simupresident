@@ -26,6 +26,7 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
             <button
               type="button"
               onClick={() => { onStepClick?.(i); }}
+              aria-label={`${label}${isCompleted ? " (terminé)" : isActive ? " (en cours)" : ""}`}
               className="flex flex-col items-center gap-1.5 cursor-pointer"
             >
               <div
@@ -44,6 +45,7 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={3}
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"

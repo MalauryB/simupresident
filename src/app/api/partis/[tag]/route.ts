@@ -26,9 +26,13 @@ export async function GET(_request: Request, { params }: Params) {
 // PUT /api/partis/:tag — Met à jour un parti
 export async function PUT(request: Request, { params }: Params) {
   const { tag } = await params;
-  const supabase = createServerSupabaseClient();
-  const body: PartiUpdate = await request.json();
 
+  let body: PartiUpdate;
+  try { body = await request.json(); } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("parti")
     .update(body)

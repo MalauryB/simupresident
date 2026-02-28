@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useSimulation } from "@/lib/simulation-context";
 import { generateSimData, getSelected } from "@/lib/simulation";
 import { TutorialOverlay, RESULTS_TUTORIAL_STEPS } from "@/app/components/ui/TutorialOverlay";
+import { BackLink } from "@/app/components/ui/BackLink";
+import { GuideButton } from "@/app/components/ui/GuideButton";
+import { Avatar } from "@/app/components/ui/Avatar";
+import { SIM_COUNT } from "@/lib/constants";
 import type { SimulationData } from "@/types/simulation";
 import {
   LineChart,
@@ -63,6 +67,17 @@ export default function ResultatsPage() {
     setTimeout(() => document.head.removeChild(style), 500);
   };
 
+  if (activeParties.length === 0) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <p className="text-sm font-medium text-gray-500">
+          Aucun candidat s&eacute;lectionn&eacute;.
+        </p>
+        <BackLink href="/simulation" label="Retour &agrave; la simulation" />
+      </div>
+    );
+  }
+
   if (computing || !simData) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
@@ -70,7 +85,7 @@ export default function ResultatsPage() {
         <p className="text-sm font-medium text-gray-500">
           Simulation Monte Carlo en cours&hellip;
         </p>
-        <p className="text-xs text-gray-400">200 simulations &times; {days} jours</p>
+        <p className="text-xs text-gray-400">{SIM_COUNT} simulations &times; {days} jours</p>
       </div>
     );
   }
@@ -91,25 +106,7 @@ export default function ResultatsPage() {
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       {/* ---- Header ---- */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <Link
-          href="/simulation"
-          className="no-print inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 transition-colors hover:text-primary-dark"
-        >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          Nouvelle simulation
-        </Link>
+        <BackLink href="/simulation" label="Nouvelle simulation" className="no-print" />
 
         <button
           type="button"
@@ -146,19 +143,10 @@ export default function ResultatsPage() {
           R&eacute;sultats de la simulation
         </h1>
         <p className="text-gray-500">
-          {simData.probabilities.length} candidats &middot; 200 simulations Monte
+          {simData.probabilities.length} candidats &middot; {SIM_COUNT} simulations Monte
           Carlo &middot; {days} jours &middot; IC 80%
         </p>
-        <button
-          type="button"
-          onClick={() => setShowTutoResults(true)}
-          className="no-print mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary/40 hover:bg-primary/10"
-        >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01" />
-          </svg>
-          Guide des résultats
-        </button>
+        <GuideButton onClick={() => setShowTutoResults(true)} label="Guide des résultats" className="no-print mx-auto mt-3" />
       </div>
 
       {/* ---- Section 1: Trajectory chart ---- */}
@@ -254,7 +242,7 @@ export default function ResultatsPage() {
               </h3>
               <p className="text-xs leading-relaxed text-gray-500">
                 Chaque ligne repr&eacute;sente la trajectoire m&eacute;diane du
-                candidat sur 200 simulations. Les zones color&eacute;es
+                candidat sur {SIM_COUNT} simulations. Les zones color&eacute;es
                 montrent l&rsquo;intervalle de confiance &agrave; 80%
                 (quantiles 10%-90%).
               </p>
@@ -391,7 +379,7 @@ export default function ResultatsPage() {
         <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-500">
           <strong className="text-gray-600">Note :</strong>{" "}
           P(qualification) est la fr&eacute;quence empirique d&rsquo;acc&egrave;s
-          au top 2 sur {simData.probabilities.length > 0 ? "200" : "0"}{" "}
+          au top 2 sur {simData.probabilities.length > 0 ? SIM_COUNT : "0"}{" "}
           simulations. P(victoire) est la fr&eacute;quence empirique du vainqueur
           au second tour, int&eacute;grant reports de voix, abstention
           diff&eacute;rentielle et vote barrage.
@@ -524,9 +512,9 @@ export default function ResultatsPage() {
             Note m&eacute;thodologique
           </h3>
           <p className="mb-2 text-xs leading-relaxed text-gray-500">
-            Les r&eacute;sultats sont produits par 200 it&eacute;rations
+            Les r&eacute;sultats sont produits par {SIM_COUNT} it&eacute;rations
             d&rsquo;une simulation de Monte Carlo. Chaque it&eacute;ration
-            g&eacute;n&egrave;re une trajectoire quotidienne sur 365 jours en
+            g&eacute;n&egrave;re une trajectoire quotidienne sur {days} jours en
             appliquant un processus latent sur logits relatifs :
             &eta;<sub>t</sub> = (1&minus;&kappa;)&eta;<sub>t-1</sub> + W&nu;<sub>t</sub> + &epsilon;<sub>t</sub>.
             Le vote utile est activ&eacute; progressivement en fin de campagne
@@ -565,25 +553,10 @@ export default function ResultatsPage() {
         <div className="flex flex-wrap gap-4">
           {activeParties.map((p) => {
             const c = getSelected(p);
-            const color = partyColors[p.tag]?.chart ?? "#999";
+            const colors = partyColors[p.tag] ?? { bg: "#999", fg: "#fff", accent: "#999", chart: "#999" };
             return (
               <div key={p.tag} className="flex items-center gap-2">
-                <div className="relative h-6 w-6 flex-shrink-0">
-                  <div
-                    className="h-6 w-6 rounded-full"
-                    style={{ backgroundColor: color }}
-                  />
-                  {c.photoUrl && (
-                    <img
-                      src={c.photoUrl}
-                      alt={c.name}
-                      className="absolute inset-0 z-10 h-6 w-6 rounded-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  )}
-                </div>
+                <Avatar candidate={c} colors={colors} size={24} />
                 <span className="text-xs font-medium text-gray-600">
                   {c.name}
                 </span>
