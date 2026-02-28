@@ -47,7 +47,6 @@ export async function GET() {
       center: c.ideologie_centre ?? 0,
       right: c.ideologie_droite ?? 0,
       startAgrege: c.start_agrege ?? 0,
-      startDebiaise: c.start_debiaise ?? 0,
       startCustom: c.start_personnalise ?? 0,
       photoUrl: c.photo_url ?? null,
     })),
