@@ -35,8 +35,8 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [pollSources, setPollSources] = useState<PollSource[]>(POLL_SOURCES);
   const [pollSource, setPollSource] = useState("agrege");
   const [loading, setLoading] = useState(true);
-  const [gammaRejetED, setGammaRejetED] = useState(3.5541198);
-  const [gammaRejetEG, setGammaRejetEG] = useState(0.6);
+  const [gammaRejetED, setGammaRejetED] = useState(4.909881);
+  const [gammaRejetEG, setGammaRejetEG] = useState(2.240084);
   const [days, setDays] = useState(365);
 
   // Charger les données depuis Supabase au mount

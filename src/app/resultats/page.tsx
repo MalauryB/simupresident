@@ -479,7 +479,7 @@ export default function ResultatsPage() {
       {secondRound.participation.median > 0 && (
         <section className="mb-16">
           <h2 className="mb-6 text-xl font-bold text-primary-dark">
-            Second tour : participation et blanc/nul
+            Second tour : participation et non-exprim&eacute;s
           </h2>
 
           <div className="grid gap-6 sm:grid-cols-2">
@@ -502,21 +502,21 @@ export default function ResultatsPage() {
               </div>
             </div>
 
-            {/* Blanc/nul */}
+            {/* Non-exprimés */}
             <div className="rounded-xl border border-gray-200 bg-white p-5">
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
-                Blanc / Nul estim&eacute;
+                Non-exprim&eacute;s estim&eacute;s
               </h3>
               <p className="mb-4 text-xs text-gray-500">
-                Sur l&rsquo;&eacute;chelle des inscrits (IC 75%)
+                Abstention + blanc/nul sur inscrits (IC 75%)
               </p>
               <div className="flex items-end gap-3">
                 <span className="text-4xl font-extrabold text-primary-dark">
-                  {(secondRound.blancNul.median * 100).toFixed(1)}%
+                  {(secondRound.nonExpr.median * 100).toFixed(1)}%
                 </span>
                 <span className="mb-1 text-sm text-gray-500">
-                  [{(secondRound.blancNul.lo * 100).toFixed(1)}% &ndash;{" "}
-                  {(secondRound.blancNul.hi * 100).toFixed(1)}%]
+                  [{(secondRound.nonExpr.lo * 100).toFixed(1)}% &ndash;{" "}
+                  {(secondRound.nonExpr.hi * 100).toFixed(1)}%]
                 </span>
               </div>
             </div>
@@ -539,8 +539,8 @@ export default function ResultatsPage() {
             Le vote utile est activ&eacute; progressivement en fin de campagne
             via une redistribution des parts mobiles selon la proximit&eacute;
             id&eacute;ologique (similarit&eacute; cosinus). Le second tour est
-            mod&eacute;lis&eacute; par un softmax &agrave; 4 issues (vote A,
-            vote B, abstention, blanc/nul) avec p&eacute;nalit&eacute; de
+            mod&eacute;lis&eacute; par un softmax &agrave; 3 issues (vote A,
+            vote B, non-exprim&eacute;s) avec p&eacute;nalit&eacute; de
             barrage.
           </p>
           <p className="text-xs leading-relaxed text-gray-600">

@@ -414,12 +414,17 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 3 — Barrage                                                   */
+/*  Step 3 — Barrage & Horizon                                         */
 /* ------------------------------------------------------------------ */
-function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean; onCloseTutorial: () => void }) {
-  const { gammaRejetED, gammaRejetEG, setGammaRejetED, setGammaRejetEG } = useSimulation();
+function StepBarrageHorizon({ showTutorial, onCloseTutorial }: { showTutorial: boolean; onCloseTutorial: () => void }) {
+  const { gammaRejetED, gammaRejetEG, setGammaRejetED, setGammaRejetEG, days, setDays } = useSimulation();
+  const daysUntilElection = useMemo(() => {
+    return Math.max(7, Math.min(365, Math.round((ELECTION_DATE.getTime() - Date.now()) / 86_400_000)));
+  }, []);
+
   return (
     <div className="mx-auto max-w-lg space-y-6">
+      {/* Barrage */}
       <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Vote barrage (second tour)</h3>
         <p className="mb-5 text-sm text-gray-600">
@@ -436,24 +441,8 @@ function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean;
           </div>
         </div>
       </div>
-      {showTutorial && (
-        <TutorialOverlay steps={BARRAGE_TUTORIAL_STEPS} storageKey="tutoBarrageSeen" onClose={onCloseTutorial} />
-      )}
-    </div>
-  );
-}
 
-/* ------------------------------------------------------------------ */
-/*  Step 4 — Horizon                                                   */
-/* ------------------------------------------------------------------ */
-function StepHorizon() {
-  const { days, setDays } = useSimulation();
-  const daysUntilElection = useMemo(() => {
-    return Math.max(7, Math.min(365, Math.round((ELECTION_DATE.getTime() - Date.now()) / 86_400_000)));
-  }, []);
-
-  return (
-    <div className="mx-auto max-w-lg space-y-6">
+      {/* Horizon */}
       <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Horizon de simulation</h3>
         <p className="mb-5 text-sm text-gray-600">
@@ -490,6 +479,10 @@ function StepHorizon() {
           ))}
         </div>
       </div>
+
+      {showTutorial && (
+        <TutorialOverlay steps={BARRAGE_TUTORIAL_STEPS} storageKey="tutoBarrageSeen" onClose={onCloseTutorial} />
+      )}
     </div>
   );
 }
@@ -615,8 +608,7 @@ export default function SimulationPage() {
     "Sélectionnez les candidats à inclure dans la simulation.",
     "Ajustez les paramètres de chaque candidat.",
     "Choisissez la source de sondages et vérifiez les points de départ.",
-    "Configurez l'intensité du vote barrage au second tour.",
-    "Choisissez l'horizon temporel de la simulation.",
+    "Configurez le vote barrage et l'horizon temporel.",
     "Vérifiez la configuration avant de lancer la simulation.",
   ];
 
@@ -639,19 +631,18 @@ export default function SimulationPage() {
         <div
           ref={contentRef}
           className={`scrollbar-thin flex-1 overflow-y-auto px-4 py-4 sm:px-6 lg:px-8 ${
-            step === 3 || step === 4 ? "flex flex-col items-center justify-center" : ""
+            step === 3 ? "flex flex-col items-center justify-center" : ""
           }`}
         >
-          <div className={`w-full ${step === 3 || step === 4 ? "" : "mx-auto max-w-4xl"}`}>
+          <div className={`w-full ${step === 3 ? "" : "mx-auto max-w-4xl"}`}>
             {step === 0 && <StepCandidats showTutorial={activeTutorial === 0 && step === 0} onCloseTutorial={closeTutorial} />}
             {step === 1 && <StepParams showTutorial={activeTutorial === 1 && step === 1} onCloseTutorial={closeTutorial} />}
             {step === 2 && <StepStartingPoint showTutorial={activeTutorial === 2 && step === 2} onCloseTutorial={closeTutorial} total={total} />}
-            {step === 3 && <StepBarrage showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
-            {step === 4 && <StepHorizon />}
-            {step === 5 && <StepSummary />}
+            {step === 3 && <StepBarrageHorizon showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
+            {step === 4 && <StepSummary />}
 
             {/* Spacer for bottom nav — only on steps with tall content */}
-            {(step <= 2 || step === 5) && <div className="h-20" />}
+            {(step <= 2 || step === 4) && <div className="h-20" />}
           </div>
         </div>
 
