@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BackLink } from "@/app/components/ui/BackLink";
 import { SIM_COUNT } from "@/lib/constants";
 
@@ -197,12 +198,12 @@ export default function AProposPage() {
               <p className="mb-3 text-xs text-gray-600">
                 Partagez vos suggestions pour am&eacute;liorer la plateforme.
               </p>
-              <a
-                href="mailto:contact@quipresident.fr"
+              <Link
+                href="/contact"
                 className="inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
               >
-                contact@quipresident.fr &rarr;
-              </a>
+                Nous &eacute;crire &rarr;
+              </Link>
             </div>
 
             {/* Project card */}
@@ -233,12 +234,12 @@ export default function AProposPage() {
             Le projet est en d&eacute;veloppement actif. Contactez-nous pour
             participer ou proposer des am&eacute;liorations.
           </p>
-          <a
-            href="mailto:contact@quipresident.fr"
+          <Link
+            href="/contact"
             className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
           >
-            contact@quipresident.fr
-          </a>
+            Nous contacter &rarr;
+          </Link>
         </div>
       </div>
     </div>

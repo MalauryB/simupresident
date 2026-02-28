@@ -83,7 +83,7 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
             color: party.active ? colors.bg : "#9ca3af",
           }}
         >
-          {party.tag}
+          {party.party}
         </span>
       </button>
 

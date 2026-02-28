@@ -13,6 +13,7 @@ const navItems: NavItem[] = [
   { label: "Simulation", href: "/simulation" },
   { label: "Méthodologie", href: "/methodologie" },
   { label: "À propos", href: "/a-propos" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Navigation() {

@@ -290,6 +290,33 @@ export interface Database {
           },
         ];
       };
+      message_contact: {
+        Row: {
+          id: string;
+          nom: string;
+          email: string;
+          sujet: string;
+          message: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          nom: string;
+          email: string;
+          sujet: string;
+          message: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          nom?: string;
+          email?: string;
+          sujet?: string;
+          message?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
