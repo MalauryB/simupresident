@@ -236,7 +236,7 @@ export default function AProposPage() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a
-              href="https://github.com/bmusic/quipresident"
+              href="https://github.com/MalauryB/simupresident"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
