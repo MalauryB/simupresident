@@ -1,13 +1,5 @@
 import type { PartyColors, PartyData, PollSource } from "@/types/simulation";
 
-export const COLORS = {
-  dark: "#475465",
-  mid: "#556C96",
-  light: "#B6CDE8",
-  cream: "#EEEDFF",
-  accent: "#FF584D",
-} as const;
-
 export const PARTY_COLORS: Record<string, PartyColors> = {
   RN: { bg: "#1B2A4A", fg: "#EEEDFF", accent: "#002395", chart: "#002395" },
   LFI: { bg: "#CC2443", fg: "#FFFFFF", accent: "#E63946", chart: "#E63946" },

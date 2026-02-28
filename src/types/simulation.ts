@@ -57,7 +57,30 @@ export interface ProbabilityResult extends SimCandidate {
   pVictoire: number;
 }
 
+export interface DuelProbability {
+  tagA: string;
+  tagB: string;
+  nameA: string;
+  nameB: string;
+  probability: number;
+  avgShareA: number;
+  avgShareB: number;
+}
+
+export interface QuantileSummary {
+  lo: number;
+  median: number;
+  hi: number;
+}
+
+export interface SecondRoundSummary {
+  participation: QuantileSummary;
+  blancNul: QuantileSummary;
+}
+
 export interface SimulationData {
   trajectory: TrajectoryPoint[];
   probabilities: ProbabilityResult[];
+  duels: DuelProbability[];
+  secondRound: SecondRoundSummary;
 }

@@ -1,0 +1,68 @@
+1) Explication du modèle en langage accessible
+L’idée générale
+
+Le programme simule une élection en deux temps :
+
+Premier tour : on simule jour après jour l’évolution des intentions de vote des 7 candidats, avec une part de hasard (comme des “petits événements” quotidiens).
+
+Second tour : à la fin, on regarde qui sont les deux premiers, puis on simule comment les électeurs des autres candidats se reportent, en tenant compte de la proximité idéologique, de l’abstention, et d’un possible vote barrage (refus d’un candidat jugé extrême).
+
+L’ensemble est fait en Monte Carlo : on répète la simulation des centaines de fois pour obtenir non seulement une courbe moyenne, mais aussi des bandes d’incertitude.
+
+A) La dynamique de base (premier tour)
+
+Chaque candidat a une courbe d’intentions de vote qui bouge chaque jour.
+
+On part d’une situation initiale (les parts v0).
+
+Chaque jour, il y a :
+
+un choc “idéologique” commun (3 dimensions dans nu) qui impacte les candidats selon leur position dans l’espace politique (W)
+
+un bruit propre à chaque candidat (événements, bourdes, actualités)
+
+En plus, le code introduit une petite tendance négative (un “drift”) sur le candidat 4 : il perd légèrement chaque jour, et ces voix sont redistribuées en partie vers les autres candidats proches de lui.
+
+Résultat : même sans vote utile, tu obtiens des trajectoires plausibles et incertaines des intentions de vote.
+
+B) Le vote utile (premier tour)
+
+Le vote utile n’est pas actif tout le temps : il est activé seulement à la fin de la campagne (derniers jours), via une fonction progressive (activation(t)).
+
+Quand il s’active, une partie des électeurs des “petits” candidats se met à se déplacer vers des candidats :
+
+idéologiquement proches (proximité via cosinus sur W)
+
+jugés plus viables (ceux qui sont déjà hauts dans les intentions)
+
+et éventuellement favorisés/défavorisés structurellement par psi
+
+L’effet est “doux” : ce n’est pas un transfert brutal.
+Chaque candidat garde une fraction de ses voix, et l’autre fraction est redistribuée selon une règle probabiliste.
+
+Donc le vote utile sert à reproduire une dynamique réaliste de “cristallisation” en fin de campagne.
+
+C) Le vote barrage (second tour)
+
+Au second tour, on prend les deux premiers du premier tour : A et B.
+
+Pour chaque électorat (les électeurs du candidat 1, du 2, etc.), le modèle calcule la probabilité de :
+
+voter pour A
+
+voter pour B
+
+s’abstenir
+
+voter blanc/nul
+
+Les électeurs ont tendance à choisir le finaliste le plus proche d’eux dans l’espace idéologique (encore via cosinus sur W).
+Mais le modèle ajoute une chose très importante : une pénalité de rejet si un candidat finaliste est perçu comme “extrême”.
+
+C’est le rôle de rho :
+
+plus un candidat est « ED / extrême droite » (ou « EG », selon la pondération), plus il est pénalisé en tant que finaliste
+
+cette pénalité augmente le vote “barrage” vers l’autre finaliste, et/ou augmente l’abstention/blanc-nul
+
+C’est une façon simple et calibrable de représenter le “front républicain” ou au contraire son affaiblissement.

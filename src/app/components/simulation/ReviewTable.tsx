@@ -1,5 +1,5 @@
 import type { PartyData } from "@/types/simulation";
-import { PARTY_COLORS } from "@/lib/constants";
+import { useSimulation } from "@/lib/simulation-context";
 import { getSelected, getTrendColor } from "@/lib/simulation";
 import { TrendSparkline } from "../ui/TrendSparkline";
 
@@ -9,6 +9,7 @@ interface ReviewTableProps {
 }
 
 export function ReviewTable({ activeParties, source }: ReviewTableProps) {
+  const { partyColors } = useSimulation();
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">
       <table className="w-full text-sm">
@@ -39,7 +40,7 @@ export function ReviewTable({ activeParties, source }: ReviewTableProps) {
         </thead>
         <tbody className="divide-y divide-gray-100">
           {activeParties.map((party) => {
-            const colors = PARTY_COLORS[party.tag] ?? {
+            const colors = partyColors[party.tag] ?? {
               bg: "#556C96",
               fg: "#FFFFFF",
               accent: "#556C96",

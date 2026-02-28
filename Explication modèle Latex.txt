@@ -1,0 +1,218 @@
+% ============================
+% Modèle (version mathématique)
+% ============================
+
+\section{Modèle de prévision d'une élection à deux tours}
+
+\subsection{Notations}
+On considère $K$ candidats. À chaque date $t\in\{1,\dots,T\}$, on note
+\[
+v_t \in \Delta^{K-1}
+\qquad\text{(simplexe : } v_{t,k}\ge 0,\ \sum_{k=1}^K v_{t,k}=1\text{)}
+\]
+le vecteur des intentions de vote (parts).  
+On dispose d'un \emph{embedding} idéologique
+\[
+W \in \mathbb{R}^{K\times B},
+\]
+où $B$ est le nombre de dimensions latentes (dans le code : $B=3$).  
+On utilise les \emph{logits relatifs} à une baseline (candidat $K$) :
+\[
+\eta_t \in \mathbb{R}^{K-1}, \qquad \tilde{\eta}_t = (\eta_t,0)\in \mathbb{R}^K.
+\]
+La transformation softmax est
+\[
+\mathrm{softmax}(x)_k = \frac{e^{x_k}}{\sum_{j=1}^K e^{x_j}}.
+\]
+La similarité cosinus entre deux vecteurs $a,b\in\mathbb{R}^B$ est
+\[
+\cos(a,b)=\frac{\langle a,b\rangle}{\|a\|\,\|b\|}.
+\]
+
+\subsection{Premier tour : dynamique latente}
+
+\paragraph{Chocs factoriels et idiosyncratiques.}
+On introduit un facteur idéologique journalier
+\[
+\nu_t \sim \mathcal{N}(0,Q_f), 
+\qquad Q_f=\mathrm{diag}(\sigma_{f,1}^2,\dots,\sigma_{f,B}^2),
+\]
+et un bruit idiosyncratique par candidat
+\[
+\varepsilon_t \sim \mathcal{N}(0,D),
+\qquad D=\mathrm{diag}(\sigma_{\varepsilon,1}^2,\dots,\sigma_{\varepsilon,K}^2).
+\]
+Le choc total sur les candidats est
+\[
+u_t = W\nu_t + \varepsilon_t \in \mathbb{R}^K.
+\]
+
+\paragraph{Drift ciblé et compensation.}
+On introduit un drift $\delta<0$ sur le candidat $c^\star$ (dans le code : $c^\star=4$) :
+\[
+u_{t,c^\star} \leftarrow u_{t,c^\star} + \delta.
+\]
+On redistribue une compensation sur les autres candidats proportionnellement à leur proximité
+avec $c^\star$. On définit
+\[
+s_k = \cos(W_{c^\star}, W_k),\qquad s_{c^\star}=0,\qquad
+w_k=\frac{s_k}{\sum_{j\ne c^\star}s_j},
+\]
+puis on ajuste
+\[
+u_{t,k} \leftarrow u_{t,k} - \delta\, w_k.
+\]
+
+\paragraph{Évolution des logits relatifs.}
+On ne met à jour que les $K-1$ logits relatifs à la baseline :
+\[
+\eta_t = (1-\kappa)\eta_{t-1} + u_{t,1:(K-1)},
+\]
+où $\kappa\ge 0$ est un paramètre de mean-reversion (dans le code : $\kappa\simeq 0$).
+
+\paragraph{Parts de premier tour (sans vote utile).}
+On reconstruit
+\[
+\tilde{\eta}_t = (\eta_t,0),
+\qquad
+v_t^{\mathrm{base}}=\mathrm{softmax}(\tilde{\eta}_t).
+\]
+
+\subsection{Vote utile : transformation déterministe activée en fin de campagne}
+
+\paragraph{Activation temporelle.}
+On active progressivement le vote utile avec
+\[
+a_t = \frac{1}{1+\exp\Big(\frac{(T-t)-\tau_0}{s_\tau}\Big)}
+\in(0,1),
+\]
+où $\tau_0$ contrôle le moment d'activation (proche de $T$) et $s_\tau$ sa pente.
+
+\paragraph{Fraction conservée et masse mobile.}
+On définit une fonction de rétention douce (logistique) :
+\[
+r(v_{t,k}) = \frac{1}{1+\exp\Big(-\frac{v_{t,k}-\tau_{\mathrm{vote}}}{s_v}\Big)}\in(0,1),
+\]
+d'où
+\[
+r_k=r(v_{t,k}^{\mathrm{base}}),\qquad
+m_k=(1-r_k)v_{t,k}^{\mathrm{base}},\qquad
+v^{\mathrm{keep}}_k = r_k v_{t,k}^{\mathrm{base}}.
+\]
+
+\paragraph{Attractivité (viabilité) et noyau de proximité.}
+On pose une viabilité
+\[
+\mathrm{viab}(v_{t,k})=\log(v_{t,k}+\epsilon),
+\]
+et on introduit un biais structurel $\psi\in\mathbb{R}^K$.
+Pour une source $j$ et une destination $k$, on définit un score :
+\[
+\mathrm{score}_{j\to k}
+=
+\cos(W_j,W_k)^{\lambda_{\cos}}
+\cdot
+\exp\Big(\psi_k + \beta_{\mathrm{viab}}\,\mathrm{viab}(v_{t,k}^{\mathrm{base}})\Big),
+\]
+où $\lambda_{\cos}\ge 1$ renforce la concentration sur les proches idéologiques
+et $\beta_{\mathrm{viab}}\ge 0$ renforce l'attrait des candidats déjà élevés.
+
+\paragraph{Matrice de redistribution.}
+On normalise pour obtenir une matrice ligne-stochastique $A\in[0,1]^{K\times K}$ :
+\[
+A_{j\to k} = \frac{\mathrm{score}_{j\to k}}{\sum_{\ell=1}^K \mathrm{score}_{j\to \ell}},
+\qquad \sum_{k=1}^K A_{j\to k}=1.
+\]
+(Remarque : $k=j$ est autorisé, une partie de la masse mobile peut rester sur la source.)
+
+\paragraph{Transformation vote utile.}
+Le vote utile produit
+\[
+v_t^{\mathrm{VU}}
+=
+v^{\mathrm{keep}} + m^\top A,
+\qquad
+v_t^{\mathrm{VU}} \leftarrow \frac{v_t^{\mathrm{VU}}}{\sum_{k=1}^K v_{t,k}^{\mathrm{VU}}}.
+\]
+
+\paragraph{Mixture (observation) entre base et vote utile.}
+La part finale utilisée pour les sorties est
+\[
+v_t^{\mathrm{obs}} = (1-a_t)\,v_t^{\mathrm{base}} + a_t\,v_t^{\mathrm{VU}},
+\qquad
+v_t^{\mathrm{obs}} \leftarrow \frac{v_t^{\mathrm{obs}}}{\sum_{k=1}^K v_{t,k}^{\mathrm{obs}}}.
+\]
+
+\subsection{Second tour : reports + abstention + blanc/nul + vote barrage}
+
+\paragraph{Finalistes.}
+On sélectionne les finalistes à $t=T$ :
+\[
+A = \arg\max_{k} v^{\mathrm{obs}}_{T,k},
+\qquad
+B = \arg\max_{k\ne A} v^{\mathrm{obs}}_{T,k}.
+\]
+
+\paragraph{Pénalité de rejet (vote barrage).}
+On définit une pénalité $\rho_k$ appliquée \emph{si $k$ est finaliste} :
+\[
+\rho_k = \gamma_{\mathrm{ED}}\,W_{k,3} + \gamma_{\mathrm{EG}}\,W_{k,1},
+\]
+où $\gamma_{\mathrm{ED}},\gamma_{\mathrm{EG}}\ge 0$ contrôlent l'intensité du rejet.
+
+\paragraph{Similarités au duel et distance.}
+Pour chaque électorat source $s\in\{1,\dots,K\}$ :
+\[
+\mathrm{simA}_s = \cos(W_s,W_A)^{\lambda},
+\qquad
+\mathrm{simB}_s = \cos(W_s,W_B)^{\lambda},
+\qquad
+d_s = 1-\max(\mathrm{simA}_s,\mathrm{simB}_s),
+\]
+où $\lambda\ge 1$ est un paramètre de concentration.
+
+\paragraph{Utilités (logits) et softmax à 4 issues.}
+On pose les logits :
+\[
+\ell_A(s) = \beta\,\mathrm{simA}_s - \rho_A,\qquad
+\ell_B(s) = \beta\,\mathrm{simB}_s - \rho_B,
+\]
+\[
+\ell_{\mathrm{abst}}(s)=\alpha_{\mathrm{abst}}+\kappa_{\mathrm{abst}}\,d_s,
+\qquad
+\ell_{\mathrm{bn}}(s)=\alpha_{\mathrm{bn}}+\kappa_{\mathrm{bn}}\,d_s,
+\]
+puis on définit la matrice de transition $M\in[0,1]^{K\times 4}$ :
+\[
+M_{s,\cdot}
+=
+\mathrm{softmax}\Big(\ell_A(s),\ell_B(s),\ell_{\mathrm{abst}}(s),\ell_{\mathrm{bn}}(s)\Big),
+\]
+où les colonnes correspondent à $(A,B,\mathrm{abst},\mathrm{bn})$.
+
+\paragraph{Agrégation au niveau agrégé.}
+Les parts au second tour sur l'échelle \emph{inscrits} sont :
+\[
+V^{(2)}_{\mathrm{ins}} = (v_T^{\mathrm{obs}})^\top M \in \mathbb{R}^4.
+\]
+Les parts sur l'échelle \emph{exprimés} (en conditionnant sur $A$ ou $B$) :
+\[
+V^{(2)}_{\mathrm{expr}}(A)=\frac{V^{(2)}_{\mathrm{ins}}(A)}{V^{(2)}_{\mathrm{ins}}(A)+V^{(2)}_{\mathrm{ins}}(B)},
+\qquad
+V^{(2)}_{\mathrm{expr}}(B)=1-V^{(2)}_{\mathrm{expr}}(A).
+\]
+
+\subsection{Monte Carlo et probabilités}
+On répète $S$ simulations indépendantes. À chaque simulation $s$ :
+\[
+\{v_t^{\mathrm{obs},(s)}\}_{t=1}^T
+\quad\Rightarrow\quad
+(A^{(s)},B^{(s)}),\ V^{(2),(s)}.
+\]
+On estime alors :
+\begin{itemize}
+  \item Probabilité de qualification : $P(k\in\{A,B\}) \approx \frac{1}{S}\sum_{s=1}^S \mathbf{1}\{k\in\{A^{(s)},B^{(s)}\}\}$.
+  \item Probabilités de duels : fréquences empiriques des paires $\{A^{(s)},B^{(s)}\}$.
+  \item Probabilités de victoire : fréquence empirique du gagnant au second tour.
+  \item Intervalles de crédibilité empiriques : quantiles des distributions simulées (par ex. 10\%--90\% ou 12.5\%--87.5\%).
+\end{itemize}

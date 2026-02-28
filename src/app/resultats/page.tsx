@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSimulation } from "@/lib/simulation-context";
-import { PARTY_COLORS } from "@/lib/constants";
 import { generateSimData, getSelected } from "@/lib/simulation";
+import type { SimulationData } from "@/types/simulation";
 import {
   LineChart,
   Line,
@@ -24,22 +24,21 @@ import {
 /*  Results page                                                       */
 /* ------------------------------------------------------------------ */
 export default function ResultatsPage() {
-  const { activeParties, pollSource } = useSimulation();
+  const { activeParties, pollSource, partyColors } = useSimulation();
 
-  const simData = useMemo(
-    () => generateSimData(activeParties, pollSource),
-    [activeParties, pollSource],
-  );
+  const [simData, setSimData] = useState<SimulationData | null>(null);
+  const [computing, setComputing] = useState(true);
 
-  const { trajectory, probabilities } = simData;
-
-  /* Sorted for charts */
-  const sortedByQualif = [...probabilities].sort(
-    (a, b) => b.pQualif - a.pQualif,
-  );
-  const sortedByVictoire = [...probabilities].sort(
-    (a, b) => b.pVictoire - a.pVictoire,
-  );
+  useEffect(() => {
+    setComputing(true);
+    // setTimeout pour permettre le rendu du loading state avant le calcul lourd
+    const timer = setTimeout(() => {
+      const result = generateSimData(activeParties, pollSource);
+      setSimData(result);
+      setComputing(false);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [activeParties, pollSource]);
 
   /* PDF download via print */
   const handleDownloadPDF = () => {
@@ -55,6 +54,30 @@ export default function ResultatsPage() {
     window.print();
     setTimeout(() => document.head.removeChild(style), 500);
   };
+
+  if (computing || !simData) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-dark" />
+        <p className="text-sm font-medium text-gray-500">
+          Simulation Monte Carlo en cours&hellip;
+        </p>
+        <p className="text-xs text-gray-400">200 simulations &times; 365 jours</p>
+      </div>
+    );
+  }
+
+  const { trajectory, probabilities, duels, secondRound } = simData;
+
+  /* Sorted for charts */
+  const sortedByQualif = [...probabilities].sort(
+    (a, b) => b.pQualif - a.pQualif,
+  );
+  const sortedByVictoire = [...probabilities].sort(
+    (a, b) => b.pVictoire - a.pVictoire,
+  );
+
+  const topDuels = duels.slice(0, 5);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -115,7 +138,8 @@ export default function ResultatsPage() {
           R&eacute;sultats de la simulation
         </h1>
         <p className="text-gray-500">
-          10 000 simulations Monte Carlo &middot; IC 75%
+          {simData.probabilities.length} candidats &middot; 200 simulations Monte
+          Carlo &middot; IC 80%
         </p>
       </div>
 
@@ -151,7 +175,7 @@ export default function ResultatsPage() {
                   }}
                 />
                 {activeParties.map((p) => {
-                  const color = PARTY_COLORS[p.tag]?.chart ?? "#999";
+                  const color = partyColors[p.tag]?.chart ?? "#999";
                   return (
                     <Area
                       key={`${p.tag}_band`}
@@ -168,7 +192,7 @@ export default function ResultatsPage() {
                   );
                 })}
                 {activeParties.map((p) => {
-                  const color = PARTY_COLORS[p.tag]?.chart ?? "#999";
+                  const color = partyColors[p.tag]?.chart ?? "#999";
                   return (
                     <Area
                       key={`${p.tag}_lo`}
@@ -185,7 +209,7 @@ export default function ResultatsPage() {
                   );
                 })}
                 {activeParties.map((p) => {
-                  const color = PARTY_COLORS[p.tag]?.chart ?? "#999";
+                  const color = partyColors[p.tag]?.chart ?? "#999";
                   return (
                     <Line
                       key={p.tag}
@@ -209,11 +233,10 @@ export default function ResultatsPage() {
                 Lecture du graphique
               </h3>
               <p className="text-xs leading-relaxed text-gray-500">
-                Chaque ligne repr&eacute;sente la trajectoire moyenne du
-                candidat. Les zones color&eacute;es semi-transparentes
-                montrent l&rsquo;intervalle de confiance &agrave; 75%, c&rsquo;est-&agrave;-dire
-                la zone dans laquelle le candidat &eacute;volue dans
-                75% des simulations.
+                Chaque ligne repr&eacute;sente la trajectoire m&eacute;diane du
+                candidat sur 200 simulations. Les zones color&eacute;es
+                montrent l&rsquo;intervalle de confiance &agrave; 80%
+                (quantiles 10%-90%).
               </p>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
@@ -221,11 +244,10 @@ export default function ResultatsPage() {
                 Mod&egrave;le utilis&eacute;
               </h3>
               <p className="text-xs leading-relaxed text-gray-500">
-                Les trajectoires sont g&eacute;n&eacute;r&eacute;es par un
-                mod&egrave;le de marche al&eacute;atoire avec d&eacute;rive
-                (tendance) et volatilit&eacute; d&eacute;croissante. Le bruit
-                est calibr&eacute; sur les variations historiques des
-                sondages pr&eacute;sidentiels fran&ccedil;ais.
+                Processus latent sur logits relatifs avec chocs factoriels
+                (embedding id&eacute;ologique W), drift cibl&eacute; par
+                candidat et transformation de vote utile activ&eacute;e en fin
+                de campagne.
               </p>
             </div>
           </div>
@@ -282,7 +304,7 @@ export default function ResultatsPage() {
                   {sortedByQualif.map((entry) => (
                     <Cell
                       key={entry.tag}
-                      fill={PARTY_COLORS[entry.tag]?.chart ?? "#999"}
+                      fill={partyColors[entry.tag]?.chart ?? "#999"}
                     />
                   ))}
                 </Bar>
@@ -333,7 +355,7 @@ export default function ResultatsPage() {
                   {sortedByVictoire.map((entry) => (
                     <Cell
                       key={entry.tag}
-                      fill={PARTY_COLORS[entry.tag]?.chart ?? "#999"}
+                      fill={partyColors[entry.tag]?.chart ?? "#999"}
                     />
                   ))}
                 </Bar>
@@ -342,29 +364,153 @@ export default function ResultatsPage() {
           </div>
         </div>
 
-        {/* Explanation */}
         <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-500">
           <strong className="text-gray-600">Note :</strong>{" "}
-          P(qualification) est la probabilit&eacute; qu&rsquo;un candidat
-          termine dans les deux premiers au premier tour. P(victoire) combine
-          la qualification avec un mod&egrave;le de second tour int&eacute;grant
-          le coefficient &laquo; barrage &raquo; de chaque candidat.
+          P(qualification) est la fr&eacute;quence empirique d&rsquo;acc&egrave;s
+          au top 2 sur {simData.probabilities.length > 0 ? "200" : "0"}{" "}
+          simulations. P(victoire) est la fr&eacute;quence empirique du vainqueur
+          au second tour, int&eacute;grant reports de voix, abstention
+          diff&eacute;rentielle et vote barrage.
         </div>
       </section>
 
-      {/* ---- Section 3: Methodology note ---- */}
+      {/* ---- Section 3: Duels les plus probables ---- */}
+      {topDuels.length > 0 && (
+        <section className="mb-16">
+          <h2 className="mb-6 text-xl font-bold text-primary-dark">
+            Duels les plus probables au second tour
+          </h2>
+
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 bg-gray-50/50">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600">
+                    Duel
+                  </th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-600">
+                    Probabilit&eacute;
+                  </th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-600">
+                    Score moyen (exprim&eacute;s)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {topDuels.map((d, i) => (
+                  <tr
+                    key={`${d.tagA}-${d.tagB}`}
+                    className={i % 2 === 0 ? "bg-white" : "bg-gray-50/30"}
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="inline-block h-2.5 w-2.5 rounded-full"
+                          style={{
+                            backgroundColor:
+                              partyColors[d.tagA]?.chart ?? "#999",
+                          }}
+                        />
+                        <span className="font-medium text-gray-700">
+                          {d.nameA}
+                        </span>
+                        <span className="text-xs text-gray-400">vs</span>
+                        <span
+                          className="inline-block h-2.5 w-2.5 rounded-full"
+                          style={{
+                            backgroundColor:
+                              partyColors[d.tagB]?.chart ?? "#999",
+                          }}
+                        />
+                        <span className="font-medium text-gray-700">
+                          {d.nameB}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <span className="inline-block rounded-full bg-primary-dark/10 px-2.5 py-0.5 text-xs font-bold text-primary-dark">
+                        {(d.probability * 100).toFixed(1)}%
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right text-xs text-gray-500">
+                      {(d.avgShareA * 100).toFixed(1)}% &ndash;{" "}
+                      {(d.avgShareB * 100).toFixed(1)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {/* ---- Section 4: R&eacute;sum&eacute; second tour ---- */}
+      {secondRound.participation.median > 0 && (
+        <section className="mb-16">
+          <h2 className="mb-6 text-xl font-bold text-primary-dark">
+            Second tour : participation et blanc/nul
+          </h2>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            {/* Participation */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Participation estim&eacute;e
+              </h3>
+              <p className="mb-4 text-xs text-gray-400">
+                Sur l&rsquo;&eacute;chelle des inscrits (IC 75%)
+              </p>
+              <div className="flex items-end gap-3">
+                <span className="text-4xl font-extrabold text-primary-dark">
+                  {(secondRound.participation.median * 100).toFixed(1)}%
+                </span>
+                <span className="mb-1 text-sm text-gray-400">
+                  [{(secondRound.participation.lo * 100).toFixed(1)}% &ndash;{" "}
+                  {(secondRound.participation.hi * 100).toFixed(1)}%]
+                </span>
+              </div>
+            </div>
+
+            {/* Blanc/nul */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+                Blanc / Nul estim&eacute;
+              </h3>
+              <p className="mb-4 text-xs text-gray-400">
+                Sur l&rsquo;&eacute;chelle des inscrits (IC 75%)
+              </p>
+              <div className="flex items-end gap-3">
+                <span className="text-4xl font-extrabold text-primary-dark">
+                  {(secondRound.blancNul.median * 100).toFixed(1)}%
+                </span>
+                <span className="mb-1 text-sm text-gray-400">
+                  [{(secondRound.blancNul.lo * 100).toFixed(1)}% &ndash;{" "}
+                  {(secondRound.blancNul.hi * 100).toFixed(1)}%]
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ---- Section 5: Methodology note ---- */}
       <section className="mb-16">
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <h3 className="mb-3 text-sm font-bold text-primary-dark">
             Note m&eacute;thodologique
           </h3>
           <p className="mb-2 text-xs leading-relaxed text-gray-500">
-            Les r&eacute;sultats sont produits par 10 000 it&eacute;rations
+            Les r&eacute;sultats sont produits par 200 it&eacute;rations
             d&rsquo;une simulation de Monte Carlo. Chaque it&eacute;ration
-            g&eacute;n&egrave;re une trajectoire quotidienne en appliquant un
-            bruit gaussien calibr&eacute; et une d&eacute;rive fond&eacute;e sur
-            le param&egrave;tre de tendance. L&rsquo;intervalle de confiance
-            affich&eacute; est de 75%.
+            g&eacute;n&egrave;re une trajectoire quotidienne sur 365 jours en
+            appliquant un processus latent sur logits relatifs :
+            &eta;<sub>t</sub> = (1&minus;&kappa;)&eta;<sub>t-1</sub> + W&nu;<sub>t</sub> + &epsilon;<sub>t</sub>.
+            Le vote utile est activ&eacute; progressivement en fin de campagne
+            via une redistribution des parts mobiles selon la proximit&eacute;
+            id&eacute;ologique (similarit&eacute; cosinus). Le second tour est
+            mod&eacute;lis&eacute; par un softmax &agrave; 4 issues (vote A,
+            vote B, abstention, blanc/nul) avec p&eacute;nalit&eacute; de
+            barrage.
           </p>
           <p className="text-xs leading-relaxed text-gray-500">
             Cette simulation est un exercice p&eacute;dagogique et ne constitue
@@ -387,7 +533,7 @@ export default function ResultatsPage() {
         <div className="flex flex-wrap gap-4">
           {activeParties.map((p) => {
             const c = getSelected(p);
-            const color = PARTY_COLORS[p.tag]?.chart ?? "#999";
+            const color = partyColors[p.tag]?.chart ?? "#999";
             return (
               <div key={p.tag} className="flex items-center gap-2">
                 <div
