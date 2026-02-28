@@ -555,38 +555,43 @@ export default function SimulationPage() {
       {step === 4 && <StepHorizon />}
       {step === 5 && <StepSummary />}
 
-      {/* Bottom navigation */}
-      <div className="mt-10 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => goToStep(Math.max(0, step - 1))}
-          disabled={step === 0}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <ChevronLeft />
-          Précédent
-        </button>
+      {/* Spacer for sticky footer */}
+      <div className="h-20" />
 
-        {step < WIZARD_STEPS.length - 1 ? (
+      {/* Sticky bottom navigation card */}
+      <div className="fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
+        <div className="flex w-full max-w-md items-center justify-between rounded-2xl border border-gray-200 bg-white/90 px-5 py-3 shadow-lg backdrop-blur-md">
           <button
             type="button"
-            onClick={() => goToStep(Math.min(WIZARD_STEPS.length - 1, step + 1))}
-            disabled={step === 2 && pollSource === "custom" && total !== 100}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+            onClick={() => goToStep(Math.max(0, step - 1))}
+            disabled={step === 0}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Suivant
-            <ChevronRight />
+            <ChevronLeft />
+            Précédent
           </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => router.push("/resultats")}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-[#FF7B73] px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
-          >
-            <span aria-hidden="true">🗳️</span>
-            Lancer la simulation
-          </button>
-        )}
+
+          {step < WIZARD_STEPS.length - 1 ? (
+            <button
+              type="button"
+              onClick={() => goToStep(Math.min(WIZARD_STEPS.length - 1, step + 1))}
+              disabled={step === 2 && pollSource === "custom" && total !== 100}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Suivant
+              <ChevronRight />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => router.push("/resultats")}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-[#FF7B73] px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
+            >
+              <span aria-hidden="true">🗳️</span>
+              Lancer la simulation
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
