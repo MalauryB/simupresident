@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
-import { PARTY_COLORS, POLL_SOURCES, WIZARD_STEPS } from "@/lib/constants";
+import { WIZARD_STEPS } from "@/lib/constants";
 import { getSelected, getTrendColor } from "@/lib/simulation";
 import { StepIndicator } from "@/app/components/ui/StepIndicator";
 import { Slider } from "@/app/components/ui/Slider";
@@ -20,8 +20,9 @@ function PartySelectCard({
   party: PartyData;
   onToggle: () => void;
 }) {
+  const { partyColors } = useSimulation();
   const candidate = getSelected(party);
-  const colors = PARTY_COLORS[party.tag];
+  const colors = partyColors[party.tag];
 
   return (
     <button
@@ -91,9 +92,9 @@ function PartySelectCard({
 /*  Config card (step 1)                                               */
 /* ------------------------------------------------------------------ */
 function ConfigCard({ party }: { party: PartyData }) {
-  const { switchVariant, updateVariant } = useSimulation();
+  const { switchVariant, updateVariant, partyColors } = useSimulation();
   const candidate = getSelected(party);
-  const colors = PARTY_COLORS[party.tag];
+  const colors = partyColors[party.tag];
   const trendColor = getTrendColor(candidate.tendance);
 
   return (
@@ -225,9 +226,9 @@ function StartingPointRow({
   party: PartyData;
   sourceId: string;
 }) {
-  const { updateVariant } = useSimulation();
+  const { updateVariant, partyColors } = useSimulation();
   const candidate = getSelected(party);
-  const colors = PARTY_COLORS[party.tag];
+  const colors = partyColors[party.tag];
 
   const fieldKey =
     sourceId === "agrege"
@@ -276,6 +277,7 @@ function StartingPointRow({
 /*  Review table (step 3)                                              */
 /* ------------------------------------------------------------------ */
 function ReviewTable({ parties }: { parties: PartyData[] }) {
+  const { partyColors } = useSimulation();
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200">
       <table className="w-full text-left text-sm">
@@ -297,7 +299,7 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
         <tbody>
           {parties.map((p) => {
             const c = getSelected(p);
-            const colors = PARTY_COLORS[p.tag];
+            const colors = partyColors[p.tag];
             return (
               <tr
                 key={p.tag}
@@ -359,6 +361,7 @@ export default function SimulationPage() {
     parties,
     activeParties,
     pollSource,
+    pollSources,
     toggleParty,
     selectAll,
     setPollSource,
@@ -385,7 +388,7 @@ export default function SimulationPage() {
     return s + c[field];
   }, 0);
 
-  const selectedSource = POLL_SOURCES.find((s) => s.id === pollSource);
+  const selectedSource = pollSources.find((s) => s.id === pollSource);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -469,7 +472,7 @@ export default function SimulationPage() {
         <div className="space-y-8">
           {/* Source selection */}
           <div className="grid gap-4 sm:grid-cols-3">
-            {POLL_SOURCES.map((src) => (
+            {pollSources.map((src) => (
               <button
                 key={src.id}
                 type="button"

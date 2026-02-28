@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
-import { PARTY_COLORS } from "@/lib/constants";
 import { getSelected } from "@/lib/simulation";
 
 /* ------------------------------------------------------------------ */
@@ -28,7 +27,7 @@ function FloatingShape({
 /* ------------------------------------------------------------------ */
 export default function HomePage() {
   const router = useRouter();
-  const { parties } = useSimulation();
+  const { parties, partyColors } = useSimulation();
 
   return (
     <div className="relative overflow-hidden">
@@ -105,7 +104,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {parties.map((party, i) => {
               const candidate = getSelected(party);
-              const colors = PARTY_COLORS[party.tag];
+              const colors = partyColors[party.tag];
               return (
                 <div
                   key={party.tag}

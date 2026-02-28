@@ -1,14 +1,17 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import type { PartyData } from "@/types/simulation";
-import { DEFAULT_PARTIES } from "@/lib/constants";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import type { PartyData, PartyColors, PollSource } from "@/types/simulation";
+import { DEFAULT_PARTIES, PARTY_COLORS, POLL_SOURCES } from "@/lib/constants";
 import { getSelected } from "@/lib/simulation";
 
 interface SimulationContextValue {
   parties: PartyData[];
   pollSource: string;
   activeParties: PartyData[];
+  partyColors: Record<string, PartyColors>;
+  pollSources: PollSource[];
+  loading: boolean;
   toggleParty: (tag: string) => void;
   switchVariant: (tag: string, idx: number) => void;
   updateVariant: (tag: string, field: string, value: number | { left: number; center: number; right: number }) => void;
@@ -21,7 +24,28 @@ const SimulationContext = createContext<SimulationContextValue | null>(null);
 
 export function SimulationProvider({ children }: { children: ReactNode }) {
   const [parties, setParties] = useState<PartyData[]>(DEFAULT_PARTIES);
+  const [partyColors, setPartyColors] = useState<Record<string, PartyColors>>(PARTY_COLORS);
+  const [pollSources, setPollSources] = useState<PollSource[]>(POLL_SOURCES);
   const [pollSource, setPollSource] = useState("agrege");
+  const [loading, setLoading] = useState(true);
+
+  // Charger les données depuis Supabase au mount
+  useEffect(() => {
+    fetch("/api/initial-data")
+      .then((res) => {
+        if (!res.ok) throw new Error("Erreur chargement données");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.parties?.length) setParties(data.parties);
+        if (data.partyColors) setPartyColors(data.partyColors);
+        if (data.pollSources?.length) setPollSources(data.pollSources);
+      })
+      .catch(() => {
+        // En cas d'erreur, on garde les fallback (constantes)
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const activeParties = parties.filter((p) => p.active);
   const unpolledActive = activeParties.filter((p) => !getSelected(p).polled);
@@ -62,6 +86,9 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         parties,
         pollSource,
         activeParties,
+        partyColors,
+        pollSources,
+        loading,
         toggleParty,
         switchVariant,
         updateVariant,

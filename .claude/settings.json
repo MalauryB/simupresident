@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:serwist.pages.dev)",
+      "Read(//d/projets/**)",
+      "Bash(robocopy simupresident-temp simupresident /E /XD node_modules .git .next /NFL /NDL /NJH /NJS /nc /ns /np)",
+      "Bash(npm install)",
+      "Bash(npm run build)",
+      "Bash(ls -la /d/projets/simupresident/public/sw*)",
+      "Bash(git remote add origin https://github.com/MalauryB/simupresident.git)",
+      "Bash(git push -u origin main)",
+      "Bash(npm install recharts)",
+      "Bash(npx tsc --noEmit --pretty)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(git add package.json package-lock.json public/icons/icon-192x192.svg public/icons/icon-512x512.svg src/app/components/layout/Footer.tsx src/app/components/layout/Header.tsx src/app/components/layout/Navigation.tsx src/app/globals.css src/app/layout.tsx src/app/manifest.ts src/app/page.tsx mld-logique.mermaid quipresident.jsx supabase/ src/types/ src/lib/ src/app/api/ src/app/components/simulation/ src/app/components/ui/FloatingShape.tsx src/app/components/ui/Slider.tsx src/app/components/ui/StepIndicator.tsx src/app/components/ui/TrendArrow.tsx src/app/components/ui/TrendSparkline.tsx src/app/a-propos/ src/app/methodologie/ src/app/resultats/ src/app/simulation/)"
+    ]
+  }
+}

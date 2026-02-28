@@ -1,7 +1,7 @@
 "use client";
 
 import type { PartyData } from "@/types/simulation";
-import { PARTY_COLORS } from "@/lib/constants";
+import { useSimulation } from "@/lib/simulation-context";
 import { getSelected } from "@/lib/simulation";
 
 interface StartingPointRowProps {
@@ -15,7 +15,8 @@ export function StartingPointRow({
   source,
   onUpdate,
 }: StartingPointRowProps) {
-  const colors = PARTY_COLORS[partyData.tag] ?? {
+  const { partyColors } = useSimulation();
+  const colors = partyColors[partyData.tag] ?? {
     bg: "#556C96",
     fg: "#FFFFFF",
     accent: "#556C96",
