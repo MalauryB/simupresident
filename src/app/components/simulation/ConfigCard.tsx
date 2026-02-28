@@ -99,14 +99,6 @@ export function ConfigCard({
             color={colors.accent}
           />
 
-          {/* Barrage slider */}
-          <Slider
-            value={selected.barrage}
-            onChange={(v) => onUpdate("barrage", v)}
-            label="Taux de barrage"
-            color="#FF584D"
-          />
-
           {/* Tendance slider */}
           <TrendSlider
             value={selected.tendance}

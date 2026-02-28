@@ -87,7 +87,8 @@ interface SimConfig {
   kappa_abst: number;
   alpha_bn: number;
   kappa_bn: number;
-  rho_scale: number;
+  gamma_rejet_ED: number;
+  gamma_rejet_EG: number;
   lambda_cos_2: number;
 }
 
@@ -111,7 +112,8 @@ const DEFAULT_CONFIG: SimConfig = {
   kappa_abst: 0.1,
   alpha_bn: -1.8144596,
   kappa_bn: 0.1,
-  rho_scale: 8,
+  gamma_rejet_ED: 3.5541198,
+  gamma_rejet_EG: 0.6,
   lambda_cos_2: 3,
 };
 
@@ -124,7 +126,6 @@ interface CandidateInput {
   v0: number;
   tendance: number;
   attractivite: number;
-  barrage: number;
   W: number[];
 }
 
@@ -378,8 +379,15 @@ export function generateSimData(
   activeParties: PartyData[],
   source: string,
   days = 365,
+  gammaRejetED?: number,
+  gammaRejetEG?: number,
 ): SimulationData {
-  const cfg: SimConfig = { ...DEFAULT_CONFIG, T: days };
+  const cfg: SimConfig = {
+    ...DEFAULT_CONFIG,
+    T: days,
+    ...(gammaRejetED !== undefined && { gamma_rejet_ED: gammaRejetED }),
+    ...(gammaRejetEG !== undefined && { gamma_rejet_EG: gammaRejetEG }),
+  };
   const K = activeParties.length;
 
   // --- Construire les entrées candidats ---
@@ -405,7 +413,6 @@ export function generateSimData(
       v0: startRaw / 100,
       tendance: c.tendance,
       attractivite: c.attractivite,
-      barrage: c.barrage,
       W: w,
     };
   });
@@ -426,8 +433,9 @@ export function generateSimData(
   const meanPsi = rawPsi.reduce((a, b) => a + b, 0) / K;
   const psi = rawPsi.map((p) => p - meanPsi);
 
-  // Rho : pénalité barrage pour le second tour
-  const rho = candidates.map((c) => c.barrage * cfg.rho_scale);
+  // Rho : pénalité barrage pour le second tour (modèle R)
+  // rho[k] = gamma_rejet_ED * W[k, droite] + gamma_rejet_EG * W[k, gauche]
+  const rho = W.map((w) => cfg.gamma_rejet_ED * w[2] + cfg.gamma_rejet_EG * w[0]);
 
   // Matrice de similarité cosinus (pré-calculée)
   const cosMat: number[][] = [];
@@ -541,7 +549,6 @@ export function generateSimData(
     start: c.v0,
     tendance: c.tendance,
     attractivite: c.attractivite,
-    barrage: c.barrage,
     final: finalShares[k],
     pQualif: pQualif[k],
     pVictoire: pVictoire[k],

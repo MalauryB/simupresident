@@ -295,17 +295,20 @@ export default function MethodologiePage() {
           </p>
           <div className="rounded-xl bg-accent/5 p-4">
             <p className="mb-2 text-xs font-bold text-accent">
-              Le r&ocirc;le du param&egrave;tre &rho; (barrage)
+              Deux param&egrave;tres globaux de barrage
             </p>
             <ul className="ml-4 list-disc space-y-1 text-xs text-gray-600">
               <li>
-                Plus un candidat est &laquo; extr&ecirc;me &raquo;, plus il est
-                p&eacute;nalis&eacute; en tant que finaliste.
+                <strong>&gamma;_ED</strong> (barrage extr&ecirc;me droite) : p&eacute;nalise
+                les candidats selon leur composante droite (W<sub>droite</sub>).
               </li>
               <li>
-                Cette p&eacute;nalit&eacute; augmente le vote
-                &laquo; barrage &raquo; vers l&rsquo;autre finaliste, et/ou
-                augmente l&rsquo;abstention et le vote blanc.
+                <strong>&gamma;_EG</strong> (barrage extr&ecirc;me gauche) : p&eacute;nalise
+                les candidats selon leur composante gauche (W<sub>gauche</sub>).
+              </li>
+              <li>
+                La p&eacute;nalit&eacute; de chaque candidat est calcul&eacute;e automatiquement :
+                &rho;<sub>k</sub> = &gamma;_ED &times; W<sub>k,droite</sub> + &gamma;_EG &times; W<sub>k,gauche</sub>.
               </li>
               <li>
                 C&rsquo;est une fa&ccedil;on simple et calibrable de
@@ -361,15 +364,15 @@ export default function MethodologiePage() {
             </ParamCard>
 
             <ParamCard
-              title="Coefficient barrage (&rho;)"
+              title="Barrage ED / EG (&gamma;)"
               tagLabel="2nd tour"
               tagColor="#ea580c"
             >
               <p>
-                Repr&eacute;sente le niveau de rejet oppos&eacute; au candidat
-                au second tour. Plus il est &eacute;lev&eacute;, plus le
-                candidat aura du mal &agrave; convertir une qualification en
-                victoire.
+                Deux coefficients globaux qui p&eacute;nalisent les candidats
+                extr&ecirc;mes au second tour. &gamma;_ED s&rsquo;applique
+                proportionnellement &agrave; la composante droite, &gamma;_EG
+                &agrave; la composante gauche du vecteur id&eacute;ologique.
               </p>
             </ParamCard>
 

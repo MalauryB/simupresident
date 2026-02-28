@@ -173,8 +173,8 @@ export default function AProposPage() {
                 a: "Les sondages sont agr\u00e9g\u00e9s \u00e0 partir des publications des principaux instituts fran\u00e7ais (IFOP, Ipsos, Elabe, etc.).",
               },
               {
-                q: "Que signifie le coefficient barrage ?",
-                a: "Il repr\u00e9sente la r\u00e9sistance qu'un candidat rencontre au second tour due au vote strat\u00e9gique de l'\u00e9lectorat adverse.",
+                q: "Que signifient les param\u00e8tres de barrage ?",
+                a: "Deux coefficients globaux (\u03b3_ED et \u03b3_EG) p\u00e9nalisent les candidats extr\u00eames au second tour. La p\u00e9nalit\u00e9 est calcul\u00e9e automatiquement \u00e0 partir du vecteur id\u00e9ologique de chaque candidat.",
               },
               {
                 q: "Puis-je modifier tous les param\u00e8tres ?",
