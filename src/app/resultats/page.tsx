@@ -24,7 +24,7 @@ import {
 /*  Results page                                                       */
 /* ------------------------------------------------------------------ */
 export default function ResultatsPage() {
-  const { activeParties, pollSource, partyColors } = useSimulation();
+  const { activeParties, pollSource, partyColors, gammaRejetED, gammaRejetEG } = useSimulation();
 
   const [simData, setSimData] = useState<SimulationData | null>(null);
   const [computing, setComputing] = useState(true);
@@ -33,12 +33,12 @@ export default function ResultatsPage() {
     setComputing(true);
     // setTimeout pour permettre le rendu du loading state avant le calcul lourd
     const timer = setTimeout(() => {
-      const result = generateSimData(activeParties, pollSource);
+      const result = generateSimData(activeParties, pollSource, 365, gammaRejetED, gammaRejetEG);
       setSimData(result);
       setComputing(false);
     }, 50);
     return () => clearTimeout(timer);
-  }, [activeParties, pollSource]);
+  }, [activeParties, pollSource, gammaRejetED, gammaRejetEG]);
 
   /* PDF download via print */
   const handleDownloadPDF = () => {

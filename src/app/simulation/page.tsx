@@ -198,14 +198,6 @@ function ConfigCard({ party }: { party: PartyData }) {
           color={colors.accent}
         />
 
-        {/* Barrage slider */}
-        <Slider
-          label="Coefficient barrage"
-          value={candidate.barrage}
-          onChange={(v) => updateVariant(party.tag, "barrage", v)}
-          color="#ea580c"
-        />
-
         {/* Tendance slider (rich version from mockup) */}
         <TrendSlider
           value={candidate.tendance}
@@ -309,9 +301,6 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
             <th className="px-4 py-3 text-right font-semibold text-gray-600">
               Tendance
             </th>
-            <th className="px-4 py-3 text-right font-semibold text-gray-600">
-              Barrage
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -368,9 +357,6 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
                     {c.tendance.toFixed(2)}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-right font-mono font-semibold text-gray-500">
-                  {c.barrage.toFixed(2)}
-                </td>
               </tr>
             );
           })}
@@ -394,6 +380,10 @@ export default function SimulationPage() {
     selectAll,
     setPollSource,
     unpolledActive,
+    gammaRejetED,
+    gammaRejetEG,
+    setGammaRejetED,
+    setGammaRejetEG,
   } = useSimulation();
 
   const [step, setStep] = useState(0);
@@ -402,6 +392,7 @@ export default function SimulationPage() {
     "S\u00e9lectionnez les candidats \u00e0 inclure dans la simulation.",
     "Ajustez les param\u00e8tres de chaque candidat.",
     "Choisissez la source de sondages et v\u00e9rifiez les points de d\u00e9part.",
+    "Configurez l\u2019intensit\u00e9 du vote barrage au second tour.",
     "V\u00e9rifiez la configuration avant de lancer la simulation.",
   ];
 
@@ -457,15 +448,6 @@ export default function SimulationPage() {
       {/* ---- STEP 0: Party selection ---- */}
       {step === 0 && (
         <div>
-          <div className="mb-4 flex justify-end">
-            <button
-              type="button"
-              onClick={selectAll}
-              className="rounded-lg bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
-            >
-              Tout s&eacute;lectionner
-            </button>
-          </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {parties.map((party) => (
               <PartySelectCard
@@ -572,8 +554,46 @@ export default function SimulationPage() {
         </div>
       )}
 
-      {/* ---- STEP 3: Summary ---- */}
+      {/* ---- STEP 3: Barrage ---- */}
       {step === 3 && (
+        <div className="mx-auto max-w-lg space-y-6">
+          <div className="rounded-2xl border border-orange-200 bg-orange-50/50 p-6">
+            <h3 className="mb-1 text-base font-bold text-primary-dark">
+              Vote barrage (second tour)
+            </h3>
+            <p className="mb-5 text-sm text-gray-500">
+              Ces coefficients p&eacute;nalisent les candidats extr&ecirc;mes
+              lorsqu&rsquo;ils acc&egrave;dent au second tour. La p&eacute;nalit&eacute;
+              de chaque candidat est calcul&eacute;e &agrave; partir de son vecteur
+              id&eacute;ologique : &rho;<sub>k</sub> = &gamma;<sub>ED</sub> &times;
+              W<sub>droite</sub> + &gamma;<sub>EG</sub> &times; W<sub>gauche</sub>.
+            </p>
+            <div className="space-y-4">
+              <Slider
+                label="Barrage extr&ecirc;me droite (&gamma;_ED)"
+                value={gammaRejetED}
+                onChange={setGammaRejetED}
+                min={0}
+                max={10}
+                step={0.1}
+                color="#dc2626"
+              />
+              <Slider
+                label="Barrage extr&ecirc;me gauche (&gamma;_EG)"
+                value={gammaRejetEG}
+                onChange={setGammaRejetEG}
+                min={0}
+                max={10}
+                step={0.1}
+                color="#2563eb"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- STEP 4: Summary ---- */}
+      {step === 4 && (
         <div className="space-y-6">
           {/* Source info badge */}
           {selectedSource && (
@@ -617,10 +637,10 @@ export default function SimulationPage() {
           Pr&eacute;c&eacute;dent
         </button>
 
-        {step < 3 ? (
+        {step < 4 ? (
           <button
             type="button"
-            onClick={() => setStep((s) => Math.min(3, s + 1))}
+            onClick={() => setStep((s) => Math.min(4, s + 1))}
             disabled={step === 2 && pollSource === "custom" && total !== 100}
             className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
           >

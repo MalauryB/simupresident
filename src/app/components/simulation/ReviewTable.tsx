@@ -25,9 +25,6 @@ export function ReviewTable({ activeParties, source }: ReviewTableProps) {
               Attractivit&eacute;
             </th>
             <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Barrage
-            </th>
-            <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
               Tendance
             </th>
             <th className="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
@@ -105,13 +102,6 @@ export function ReviewTable({ activeParties, source }: ReviewTableProps) {
                 <td className="px-3 py-2.5 text-center">
                   <span className="font-mono text-sm text-gray-700">
                     {selected.attractivite.toFixed(2)}
-                  </span>
-                </td>
-
-                {/* Barrage */}
-                <td className="px-3 py-2.5 text-center">
-                  <span className="font-mono text-sm text-gray-700">
-                    {selected.barrage.toFixed(2)}
                   </span>
                 </td>
 

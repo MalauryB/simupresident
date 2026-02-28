@@ -20,7 +20,7 @@ export function Slider({
   step = 0.01,
 }: SliderProps) {
   const percentage = ((value - min) / (max - min)) * 100;
-  const displayValue = max > 1 ? Math.round(value) : value.toFixed(2);
+  const displayValue = max <= 1 ? value.toFixed(2) : step >= 1 ? Math.round(value) : value.toFixed(1);
 
   return (
     <div className="flex flex-col gap-1.5">

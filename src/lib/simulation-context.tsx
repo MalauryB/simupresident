@@ -12,10 +12,14 @@ interface SimulationContextValue {
   partyColors: Record<string, PartyColors>;
   pollSources: PollSource[];
   loading: boolean;
+  gammaRejetED: number;
+  gammaRejetEG: number;
   toggleParty: (tag: string) => void;
   switchVariant: (tag: string, idx: number) => void;
   updateVariant: (tag: string, field: string, value: number | { left: number; center: number; right: number }) => void;
   setPollSource: (source: string) => void;
+  setGammaRejetED: (v: number) => void;
+  setGammaRejetEG: (v: number) => void;
   selectAll: () => void;
   unpolledActive: PartyData[];
 }
@@ -28,6 +32,8 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [pollSources, setPollSources] = useState<PollSource[]>(POLL_SOURCES);
   const [pollSource, setPollSource] = useState("agrege");
   const [loading, setLoading] = useState(true);
+  const [gammaRejetED, setGammaRejetED] = useState(3.5541198);
+  const [gammaRejetEG, setGammaRejetEG] = useState(0.6);
 
   // Charger les données depuis Supabase au mount
   useEffect(() => {
@@ -104,10 +110,14 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         partyColors,
         pollSources,
         loading,
+        gammaRejetED,
+        gammaRejetEG,
         toggleParty,
         switchVariant,
         updateVariant,
         setPollSource,
+        setGammaRejetED,
+        setGammaRejetEG,
         selectAll,
         unpolledActive,
       }}

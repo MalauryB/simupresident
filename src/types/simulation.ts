@@ -8,7 +8,6 @@ export interface CandidatVariant {
   left: number;
   center: number;
   right: number;
-  barrage: number;
   startAgrege: number;
   startDebiaise: number;
   startCustom: number;
@@ -44,7 +43,6 @@ export interface SimCandidate {
   start: number;
   tendance: number;
   attractivite: number;
-  barrage: number;
 }
 
 export interface TrajectoryPoint {
