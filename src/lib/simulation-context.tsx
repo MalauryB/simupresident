@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, useEffect, type ReactNode } from "react";
 import type { PartyData, PartyColors, PollSource } from "@/types/simulation";
 import { DEFAULT_PARTIES, PARTY_COLORS, POLL_SOURCES } from "@/lib/constants";
 import { getSelected } from "@/lib/simulation";
@@ -82,8 +82,8 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const activeParties = parties.filter((p) => p.active);
-  const unpolledActive = activeParties.filter((p) => !getSelected(p).polled);
+  const activeParties = useMemo(() => parties.filter((p) => p.active), [parties]);
+  const unpolledActive = useMemo(() => activeParties.filter((p) => !getSelected(p).polled), [activeParties]);
 
   const toggleParty = useCallback((tag: string) => {
     setParties((prev) => prev.map((p) => (p.tag === tag ? { ...p, active: !p.active } : p)));

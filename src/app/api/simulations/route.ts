@@ -15,9 +15,18 @@ export async function GET() {
 
 // POST /api/simulations — Crée une simulation
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient();
-  const body = await request.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  if (typeof body !== "object" || body === null) {
+    return NextResponse.json({ error: "Body must be a JSON object" }, { status: 400 });
+  }
 
+  const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("simulation")
     .insert(body)

@@ -25,7 +25,7 @@ class PRNG {
   }
   /** Box-Muller transform → N(0,1) */
   randn(): number {
-    const u1 = this.next();
+    const u1 = Math.max(this.next(), Number.EPSILON);
     const u2 = this.next();
     return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
   }
@@ -34,9 +34,11 @@ class PRNG {
 // ===== Math Helpers =====
 
 function softmax(x: number[]): number[] {
+  if (x.length === 0) return [];
   const maxX = Math.max(...x);
   const ex = x.map((v) => Math.exp(v - maxX));
   const sum = ex.reduce((a, b) => a + b, 0);
+  if (sum <= 0) return x.map(() => 1 / x.length);
   return ex.map((v) => v / sum);
 }
 
@@ -132,7 +134,13 @@ interface CandidateInput {
 // ===== Public Helpers =====
 
 export function getSelected(p: PartyData): CandidatVariant {
-  return p.variants[p.selectedIdx];
+  return p.variants[p.selectedIdx] ?? p.variants[0];
+}
+
+export function getStartField(source: string): "startAgrege" | "startDebiaise" | "startCustom" {
+  if (source === "agrege") return "startAgrege";
+  if (source === "debiaise") return "startDebiaise";
+  return "startCustom";
 }
 
 export function getTrendColor(v: number): string {
@@ -199,6 +207,7 @@ function voteUtileTransform(
 
   const vPos = v_new.map((x) => Math.max(x, 0));
   const total = vPos.reduce((a, b) => a + b, 0);
+  if (total <= 0) return v.map(() => 1 / v.length); // uniform fallback
   return vPos.map((x) => x / total);
 }
 
@@ -226,8 +235,9 @@ function simulateOne(
 
   // eta[0] = log(v0[k] / v0[K-1]) pour k=0..K-2
   const eta0: number[] = [];
+  const baselineV0 = Math.max(v0[K - 1], 1e-8);
   for (let k = 0; k < K - 1; k++) {
-    eta0.push(Math.log(v0[k] / v0[K - 1]));
+    eta0.push(Math.log(Math.max(v0[k], 1e-8) / baselineV0));
   }
   eta.push(eta0);
   v_obs.push(softmax([...eta0, 0]));
@@ -304,9 +314,9 @@ function simulateOne(
       v_mix.push((1 - a_t) * v_base[k] + a_t * v_tilde[k]);
     }
 
-    // Normalisation
+    // Normalisation (guard division by zero)
     const total = v_mix.reduce((a, b) => a + b, 0);
-    v_obs.push(v_mix.map((x) => x / total));
+    v_obs.push(total > 0 ? v_mix.map((x) => x / total) : v_mix.map(() => 1 / K));
   }
 
   return v_obs;
@@ -364,9 +374,11 @@ function simulateSecondRound(
     }
   }
 
-  // Parts exprimées
+  // Parts exprimées (guard division by zero)
   const expr = V2_ins[0] + V2_ins[1];
-  const V2_expr: [number, number] = [V2_ins[0] / expr, V2_ins[1] / expr];
+  const V2_expr: [number, number] = expr > 0
+    ? [V2_ins[0] / expr, V2_ins[1] / expr]
+    : [0.5, 0.5];
 
   return { A, B, V2_expr, V2_ins };
 }
@@ -382,23 +394,22 @@ export function generateSimData(
   gammaRejetED?: number,
   gammaRejetEG?: number,
 ): SimulationData {
+  const safeDays = Math.max(1, days);
   const cfg: SimConfig = {
     ...DEFAULT_CONFIG,
-    T: days,
+    T: safeDays,
     ...(gammaRejetED !== undefined && { gamma_rejet_ED: gammaRejetED }),
     ...(gammaRejetEG !== undefined && { gamma_rejet_EG: gammaRejetEG }),
   };
   const K = activeParties.length;
+  if (K === 0) {
+    return { trajectory: [], probabilities: [], duels: [], secondRound: { participation: { lo: 0, median: 0, hi: 0 }, blancNul: { lo: 0, median: 0, hi: 0 } } };
+  }
 
   // --- Construire les entrées candidats ---
   const candidates: CandidateInput[] = activeParties.map((p) => {
     const c = getSelected(p);
-    const startRaw =
-      source === "agrege"
-        ? c.startAgrege
-        : source === "debiaise"
-          ? c.startDebiaise
-          : c.startCustom;
+    const startRaw = c[getStartField(source)];
     const w = [c.left, c.center, c.right];
     // Fallback si idéologie nulle
     if (w[0] + w[1] + w[2] === 0) {
