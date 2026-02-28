@@ -9,7 +9,6 @@ export interface CandidatVariant {
   center: number;
   right: number;
   startAgrege: number;
-  startDebiaise: number;
   startCustom: number;
   photoUrl: string | null;
 }

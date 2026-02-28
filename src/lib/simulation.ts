@@ -137,9 +137,8 @@ export function getSelected(p: PartyData): CandidatVariant {
   return p.variants[p.selectedIdx] ?? p.variants[0];
 }
 
-export function getStartField(source: string): "startAgrege" | "startDebiaise" | "startCustom" {
+export function getStartField(source: string): "startAgrege" | "startCustom" {
   if (source === "agrege") return "startAgrege";
-  if (source === "debiaise") return "startDebiaise";
   return "startCustom";
 }
 
