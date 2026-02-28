@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSimulation } from "@/lib/simulation-context";
 import { generateSimData, getSelected } from "@/lib/simulation";
+import { TutorialOverlay, RESULTS_TUTORIAL_STEPS } from "@/app/components/ui/TutorialOverlay";
 import type { SimulationData } from "@/types/simulation";
 import {
   LineChart,
@@ -24,21 +25,28 @@ import {
 /*  Results page                                                       */
 /* ------------------------------------------------------------------ */
 export default function ResultatsPage() {
-  const { activeParties, pollSource, partyColors, gammaRejetED, gammaRejetEG } = useSimulation();
+  const { activeParties, pollSource, partyColors, gammaRejetED, gammaRejetEG, days } = useSimulation();
 
   const [simData, setSimData] = useState<SimulationData | null>(null);
   const [computing, setComputing] = useState(true);
+  const [showTutoResults, setShowTutoResults] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("tutoResultsSeen")) {
+      setShowTutoResults(true);
+    }
+  }, []);
 
   useEffect(() => {
     setComputing(true);
     // setTimeout pour permettre le rendu du loading state avant le calcul lourd
     const timer = setTimeout(() => {
-      const result = generateSimData(activeParties, pollSource, 365, gammaRejetED, gammaRejetEG);
+      const result = generateSimData(activeParties, pollSource, days, gammaRejetED, gammaRejetEG);
       setSimData(result);
       setComputing(false);
     }, 50);
     return () => clearTimeout(timer);
-  }, [activeParties, pollSource, gammaRejetED, gammaRejetEG]);
+  }, [activeParties, pollSource, days, gammaRejetED, gammaRejetEG]);
 
   /* PDF download via print */
   const handleDownloadPDF = () => {
@@ -62,7 +70,7 @@ export default function ResultatsPage() {
         <p className="text-sm font-medium text-gray-500">
           Simulation Monte Carlo en cours&hellip;
         </p>
-        <p className="text-xs text-gray-400">200 simulations &times; 365 jours</p>
+        <p className="text-xs text-gray-400">200 simulations &times; {days} jours</p>
       </div>
     );
   }
@@ -139,13 +147,23 @@ export default function ResultatsPage() {
         </h1>
         <p className="text-gray-500">
           {simData.probabilities.length} candidats &middot; 200 simulations Monte
-          Carlo &middot; IC 80%
+          Carlo &middot; {days} jours &middot; IC 80%
         </p>
+        <button
+          type="button"
+          onClick={() => setShowTutoResults(true)}
+          className="no-print mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary/40 hover:bg-primary/10"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01" />
+          </svg>
+          Guide des résultats
+        </button>
       </div>
 
       {/* ---- Section 1: Trajectory chart ---- */}
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-bold text-primary-dark">
+        <h2 className="mb-6 text-xl font-bold text-primary-dark" data-tuto="res-trajectoires">
           Trajectoires de sondages
         </h2>
 
@@ -264,12 +282,12 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* P(qualification) */}
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" data-tuto="res-qualif">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
-              P(qualification au 2nd tour)
+              Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </h3>
             <p className="mb-4 text-xs text-gray-400">
-              Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
+              P(qualification au 2nd tour)
             </p>
             <div className="min-w-[400px]">
             <ResponsiveContainer width="100%" height={280}>
@@ -317,12 +335,12 @@ export default function ResultatsPage() {
           </div>
 
           {/* P(victoire) */}
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" data-tuto="res-victoire">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
-              P(victoire finale)
+              Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </h3>
             <p className="mb-4 text-xs text-gray-400">
-              Probabilit&eacute; de remporter l&rsquo;&eacute;lection
+              P(victoire finale)
             </p>
             <div className="min-w-[400px]">
             <ResponsiveContainer width="100%" height={280}>
@@ -383,7 +401,7 @@ export default function ResultatsPage() {
       {/* ---- Section 3: Duels les plus probables ---- */}
       {topDuels.length > 0 && (
         <section className="mb-16">
-          <h2 className="mb-6 text-xl font-bold text-primary-dark">
+          <h2 className="mb-6 text-xl font-bold text-primary-dark" data-tuto="res-duels">
             Duels les plus probables au second tour
           </h2>
 
@@ -530,6 +548,14 @@ export default function ResultatsPage() {
           </Link>
         </div>
       </section>
+
+      {showTutoResults && (
+        <TutorialOverlay
+          steps={RESULTS_TUTORIAL_STEPS}
+          storageKey="tutoResultsSeen"
+          onClose={() => setShowTutoResults(false)}
+        />
+      )}
 
       {/* ---- Legend ---- */}
       <section className="mb-8">

@@ -3,13 +3,19 @@
 -- À exécuter dans Supabase APRÈS schema.sql
 -- ============================================
 
+-- 0. Nettoyage (candidats d'abord à cause de la FK vers parti)
+DELETE FROM candidat;
+DELETE FROM parti;
+DELETE FROM source_sondage;
+
 -- 1. Partis politiques
 INSERT INTO parti (tag, nom, actif, couleur_fond, couleur_texte, couleur_accent, couleur_graphique) VALUES
   ('RN',   'Rassemblement National',  true, '#1B2A4A', '#EEEDFF', '#002395', '#002395'),
   ('LFI',  'La France Insoumise',     true, '#CC2443', '#FFFFFF', '#E63946', '#E63946'),
   ('REN',  'Renaissance',             true, '#FFD600', '#1a1a1a', '#FFB800', '#FFB800'),
   ('LR',   'Les Républicains',        true, '#0066CC', '#FFFFFF', '#004A99', '#0066CC'),
-  ('PS',   'Place Publique / PS',     true, '#FF6B9D', '#FFFFFF', '#E0476E', '#FF6B9D'),
+  ('PS',   'Parti Socialiste',        true, '#FF6B9D', '#FFFFFF', '#E0476E', '#FF6B9D'),
+  ('PP',   'Place Publique',          true, '#C850C0', '#FFFFFF', '#A03090', '#C850C0'),
   ('EELV', 'Les Écologistes',         true, '#00A86B', '#FFFFFF', '#008C57', '#00A86B'),
   ('HOR',  'Horizons',                true, '#00C2D1', '#FFFFFF', '#009DAA', '#00C2D1'),
   ('REC',  'Picardie Debout!',        true, '#8B5CF6', '#FFFFFF', '#7C3AED', '#8B5CF6');
@@ -32,7 +38,10 @@ INSERT INTO candidat (id, parti_tag, indice_variante, nom, initiales, sonde_indi
   ('lr-0',   'LR',   0, 'Bruno Retailleau',   'BR',  true,  NULL,                          0.5,  0.55, 0.05, 0.35, 0.6,  0.25,  8,  9,  8, NULL),
   ('lr-1',   'LR',   1, 'Laurent Wauquiez',   'LW',  true,  NULL,                          0.45, 0.5,  0.05, 0.4,  0.55, 0.2,   9,  9,  9, NULL),
   -- PS
-  ('ps-0',   'PS',   0, 'Raphaël Glucksmann', 'RG',  true,  NULL,                          0.5,  0.6,  0.6,  0.35, 0.05, 0.08, 10, 11, 10, NULL),
+  ('ps-0',   'PS',   0, 'François Hollande',  'FH',  false, 'Gauche sociale-démocrate',     0.4,  0.35, 0.55, 0.4,  0.05, 0.1,   7,  8,  7, NULL),
+  ('ps-1',   'PS',   1, 'Olivier Faure',      'OF',  false, 'Gauche sociale-démocrate',     0.25, 0.3,  0.6,  0.35, 0.05, 0.08,  4,  5,  4, NULL),
+  -- PP
+  ('pp-0',   'PP',   0, 'Raphaël Glucksmann', 'RG',  true,  NULL,                          0.5,  0.6,  0.6,  0.35, 0.05, 0.08, 10, 11, 10, NULL),
   -- EELV
   ('eelv-0', 'EELV', 0, 'Marine Tondelier',   'MT',  false, 'EELV / Pôle écologiste',      0.5,  0.55, 0.55, 0.4,  0.05, 0.1,   5,  6,  5, NULL),
   -- HOR

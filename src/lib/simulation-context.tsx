@@ -14,13 +14,16 @@ interface SimulationContextValue {
   loading: boolean;
   gammaRejetED: number;
   gammaRejetEG: number;
+  days: number;
   toggleParty: (tag: string) => void;
   switchVariant: (tag: string, idx: number) => void;
   updateVariant: (tag: string, field: string, value: number | { left: number; center: number; right: number }) => void;
   setPollSource: (source: string) => void;
   setGammaRejetED: (v: number) => void;
   setGammaRejetEG: (v: number) => void;
+  setDays: (v: number) => void;
   selectAll: () => void;
+  setPartiesActive: (inactiveTags: string[]) => void;
   unpolledActive: PartyData[];
 }
 
@@ -34,6 +37,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [gammaRejetED, setGammaRejetED] = useState(3.5541198);
   const [gammaRejetEG, setGammaRejetEG] = useState(0.6);
+  const [days, setDays] = useState(365);
 
   // Charger les données depuis Supabase au mount
   useEffect(() => {
@@ -44,22 +48,32 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       })
       .then((data) => {
         if (data.parties?.length) {
-          // Fusionner : garder les photoUrl des constantes si la BDD retourne null
-          const fallbackByTag: Record<string, Record<number, string | null>> = {};
-          for (const dp of DEFAULT_PARTIES) {
-            fallbackByTag[dp.tag] = {};
-            dp.variants.forEach((v, i) => { fallbackByTag[dp.tag][i] = v.photoUrl; });
+          // Construire un lookup des données BDD par tag
+          const dbByTag: Record<string, PartyData> = {};
+          for (const p of data.parties as PartyData[]) {
+            dbByTag[p.tag] = p;
           }
-          const merged = (data.parties as PartyData[]).map((p) => ({
-            ...p,
-            variants: p.variants.map((v, i) => ({
-              ...v,
-              photoUrl: v.photoUrl ?? fallbackByTag[p.tag]?.[i] ?? null,
-            })),
-          }));
+          // DEFAULT_PARTIES est la structure de référence.
+          // On met à jour les valeurs depuis la BDD par correspondance tag + nom de candidat.
+          const merged = DEFAULT_PARTIES.map((dp) => {
+            const dbParty = dbByTag[dp.tag];
+            if (!dbParty) return dp; // Parti absent de la BDD (ex: nouveau PP) → garder le défaut
+            return {
+              ...dp,
+              variants: dp.variants.map((v) => {
+                const dbV = dbParty.variants.find((dv) => dv.name === v.name);
+                if (!dbV) return v; // Candidat absent de la BDD → garder le défaut
+                return {
+                  ...v,
+                  ...dbV,
+                  photoUrl: dbV.photoUrl ?? v.photoUrl,
+                };
+              }),
+            };
+          });
           setParties(merged);
         }
-        if (data.partyColors) setPartyColors(data.partyColors);
+        if (data.partyColors) setPartyColors((prev) => ({ ...prev, ...data.partyColors }));
         if (data.pollSources?.length) setPollSources(data.pollSources);
       })
       .catch(() => {
@@ -101,6 +115,10 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     setParties((prev) => prev.map((p) => ({ ...p, active: true })));
   }, []);
 
+  const setPartiesActive = useCallback((inactiveTags: string[]) => {
+    setParties((prev) => prev.map((p) => ({ ...p, active: !inactiveTags.includes(p.tag) })));
+  }, []);
+
   return (
     <SimulationContext.Provider
       value={{
@@ -112,13 +130,16 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         loading,
         gammaRejetED,
         gammaRejetEG,
+        days,
         toggleParty,
         switchVariant,
         updateVariant,
         setPollSource,
         setGammaRejetED,
         setGammaRejetEG,
+        setDays,
         selectAll,
+        setPartiesActive,
         unpolledActive,
       }}
     >

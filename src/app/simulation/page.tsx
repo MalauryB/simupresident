@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
-import { WIZARD_STEPS } from "@/lib/constants";
+import { WIZARD_STEPS, ALLIANCE_PRESETS } from "@/lib/constants";
 import { getSelected, getTrendColor } from "@/lib/simulation";
 import { StepIndicator } from "@/app/components/ui/StepIndicator";
 import { Slider } from "@/app/components/ui/Slider";
 import { TrendSlider } from "@/app/components/ui/TrendSlider";
 import { TriSlider } from "@/app/components/ui/TriSlider";
+import { TutorialOverlay, CANDIDATE_TUTORIAL_STEPS, PARAMS_TUTORIAL_STEPS, STARTING_POINT_TUTORIAL_STEPS, BARRAGE_TUTORIAL_STEPS } from "@/app/components/ui/TutorialOverlay";
 import type { PartyData } from "@/types/simulation";
 
 /* ------------------------------------------------------------------ */
@@ -144,7 +145,7 @@ function PartySelectCard({
 /* ------------------------------------------------------------------ */
 /*  Config card (step 1)                                               */
 /* ------------------------------------------------------------------ */
-function ConfigCard({ party }: { party: PartyData }) {
+function ConfigCard({ party, isTutorial }: { party: PartyData; isTutorial?: boolean }) {
   const { updateVariant, partyColors } = useSimulation();
   const candidate = getSelected(party);
   const colors = partyColors[party.tag];
@@ -191,26 +192,32 @@ function ConfigCard({ party }: { party: PartyData }) {
 
       <div className="space-y-4 px-5 py-4">
         {/* Attractivite slider */}
-        <Slider
-          label="Attractivit&eacute;"
-          value={candidate.attractivite}
-          onChange={(v) => updateVariant(party.tag, "attractivite", v)}
-          color={colors.accent}
-        />
+        <div {...(isTutorial ? { "data-tuto": "attractivite" } : {})}>
+          <Slider
+            label="Attractivit&eacute;"
+            value={candidate.attractivite}
+            onChange={(v) => updateVariant(party.tag, "attractivite", v)}
+            color={colors.accent}
+          />
+        </div>
 
         {/* Tendance slider (rich version from mockup) */}
-        <TrendSlider
-          value={candidate.tendance}
-          onChange={(v) => updateVariant(party.tag, "tendance", v)}
-        />
+        <div {...(isTutorial ? { "data-tuto": "tendance" } : {})}>
+          <TrendSlider
+            value={candidate.tendance}
+            onChange={(v) => updateVariant(party.tag, "tendance", v)}
+          />
+        </div>
 
         {/* Ideology tri-slider */}
-        <TriSlider
-          left={candidate.left}
-          center={candidate.center}
-          right={candidate.right}
-          onChange={(v) => updateVariant(party.tag, "ideology", v)}
-        />
+        <div {...(isTutorial ? { "data-tuto": "ideologie" } : {})}>
+          <TriSlider
+            left={candidate.left}
+            center={candidate.center}
+            right={candidate.right}
+            onChange={(v) => updateVariant(party.tag, "ideology", v)}
+          />
+        </div>
       </div>
     </div>
   );
@@ -378,21 +385,44 @@ export default function SimulationPage() {
     pollSources,
     toggleParty,
     selectAll,
+    setPartiesActive,
     setPollSource,
     unpolledActive,
     gammaRejetED,
     gammaRejetEG,
     setGammaRejetED,
     setGammaRejetEG,
+    days,
+    setDays,
   } = useSimulation();
 
   const [step, setStep] = useState(0);
+  const [showTutoCandidats, setShowTutoCandidats] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [showTutoStarting, setShowTutoStarting] = useState(false);
+  const [showTutoBarrage, setShowTutoBarrage] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("tutoCandidatsSeen")) {
+      setShowTutoCandidats(true);
+    }
+    if (!localStorage.getItem("tutoParamsSeen")) {
+      setShowTutorial(true);
+    }
+    if (!localStorage.getItem("tutoStartingSeen")) {
+      setShowTutoStarting(true);
+    }
+    if (!localStorage.getItem("tutoBarrageSeen")) {
+      setShowTutoBarrage(true);
+    }
+  }, []);
 
   const stepSubtitles = [
     "S\u00e9lectionnez les candidats \u00e0 inclure dans la simulation.",
     "Ajustez les param\u00e8tres de chaque candidat.",
     "Choisissez la source de sondages et v\u00e9rifiez les points de d\u00e9part.",
     "Configurez l\u2019intensit\u00e9 du vote barrage au second tour.",
+    "Choisissez l\u2019horizon temporel de la simulation.",
     "V\u00e9rifiez la configuration avant de lancer la simulation.",
   ];
 
@@ -437,34 +467,109 @@ export default function SimulationPage() {
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
           Configurer la simulation
         </h1>
-        <p className="text-gray-500">{stepSubtitles[step]}</p>
+        <div className="flex items-center justify-center gap-2">
+          <p className="text-gray-500">{stepSubtitles[step]}</p>
+        </div>
+        {step <= 3 && (
+          <button
+            type="button"
+            onClick={() => {
+              if (step === 0) setShowTutoCandidats(true);
+              if (step === 1) setShowTutorial(true);
+              if (step === 2) setShowTutoStarting(true);
+              if (step === 3) setShowTutoBarrage(true);
+            }}
+            className="mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary/40 hover:bg-primary/10"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01" />
+            </svg>
+            Guide de cette étape
+          </button>
+        )}
+
       </div>
 
       {/* Step indicator */}
       <div className="mb-10">
-        <StepIndicator current={step} labels={WIZARD_STEPS} />
+        <StepIndicator current={step} labels={WIZARD_STEPS} onStepClick={(i) => { setStep(i); window.scrollTo({ top: 0, behavior: "smooth" }); }} />
       </div>
 
       {/* ---- STEP 0: Party selection ---- */}
-      {step === 0 && (
-        <div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {parties.map((party) => (
-              <PartySelectCard
-                key={party.tag}
-                party={party}
-                onToggle={() => toggleParty(party.tag)}
+      {step === 0 && (() => {
+        const firstVariantIdx = showTutoCandidats
+          ? parties.findIndex((p, i) => i !== 0 && p.variants.length > 1 && p.active)
+          : -1;
+        // Detect which preset matches current active/inactive state
+        const currentPresetId = ALLIANCE_PRESETS.find((preset) => {
+          return parties.every((p) =>
+            preset.inactive.includes(p.tag) ? !p.active : p.active
+          );
+        })?.id ?? null;
+        return (
+          <div>
+            {/* Alliance presets */}
+            <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-4">
+              <h3 className="mb-3 text-sm font-bold text-primary-dark">
+                Sc&eacute;narios d&rsquo;alliance
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {ALLIANCE_PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => setPartiesActive(preset.inactive)}
+                    title={preset.desc}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      currentPresetId === preset.id
+                        ? "bg-accent text-white"
+                        : "border border-gray-200 bg-white text-gray-600 hover:border-accent/50 hover:text-accent"
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {parties.map((party, i) => {
+                const tutoAttr = showTutoCandidats && i === 0
+                  ? "candidat-carte"
+                  : showTutoCandidats && i === firstVariantIdx
+                    ? "candidat-variante"
+                    : undefined;
+                return (
+                  <div key={party.tag} {...(tutoAttr ? { "data-tuto": tutoAttr } : {})}>
+                    <PartySelectCard
+                      party={party}
+                      onToggle={() => toggleParty(party.tag)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {showTutoCandidats && (
+              <TutorialOverlay
+                steps={CANDIDATE_TUTORIAL_STEPS}
+                storageKey="tutoCandidatsSeen"
+                onClose={() => setShowTutoCandidats(false)}
               />
-            ))}
+            )}
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ---- STEP 1: Parameter config ---- */}
       {step === 1 && (
         <div className="space-y-6">
-          {activeParties.map((party) => (
-            <ConfigCard key={party.tag} party={party} />
+          {activeParties.map((party, i) => (
+            <ConfigCard
+              key={party.tag}
+              party={party}
+              isTutorial={showTutorial && i === 0}
+            />
           ))}
           {activeParties.length === 0 && (
             <div className="rounded-2xl border-2 border-dashed border-gray-200 py-12 text-center">
@@ -474,6 +579,13 @@ export default function SimulationPage() {
               </p>
             </div>
           )}
+          {showTutorial && step === 1 && (
+            <TutorialOverlay
+              steps={PARAMS_TUTORIAL_STEPS}
+              storageKey="tutoParamsSeen"
+              onClose={() => setShowTutorial(false)}
+            />
+          )}
         </div>
       )}
 
@@ -481,7 +593,7 @@ export default function SimulationPage() {
       {step === 2 && (
         <div className="space-y-8">
           {/* Source selection */}
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-3" {...(showTutoStarting ? { "data-tuto": "source-sondage" } : {})}>
             {pollSources.map((src) => (
               <button
                 key={src.id}
@@ -525,7 +637,10 @@ export default function SimulationPage() {
 
           {/* Starting points list */}
           <div>
-            <h3 className="mb-3 text-sm font-bold text-primary-dark">
+            <h3
+              className="mb-3 text-sm font-bold text-primary-dark"
+              {...(showTutoStarting ? { "data-tuto": "points-depart" } : {})}
+            >
               Points de d&eacute;part
             </h3>
             <div className="space-y-2">
@@ -551,6 +666,14 @@ export default function SimulationPage() {
               </span>
             </div>
           </div>
+
+          {showTutoStarting && (
+            <TutorialOverlay
+              steps={STARTING_POINT_TUTORIAL_STEPS}
+              storageKey="tutoStartingSeen"
+              onClose={() => setShowTutoStarting(false)}
+            />
+          )}
         </div>
       )}
 
@@ -569,31 +692,100 @@ export default function SimulationPage() {
               W<sub>droite</sub> + &gamma;<sub>EG</sub> &times; W<sub>gauche</sub>.
             </p>
             <div className="space-y-4">
-              <Slider
-                label="Barrage extr&ecirc;me droite (&gamma;_ED)"
-                value={gammaRejetED}
-                onChange={setGammaRejetED}
-                min={0}
-                max={10}
-                step={0.1}
-                color="#dc2626"
-              />
-              <Slider
-                label="Barrage extr&ecirc;me gauche (&gamma;_EG)"
-                value={gammaRejetEG}
-                onChange={setGammaRejetEG}
-                min={0}
-                max={10}
-                step={0.1}
-                color="#2563eb"
-              />
+              <div {...(showTutoBarrage ? { "data-tuto": "barrage-ed" } : {})}>
+                <Slider
+                  label="Barrage extr&ecirc;me droite (&gamma;_ED)"
+                  value={gammaRejetED}
+                  onChange={setGammaRejetED}
+                  min={0}
+                  max={10}
+                  step={0.1}
+                  color="#2563eb"
+                />
+              </div>
+              <div {...(showTutoBarrage ? { "data-tuto": "barrage-eg" } : {})}>
+                <Slider
+                  label="Barrage extr&ecirc;me gauche (&gamma;_EG)"
+                  value={gammaRejetEG}
+                  onChange={setGammaRejetEG}
+                  min={0}
+                  max={10}
+                  step={0.1}
+                  color="#dc2626"
+                />
+              </div>
             </div>
           </div>
+
+          {showTutoBarrage && (
+            <TutorialOverlay
+              steps={BARRAGE_TUTORIAL_STEPS}
+              storageKey="tutoBarrageSeen"
+              onClose={() => setShowTutoBarrage(false)}
+            />
+          )}
         </div>
       )}
 
-      {/* ---- STEP 4: Summary ---- */}
-      {step === 4 && (
+      {/* ---- STEP 4: Horizon ---- */}
+      {step === 4 && (() => {
+        const ELECTION_DATE = new Date(2027, 3, 10); // 10 avril 2027
+        const daysUntilElection = Math.max(7, Math.min(365, Math.round((ELECTION_DATE.getTime() - Date.now()) / 86_400_000)));
+        return (
+          <div className="mx-auto max-w-lg space-y-6">
+            <div className="rounded-2xl border border-orange-200 bg-orange-50/50 p-6">
+              <h3 className="mb-1 text-base font-bold text-primary-dark">
+                Horizon de simulation
+              </h3>
+              <p className="mb-5 text-sm text-gray-500">
+                Nombre de jours avant l&rsquo;&eacute;lection sur lesquels la
+                simulation est projet&eacute;e. Un horizon court (30&ndash;90&nbsp;j)
+                donne des r&eacute;sultats plus stables&nbsp;; un horizon long
+                (365&nbsp;j) capture davantage d&rsquo;incertitude.
+              </p>
+              <Slider
+                label="Jours avant l&rsquo;&eacute;lection"
+                value={days}
+                onChange={(v) => setDays(Math.round(v))}
+                min={7}
+                max={365}
+                step={1}
+                color="#ea580c"
+              />
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDays(daysUntilElection)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    days === daysUntilElection
+                      ? "bg-orange-600 text-white"
+                      : "border border-orange-300 bg-orange-50 text-orange-600 hover:bg-orange-100"
+                  }`}
+                >
+                  Aujourd&rsquo;hui ({daysUntilElection}j)
+                </button>
+                {[30, 90, 180, 365].map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => setDays(d)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      days === d
+                        ? "bg-orange-600 text-white"
+                        : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:text-orange-600"
+                    }`}
+                  >
+                    {d} jours
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ---- STEP 5: Summary ---- */}
+      {step === 5 && (
         <div className="space-y-6">
           {/* Source info badge */}
           {selectedSource && (
@@ -617,7 +809,7 @@ export default function SimulationPage() {
       <div className="mt-10 flex items-center justify-between">
         <button
           type="button"
-          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          onClick={() => { setStep((s) => Math.max(0, s - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
           disabled={step === 0}
           className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
@@ -637,10 +829,10 @@ export default function SimulationPage() {
           Pr&eacute;c&eacute;dent
         </button>
 
-        {step < 4 ? (
+        {step < 5 ? (
           <button
             type="button"
-            onClick={() => setStep((s) => Math.min(4, s + 1))}
+            onClick={() => { setStep((s) => Math.min(5, s + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
             disabled={step === 2 && pollSource === "custom" && total !== 100}
             className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
           >
