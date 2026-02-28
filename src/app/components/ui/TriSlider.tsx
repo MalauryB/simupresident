@@ -68,6 +68,7 @@ export function TriSlider({ left, center, right, onChange }: TriSliderProps) {
               max={1}
               step={0.01}
               value={vals[axis.key]}
+              aria-label={`Idéologie ${axis.label}`}
               onChange={(e) => handleChange(axis.key, parseFloat(e.target.value))}
               className="mt-1 w-full cursor-pointer"
               style={{ accentColor: axis.color }}

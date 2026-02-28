@@ -30,7 +30,7 @@ export function Navigation() {
           <li key={item.href}>
             <Link
               href={item.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`rounded text-sm font-medium transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                 pathname === item.href ? "text-primary" : "text-gray-600"
               }`}
             >
@@ -43,7 +43,7 @@ export function Navigation() {
       {/* Mobile hamburger button */}
       <button
         type="button"
-        className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 md:hidden"
+        className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:hidden"
         onClick={toggleMenu}
         aria-expanded={isOpen}
         aria-controls="mobile-menu"

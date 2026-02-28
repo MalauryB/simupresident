@@ -47,9 +47,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="fr" dir="ltr">
       <head />
       <body className="flex min-h-screen flex-col bg-secondary text-primary-dark antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white focus:outline-none"
+        >
+          Aller au contenu principal
+        </a>
         <SimulationProvider>
           <Header />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
           <Footer />
         </SimulationProvider>
       </body>
