@@ -74,7 +74,7 @@ export interface QuantileSummary {
 
 export interface SecondRoundSummary {
   participation: QuantileSummary;
-  blancNul: QuantileSummary;
+  nonExpr: QuantileSummary;
 }
 
 export interface SimulationData {

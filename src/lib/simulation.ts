@@ -87,12 +87,9 @@ interface SimConfig {
   r_max: number;
   // Drift
   lambda_drift: number;
-  // Second tour
+  // Second tour (3 issues : A, B, non-exprimés)
   beta_2: number;
-  alpha_abst: number;
-  kappa_abst: number;
-  alpha_bn: number;
-  kappa_bn: number;
+  alpha_nonexpr: number;
   gamma_rejet_ED: number;
   gamma_rejet_EG: number;
   lambda_cos_2: number;
@@ -101,27 +98,24 @@ interface SimConfig {
 const DEFAULT_CONFIG: SimConfig = {
   T: 365,
   S: 200,
-  sigma_f: [0.01, 0.005, 0.01],
-  sigma_eps: 0.01,
+  sigma_f: [1.664767e-05, 1.664767e-05, 1.664767e-05],
+  sigma_eps: 1.766046e-02,
   lambda_cos: 6,
-  beta_viab: 10,
+  beta_viab: 5,
   eps_viab: 1e-4,
-  T0_offset: 10,
-  s_tau: 5,
-  psi_scale: 16,
+  T0_offset: 7,
+  s_tau: 7,
+  psi_scale: 4,
   drift_scale: 0.001,
   q0: 0.15,
-  sig_q: 0.10,
-  r_min: 0.70,
+  sig_q: 0.20,
+  r_min: 0.60,
   r_max: 0.95,
   lambda_drift: 6,
   beta_2: 7,
-  alpha_abst: -1.8144596,
-  kappa_abst: 0.1,
-  alpha_bn: -1.8144596,
-  kappa_bn: 0.1,
-  gamma_rejet_ED: 3.5541198,
-  gamma_rejet_EG: 0.6,
+  alpha_nonexpr: -2.259496,
+  gamma_rejet_ED: 4.909881,
+  gamma_rejet_EG: 2.240084,
   lambda_cos_2: 3,
 };
 
@@ -336,11 +330,10 @@ function simulateOne(
     // Drift vectorisé (centré + compensation via matrice de similarité)
     const u_drifted = applyDriftVec(u, cosMat, drift, cfg);
 
-    // Update logits relatifs (exclure baseline K)
-    const u_rel = u_drifted.slice(0, K - 1);
+    // Update logits relatifs (relative innovation: subtract baseline shock)
     const eta_t: number[] = [];
     for (let k = 0; k < K - 1; k++) {
-      eta_t.push(eta[t - 1][k] + u_rel[k]);
+      eta_t.push(eta[t - 1][k] + (u_drifted[k] - u_drifted[K - 1]));
     }
     eta.push(eta_t);
 
@@ -375,7 +368,7 @@ interface SecondRoundResult {
   A: number;
   B: number;
   V2_expr: [number, number];
-  V2_ins: [number, number, number, number];
+  V2_ins: [number, number, number]; // [A, B, nonexpr]
 }
 
 function simulateSecondRound(
@@ -393,8 +386,8 @@ function simulateSecondRound(
   const A = indices[0].i;
   const B = indices[1].i;
 
-  // Matrice de transition M (K × 4) : [vote A, vote B, abstention, blanc/nul]
-  const V2_ins: [number, number, number, number] = [0, 0, 0, 0];
+  // Matrice de transition M (K × 3) : [vote A, vote B, non-exprimés]
+  const V2_ins: [number, number, number] = [0, 0, 0];
 
   for (let s = 0; s < K; s++) {
     const simA = Math.pow(
@@ -405,17 +398,15 @@ function simulateSecondRound(
       Math.max(0, cosSim(W[s], W[B])),
       cfg.lambda_cos_2,
     );
-    const dist = 1 - Math.max(simA, simB);
 
     const lA = cfg.beta_2 * simA - rho[A];
     const lB = cfg.beta_2 * simB - rho[B];
-    const lAbst = cfg.alpha_abst + cfg.kappa_abst * dist;
-    const lBN = cfg.alpha_bn + cfg.kappa_bn * dist;
+    const lNonExpr = cfg.alpha_nonexpr;
 
-    const probs = softmax([lA, lB, lAbst, lBN]);
+    const probs = softmax([lA, lB, lNonExpr]);
 
     // Pondérer par la part au 1er tour
-    for (let c = 0; c < 4; c++) {
+    for (let c = 0; c < 3; c++) {
       V2_ins[c] += v1[s] * probs[c];
     }
   }
@@ -449,7 +440,7 @@ export function generateSimData(
   };
   const K = activeParties.length;
   if (K === 0) {
-    return { trajectory: [], probabilities: [], duels: [], secondRound: { participation: { lo: 0, median: 0, hi: 0 }, blancNul: { lo: 0, median: 0, hi: 0 } } };
+    return { trajectory: [], probabilities: [], duels: [], secondRound: { participation: { lo: 0, median: 0, hi: 0 }, nonExpr: { lo: 0, median: 0, hi: 0 } } };
   }
 
   // --- Construire les entrées candidats ---
@@ -660,11 +651,12 @@ export function generateSimData(
   let secondRound: SecondRoundSummary;
 
   if (K >= 2 && V2_ins_arr.length > 0) {
+    // participation = 1 - nonexpr (3-outcome model: A, B, nonexpr)
     const turnout = V2_ins_arr
-      .map((v) => 1 - v[2])
+      .map((v) => v[0] + v[1])
       .sort((a, b) => a - b);
-    const blancNul = V2_ins_arr
-      .map((v) => v[3])
+    const nonExpr = V2_ins_arr
+      .map((v) => v[2])
       .sort((a, b) => a - b);
 
     secondRound = {
@@ -673,16 +665,16 @@ export function generateSimData(
         median: quantile(turnout, 0.5),
         hi: quantile(turnout, 0.875),
       },
-      blancNul: {
-        lo: quantile(blancNul, 0.125),
-        median: quantile(blancNul, 0.5),
-        hi: quantile(blancNul, 0.875),
+      nonExpr: {
+        lo: quantile(nonExpr, 0.125),
+        median: quantile(nonExpr, 0.5),
+        hi: quantile(nonExpr, 0.875),
       },
     };
   } else {
     secondRound = {
       participation: { lo: 0, median: 0, hi: 0 },
-      blancNul: { lo: 0, median: 0, hi: 0 },
+      nonExpr: { lo: 0, median: 0, hi: 0 },
     };
   }
 
