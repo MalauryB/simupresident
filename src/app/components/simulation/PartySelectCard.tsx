@@ -48,15 +48,27 @@ export function PartySelectCard({
         onClick={onToggle}
         className="flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50"
       >
-        {/* Avatar circle with gradient */}
-        <div
-          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
-          style={{
-            background: `linear-gradient(135deg, ${colors.bg}, ${colors.accent})`,
-            color: colors.fg,
-          }}
-        >
-          {selected.initials}
+        {/* Avatar circle: photo or initials fallback */}
+        <div className="relative h-11 w-11 flex-shrink-0">
+          <div
+            className="flex h-11 w-11 items-center justify-center rounded-full text-sm font-bold"
+            style={{
+              background: `linear-gradient(135deg, ${colors.bg}, ${colors.accent})`,
+              color: colors.fg,
+            }}
+          >
+            {selected.initials}
+          </div>
+          {selected.photoUrl && (
+            <img
+              src={selected.photoUrl}
+              alt={selected.name}
+              className="absolute inset-0 z-10 h-11 w-11 rounded-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          )}
         </div>
 
         {/* Candidate info */}

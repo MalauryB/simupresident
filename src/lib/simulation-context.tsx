@@ -37,7 +37,22 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         return res.json();
       })
       .then((data) => {
-        if (data.parties?.length) setParties(data.parties);
+        if (data.parties?.length) {
+          // Fusionner : garder les photoUrl des constantes si la BDD retourne null
+          const fallbackByTag: Record<string, Record<number, string | null>> = {};
+          for (const dp of DEFAULT_PARTIES) {
+            fallbackByTag[dp.tag] = {};
+            dp.variants.forEach((v, i) => { fallbackByTag[dp.tag][i] = v.photoUrl; });
+          }
+          const merged = (data.parties as PartyData[]).map((p) => ({
+            ...p,
+            variants: p.variants.map((v, i) => ({
+              ...v,
+              photoUrl: v.photoUrl ?? fallbackByTag[p.tag]?.[i] ?? null,
+            })),
+          }));
+          setParties(merged);
+        }
         if (data.partyColors) setPartyColors(data.partyColors);
         if (data.pollSources?.length) setPollSources(data.pollSources);
       })

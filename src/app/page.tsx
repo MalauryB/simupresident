@@ -120,15 +120,25 @@ export default function HomePage() {
                   />
 
                   <div className="flex flex-col items-center px-4 py-5">
-                    {/* Avatar circle with initials */}
-                    <div
-                      className="mb-3 flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold shadow-md transition-transform duration-300 group-hover:scale-110"
-                      style={{
-                        backgroundColor: colors.bg,
-                        color: colors.fg,
-                      }}
-                    >
-                      {candidate.initials}
+                    {/* Avatar circle with photo or initials fallback */}
+                    <div className="relative mb-3 h-14 w-14 flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+                      <div
+                        className="flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold shadow-md"
+                        style={{
+                          backgroundColor: colors.bg,
+                          color: colors.fg,
+                        }}
+                      >
+                        {candidate.initials}
+                      </div>
+                      {candidate.photoUrl && (
+                        <img
+                          src={candidate.photoUrl}
+                          alt={candidate.name}
+                          className="absolute inset-0 h-14 w-14 rounded-full object-cover shadow-md"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        />
+                      )}
                     </div>
 
                     {/* Candidate name */}
