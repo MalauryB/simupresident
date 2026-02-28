@@ -52,7 +52,8 @@ function cosSim(a: number[], b: number[]): number {
     nb += b[i] * b[i];
   }
   const den = Math.sqrt(na) * Math.sqrt(nb);
-  return den === 0 ? 0 : dot / den;
+  if (den < 1e-12) return 0;
+  return Math.max(-1, Math.min(1, dot / den));
 }
 
 function quantile(sorted: number[], p: number): number {

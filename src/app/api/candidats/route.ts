@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await query;
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 500 });
   return NextResponse.json(data);
 }
 
@@ -33,6 +33,6 @@ export async function POST(request: Request) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 400 });
   return NextResponse.json(data, { status: 201 });
 }

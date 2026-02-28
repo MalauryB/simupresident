@@ -33,6 +33,7 @@ export default function ResultatsPage() {
 
   const [simData, setSimData] = useState<SimulationData | null>(null);
   const [computing, setComputing] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showTutoResults, setShowTutoResults] = useState(false);
 
   useEffect(() => {
@@ -45,9 +46,14 @@ export default function ResultatsPage() {
     setComputing(true);
     // setTimeout pour permettre le rendu du loading state avant le calcul lourd
     const timer = setTimeout(() => {
-      const result = generateSimData(activeParties, pollSource, days, gammaRejetED, gammaRejetEG);
-      setSimData(result);
-      setComputing(false);
+      try {
+        const result = generateSimData(activeParties, pollSource, days, gammaRejetED, gammaRejetEG);
+        setSimData(result);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Erreur inattendue");
+      } finally {
+        setComputing(false);
+      }
     }, 50);
     return () => clearTimeout(timer);
   }, [activeParties, pollSource, days, gammaRejetED, gammaRejetEG]);
@@ -72,6 +78,17 @@ export default function ResultatsPage() {
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
         <p className="text-sm font-medium text-gray-500">
           Aucun candidat s&eacute;lectionn&eacute;.
+        </p>
+        <BackLink href="/simulation" label="Retour &agrave; la simulation" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <p className="text-sm font-medium text-red-600">
+          Erreur lors de la simulation : {error}
         </p>
         <BackLink href="/simulation" label="Retour &agrave; la simulation" />
       </div>

@@ -16,7 +16,7 @@ export async function GET(_request: Request, { params }: Params) {
     .eq("simulation_id", id)
     .order("jour");
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 500 });
   return NextResponse.json(data);
 }
 
@@ -31,6 +31,9 @@ export async function POST(request: Request, { params }: Params) {
   }
 
   const items = Array.isArray(body) ? body : [body];
+  if (items.length > 100) {
+    return NextResponse.json({ error: "Batch size exceeds limit (100)" }, { status: 400 });
+  }
   const withSimId = items.map((item: any) => ({ ...item, simulation_id: id }));
 
   const supabase = createServerSupabaseClient();
@@ -39,6 +42,6 @@ export async function POST(request: Request, { params }: Params) {
     .insert(withSimId)
     .select();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error) return NextResponse.json({ error: "Database error" }, { status: 400 });
   return NextResponse.json(data, { status: 201 });
 }
