@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 interface SliderProps {
   value: number;
   onChange: (v: number) => void;
@@ -19,8 +21,10 @@ export function Slider({
   max = 1,
   step = 0.01,
 }: SliderProps) {
-  const percentage = ((value - min) / (max - min)) * 100;
-  const displayValue = max <= 1 ? value.toFixed(2) : step >= 1 ? Math.round(value) : value.toFixed(1);
+  const id = useId().replace(/:/g, "");
+  const v = value ?? min;
+  const percentage = ((v - min) / (max - min)) * 100;
+  const displayValue = max <= 1 ? v.toFixed(2) : step >= 1 ? Math.round(v) : v.toFixed(1);
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -44,8 +48,9 @@ export function Slider({
           min={min}
           max={max}
           step={step}
-          value={value}
+          value={v}
           onChange={(e) => onChange(parseFloat(e.target.value))}
+          data-slider={id}
           className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent
             [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:appearance-none
             [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:bg-white
@@ -55,19 +60,14 @@ export function Slider({
             [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:bg-white
             [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:transition-shadow
             [&::-webkit-slider-thumb]:hover:shadow-md"
-          style={
-            {
-              "--thumb-border-color": color,
-            } as React.CSSProperties
-          }
         />
       </div>
 
       <style>{`
-        input[type="range"]::-webkit-slider-thumb {
+        input[data-slider="${id}"]::-webkit-slider-thumb {
           border-color: ${color};
         }
-        input[type="range"]::-moz-range-thumb {
+        input[data-slider="${id}"]::-moz-range-thumb {
           border-color: ${color};
         }
       `}</style>

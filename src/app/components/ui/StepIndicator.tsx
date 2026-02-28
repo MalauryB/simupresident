@@ -1,9 +1,10 @@
 interface StepIndicatorProps {
   current: number;
   labels: string[];
+  onStepClick?: (step: number) => void;
 }
 
-export function StepIndicator({ current, labels }: StepIndicatorProps) {
+export function StepIndicator({ current, labels, onStepClick }: StepIndicatorProps) {
   return (
     <div className="flex items-center justify-center gap-0">
       {labels.map((label, i) => {
@@ -22,14 +23,18 @@ export function StepIndicator({ current, labels }: StepIndicatorProps) {
             )}
 
             {/* Step circle + label */}
-            <div className="flex flex-col items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => { onStepClick?.(i); }}
+              className="flex flex-col items-center gap-1.5 cursor-pointer"
+            >
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all duration-300 ${
                   isCompleted
-                    ? "bg-accent text-white"
+                    ? "bg-accent text-white hover:shadow-md"
                     : isActive
                       ? "bg-accent text-white shadow-lg shadow-accent/30"
-                      : "border-2 border-gray-200 bg-white text-gray-400"
+                      : "border-2 border-gray-200 bg-white text-gray-400 hover:border-accent/50 hover:text-accent/70"
                 }`}
               >
                 {isCompleted ? (
@@ -61,7 +66,7 @@ export function StepIndicator({ current, labels }: StepIndicatorProps) {
               >
                 {label}
               </span>
-            </div>
+            </button>
           </div>
         );
       })}

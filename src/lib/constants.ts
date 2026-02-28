@@ -8,6 +8,7 @@ export const PARTY_COLORS: Record<string, PartyColors> = {
   REN: { bg: "#FFD600", fg: "#1a1a1a", accent: "#FFB800", chart: "#FFB800" },
   LR: { bg: "#0066CC", fg: "#FFFFFF", accent: "#004A99", chart: "#0066CC" },
   PS: { bg: "#FF6B9D", fg: "#FFFFFF", accent: "#E0476E", chart: "#FF6B9D" },
+  PP: { bg: "#C850C0", fg: "#FFFFFF", accent: "#A03090", chart: "#C850C0" },
   EELV: { bg: "#00A86B", fg: "#FFFFFF", accent: "#008C57", chart: "#00A86B" },
   HOR: { bg: "#00C2D1", fg: "#FFFFFF", accent: "#009DAA", chart: "#00C2D1" },
   REC: { bg: "#8B5CF6", fg: "#FFFFFF", accent: "#7C3AED", chart: "#8B5CF6" },
@@ -51,11 +52,16 @@ export const DEFAULT_PARTIES: PartyData[] = [
     ],
   },
   {
-    tag: "PS", party: "Place Publique / PS", active: true, selectedIdx: 0,
+    tag: "PS", party: "Parti Socialiste", active: true, selectedIdx: 0,
     variants: [
-      { name: "Raphaël Glucksmann", initials: "RG", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.6, left: 0.6, center: 0.35, right: 0.05, startAgrege: 10, startDebiaise: 11, startCustom: 10, photoUrl: `${PHOTO_BASE}raphael-glucksmann.jpg` },
       { name: "François Hollande", initials: "FH", polled: false, pollGroup: "Gauche sociale-démocrate", attractivite: 0.4, tendance: 0.35, left: 0.55, center: 0.4, right: 0.05, startAgrege: 7, startDebiaise: 8, startCustom: 7, photoUrl: `${PHOTO_BASE}francois-hollande.jpg` },
       { name: "Olivier Faure", initials: "OF", polled: false, pollGroup: "Gauche sociale-démocrate", attractivite: 0.25, tendance: 0.3, left: 0.6, center: 0.35, right: 0.05, startAgrege: 4, startDebiaise: 5, startCustom: 4, photoUrl: `${PHOTO_BASE}olivier-faure.jpg` },
+    ],
+  },
+  {
+    tag: "PP", party: "Place Publique", active: true, selectedIdx: 0,
+    variants: [
+      { name: "Raphaël Glucksmann", initials: "RG", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.6, left: 0.6, center: 0.35, right: 0.05, startAgrege: 10, startDebiaise: 11, startCustom: 10, photoUrl: `${PHOTO_BASE}raphael-glucksmann.jpg` },
     ],
   },
   {
@@ -88,4 +94,12 @@ export const POLL_SOURCES: PollSource[] = [
   { id: "custom", label: "Personnalisable", desc: "Définissez librement les points de départ de chaque candidat.", icon: "✏️" },
 ];
 
-export const WIZARD_STEPS = ["Candidats", "Paramètres", "Point de départ", "Barrage", "Résumé"];
+export const WIZARD_STEPS = ["Candidats", "Paramètres", "Point de départ", "Barrage", "Horizon", "Résumé"];
+
+export const ALLIANCE_PRESETS = [
+  { id: "all", label: "Tous séparés", desc: "Chaque parti présente son candidat", inactive: [] as string[] },
+  { id: "ps-pp", label: "Alliance PS‑PP", desc: "PP se retire au profit du PS", inactive: ["PP"] },
+  { id: "ps-eelv", label: "Alliance PS‑EELV", desc: "EELV se retire au profit du PS", inactive: ["EELV"] },
+  { id: "nfp", label: "Gauche unie (NFP)", desc: "Un seul candidat de gauche (LFI)", inactive: ["PS", "PP", "EELV", "REC"] },
+  { id: "droite-unie", label: "Droite unie", desc: "Un seul candidat à droite (HOR)", inactive: ["LR", "REN"] },
+];
