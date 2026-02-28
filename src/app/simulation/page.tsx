@@ -8,6 +8,8 @@ import { WIZARD_STEPS } from "@/lib/constants";
 import { getSelected, getTrendColor } from "@/lib/simulation";
 import { StepIndicator } from "@/app/components/ui/StepIndicator";
 import { Slider } from "@/app/components/ui/Slider";
+import { TrendSlider } from "@/app/components/ui/TrendSlider";
+import { TriSlider } from "@/app/components/ui/TriSlider";
 import type { PartyData } from "@/types/simulation";
 
 /* ------------------------------------------------------------------ */
@@ -20,9 +22,21 @@ function PartySelectCard({
   party: PartyData;
   onToggle: () => void;
 }) {
-  const { partyColors } = useSimulation();
+  const { partyColors, switchVariant } = useSimulation();
   const candidate = getSelected(party);
   const colors = partyColors[party.tag];
+  const hasVariants = party.variants.length > 1;
+
+  const goPrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const prev = (party.selectedIdx - 1 + party.variants.length) % party.variants.length;
+    switchVariant(party.tag, prev);
+  };
+  const goNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const next = (party.selectedIdx + 1) % party.variants.length;
+    switchVariant(party.tag, next);
+  };
 
   return (
     <button
@@ -43,12 +57,52 @@ function PartySelectCard({
       />
 
       <div className="flex flex-col items-center px-3 py-4">
-        {/* Avatar */}
-        <div
-          className="mb-2 flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold shadow-sm"
-          style={{ backgroundColor: colors.bg, color: colors.fg }}
-        >
-          {candidate.initials}
+        {/* Avatar with variant arrows */}
+        <div className="mb-2 flex items-center gap-1">
+          {hasVariants && (
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={goPrev}
+              onKeyDown={(e) => { if (e.key === "Enter") goPrev(e as unknown as React.MouseEvent); }}
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+          )}
+
+          <div className="relative h-12 w-12 flex-shrink-0">
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold shadow-sm"
+              style={{ backgroundColor: colors.bg, color: colors.fg }}
+            >
+              {candidate.initials}
+            </div>
+            {candidate.photoUrl && (
+              <img
+                src={candidate.photoUrl}
+                alt={candidate.name}
+                className="absolute inset-0 h-12 w-12 rounded-full object-cover shadow-sm"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+              />
+            )}
+          </div>
+
+          {hasVariants && (
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={goNext}
+              onKeyDown={(e) => { if (e.key === "Enter") goNext(e as unknown as React.MouseEvent); }}
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          )}
         </div>
 
         <h3 className="mb-0.5 text-center text-sm font-semibold text-primary-dark">
@@ -64,6 +118,21 @@ function PartySelectCard({
           {party.tag}
         </span>
         <p className="text-center text-[11px] text-gray-400">{party.party}</p>
+
+        {/* Variant dots indicator */}
+        {hasVariants && (
+          <div className="mt-1 flex gap-1">
+            {party.variants.map((_, idx) => (
+              <div
+                key={idx}
+                className="h-1.5 w-1.5 rounded-full transition-colors"
+                style={{
+                  backgroundColor: idx === party.selectedIdx ? colors.accent : "#d1d5db",
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Checkmark overlay */}
@@ -92,10 +161,9 @@ function PartySelectCard({
 /*  Config card (step 1)                                               */
 /* ------------------------------------------------------------------ */
 function ConfigCard({ party }: { party: PartyData }) {
-  const { switchVariant, updateVariant, partyColors } = useSimulation();
+  const { updateVariant, partyColors } = useSimulation();
   const candidate = getSelected(party);
   const colors = partyColors[party.tag];
-  const trendColor = getTrendColor(candidate.tendance);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -104,11 +172,21 @@ function ConfigCard({ party }: { party: PartyData }) {
         className="flex items-center gap-3 px-5 py-4"
         style={{ borderBottom: `3px solid ${colors.accent}` }}
       >
-        <div
-          className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold"
-          style={{ backgroundColor: colors.bg, color: colors.fg }}
-        >
-          {candidate.initials}
+        <div className="relative h-10 w-10 flex-shrink-0">
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold"
+            style={{ backgroundColor: colors.bg, color: colors.fg }}
+          >
+            {candidate.initials}
+          </div>
+          {candidate.photoUrl && (
+            <img
+              src={candidate.photoUrl}
+              alt={candidate.name}
+              className="absolute inset-0 h-10 w-10 rounded-full object-cover"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          )}
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-bold text-primary-dark">
@@ -128,45 +206,12 @@ function ConfigCard({ party }: { party: PartyData }) {
       </div>
 
       <div className="space-y-4 px-5 py-4">
-        {/* Variant selector (if more than one) */}
-        {party.variants.length > 1 && (
-          <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-500">
-              Candidat
-            </label>
-            <div className="flex gap-2">
-              {party.variants.map((v, idx) => (
-                <button
-                  key={v.name}
-                  type="button"
-                  onClick={() => switchVariant(party.tag, idx)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                    idx === party.selectedIdx
-                      ? "bg-accent text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  {v.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Attractivite slider */}
         <Slider
           label="Attractivit&eacute;"
           value={candidate.attractivite}
           onChange={(v) => updateVariant(party.tag, "attractivite", v)}
           color={colors.accent}
-        />
-
-        {/* Tendance slider */}
-        <Slider
-          label="Tendance"
-          value={candidate.tendance}
-          onChange={(v) => updateVariant(party.tag, "tendance", v)}
-          color={trendColor}
         />
 
         {/* Barrage slider */}
@@ -177,40 +222,19 @@ function ConfigCard({ party }: { party: PartyData }) {
           color="#ea580c"
         />
 
-        {/* Ideology tri-bar */}
-        <div>
-          <label className="mb-1.5 block text-xs font-medium text-gray-500">
-            Positionnement id&eacute;ologique
-          </label>
-          <div className="flex h-3 overflow-hidden rounded-full">
-            <div
-              className="transition-all"
-              style={{
-                width: `${candidate.left * 100}%`,
-                backgroundColor: "#E63946",
-              }}
-            />
-            <div
-              className="transition-all"
-              style={{
-                width: `${candidate.center * 100}%`,
-                backgroundColor: "#FFB800",
-              }}
-            />
-            <div
-              className="transition-all"
-              style={{
-                width: `${candidate.right * 100}%`,
-                backgroundColor: "#002395",
-              }}
-            />
-          </div>
-          <div className="mt-1 flex justify-between text-[10px] text-gray-400">
-            <span>Gauche {Math.round(candidate.left * 100)}%</span>
-            <span>Centre {Math.round(candidate.center * 100)}%</span>
-            <span>Droite {Math.round(candidate.right * 100)}%</span>
-          </div>
-        </div>
+        {/* Tendance slider (rich version from mockup) */}
+        <TrendSlider
+          value={candidate.tendance}
+          onChange={(v) => updateVariant(party.tag, "tendance", v)}
+        />
+
+        {/* Ideology tri-slider */}
+        <TriSlider
+          left={candidate.left}
+          center={candidate.center}
+          right={candidate.right}
+          onChange={(v) => updateVariant(party.tag, "ideology", v)}
+        />
       </div>
     </div>
   );
@@ -242,11 +266,21 @@ function StartingPointRow({
 
   return (
     <div className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3">
-      <div
-        className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold"
-        style={{ backgroundColor: colors.bg, color: colors.fg }}
-      >
-        {candidate.initials}
+      <div className="relative h-8 w-8 flex-shrink-0">
+        <div
+          className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold"
+          style={{ backgroundColor: colors.bg, color: colors.fg }}
+        >
+          {candidate.initials}
+        </div>
+        {candidate.photoUrl && (
+          <img
+            src={candidate.photoUrl}
+            alt={candidate.name}
+            className="absolute inset-0 h-8 w-8 rounded-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        )}
       </div>
       <div className="flex-1">
         <span className="text-sm font-medium text-primary-dark">
@@ -307,11 +341,21 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div
-                      className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold"
-                      style={{ backgroundColor: colors.bg, color: colors.fg }}
-                    >
-                      {c.initials}
+                    <div className="relative h-7 w-7 flex-shrink-0">
+                      <div
+                        className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold"
+                        style={{ backgroundColor: colors.bg, color: colors.fg }}
+                      >
+                        {c.initials}
+                      </div>
+                      {c.photoUrl && (
+                        <img
+                          src={c.photoUrl}
+                          alt={c.name}
+                          className="absolute inset-0 h-7 w-7 rounded-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        />
+                      )}
                     </div>
                     <span className="font-medium text-primary-dark">
                       {c.name}

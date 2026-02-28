@@ -12,6 +12,7 @@ export interface CandidatVariant {
   startAgrege: number;
   startDebiaise: number;
   startCustom: number;
+  photoUrl: string | null;
 }
 
 export interface PartyData {

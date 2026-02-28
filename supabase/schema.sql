@@ -32,6 +32,7 @@ CREATE TABLE candidat (
   start_agrege FLOAT DEFAULT 0,
   start_debiaise FLOAT DEFAULT 0,
   start_personnalise FLOAT DEFAULT 0,
+  photo_url VARCHAR,
   UNIQUE (parti_tag, indice_variante)
 );
 

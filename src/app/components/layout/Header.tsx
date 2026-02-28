@@ -9,7 +9,7 @@ export function Header() {
           <span className="text-xl">🗳️</span>
         </div>
         <span className="text-lg font-extrabold tracking-tight text-primary-dark">
-          quiprésident<span className="text-accent">.fr</span>
+          Qui sera <span className="text-accent">président</span>
         </span>
       </Link>
       <Navigation />

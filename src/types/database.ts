@@ -49,6 +49,7 @@ export interface Database {
           start_agrege: number;
           start_debiaise: number;
           start_personnalise: number;
+          photo_url: string | null;
         };
         Insert: {
           id: string;
@@ -67,6 +68,7 @@ export interface Database {
           start_agrege?: number;
           start_debiaise?: number;
           start_personnalise?: number;
+          photo_url?: string | null;
         };
         Update: {
           id?: string;
@@ -85,6 +87,7 @@ export interface Database {
           start_agrege?: number;
           start_debiaise?: number;
           start_personnalise?: number;
+          photo_url?: string | null;
         };
         Relationships: [
           {

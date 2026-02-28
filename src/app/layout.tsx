@@ -5,7 +5,7 @@ import { Header } from "@/app/components/layout/Header";
 import { Footer } from "@/app/components/layout/Footer";
 import { SimulationProvider } from "@/lib/simulation-context";
 
-const APP_NAME = "quiprésident.fr";
+const APP_NAME = "Qui sera président";
 const APP_DESCRIPTION =
   "Simulez l'élection présidentielle 2027 grâce à notre modèle Monte Carlo interactif.";
 

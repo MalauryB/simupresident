@@ -536,10 +536,22 @@ export default function ResultatsPage() {
             const color = partyColors[p.tag]?.chart ?? "#999";
             return (
               <div key={p.tag} className="flex items-center gap-2">
-                <div
-                  className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: color }}
-                />
+                <div className="relative h-6 w-6 flex-shrink-0">
+                  <div
+                    className="h-6 w-6 rounded-full"
+                    style={{ backgroundColor: color }}
+                  />
+                  {c.photoUrl && (
+                    <img
+                      src={c.photoUrl}
+                      alt={c.name}
+                      className="absolute inset-0 z-10 h-6 w-6 rounded-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  )}
+                </div>
                 <span className="text-xs font-medium text-gray-600">
                   {c.name}
                 </span>
