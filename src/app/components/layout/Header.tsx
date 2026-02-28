@@ -5,9 +5,11 @@ export function Header() {
   return (
     <nav className="relative z-10 flex items-center justify-between px-6 py-5 sm:px-10">
       <Link href="/" className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-[#FF7B73] shadow-lg shadow-accent/40">
-          <span className="text-xl">🗳️</span>
-        </div>
+        <img
+          src="/icons/icon-192x192.svg"
+          alt="Logo"
+          className="h-10 w-10 rounded-xl shadow-lg shadow-primary/30"
+        />
         <span className="text-lg font-extrabold tracking-tight text-primary-dark">
           Qui sera <span className="text-accent">président</span>
         </span>
