@@ -22,7 +22,7 @@ export default function AProposPage() {
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
           &Agrave; propos
         </h1>
-        <p className="text-gray-500">
+        <p className="text-gray-600">
           D&eacute;couvrez l&rsquo;&eacute;quipe et la mission derri&egrave;re
           quipr&eacute;sident.fr.
         </p>
@@ -30,7 +30,7 @@ export default function AProposPage() {
 
       <div className="space-y-8">
         {/* ---- Mission ---- */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h2 className="mb-3 text-lg font-bold text-primary-dark">
             Notre mission
           </h2>
@@ -58,7 +58,7 @@ export default function AProposPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Profile 1 */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-light text-2xl font-bold text-white shadow-lg">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white">
                 TD
               </div>
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
@@ -67,7 +67,7 @@ export default function AProposPage() {
               <p className="mb-2 text-xs font-medium text-accent">
                 Data Scientist &amp; Fondateur
               </p>
-              <p className="text-xs leading-relaxed text-gray-500">
+              <p className="text-xs leading-relaxed text-gray-600">
                 Sp&eacute;cialiste en mod&eacute;lisation statistique et
                 analyse &eacute;lectorale. Dipl&ocirc;m&eacute; de
                 l&rsquo;ENSAE.
@@ -76,7 +76,7 @@ export default function AProposPage() {
 
             {/* Profile 2 */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-accent to-[#FF7B73] text-2xl font-bold text-white shadow-lg">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent text-2xl font-bold text-white">
                 CM
               </div>
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
@@ -85,7 +85,7 @@ export default function AProposPage() {
               <p className="mb-2 text-xs font-medium text-accent">
                 Ing&eacute;nieure Full-Stack
               </p>
-              <p className="text-xs leading-relaxed text-gray-500">
+              <p className="text-xs leading-relaxed text-gray-600">
                 D&eacute;veloppeuse passionn&eacute;e par les outils
                 p&eacute;dagogiques et la visualisation de donn&eacute;es.
               </p>
@@ -99,40 +99,40 @@ export default function AProposPage() {
             Comment &ccedil;a marche
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-xl font-bold text-primary">
                 1
               </div>
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Configurez
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-600">
                 S&eacute;lectionnez les candidats et ajustez les
                 param&egrave;tres de la simulation.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-xl font-bold text-accent">
                 2
               </div>
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Simulez
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-600">
                 {SIM_COUNT} simulations Monte Carlo sont
                 g&eacute;n&eacute;r&eacute;es en quelques secondes.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
                 3
               </div>
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Analysez
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-600">
                 Explorez les trajectoires, probabilit&eacute;s et intervalles
                 de confiance.
               </p>
@@ -175,7 +175,7 @@ export default function AProposPage() {
                 <h3 className="mb-1 text-sm font-bold text-primary-dark">
                   {faq.q}
                 </h3>
-                <p className="text-xs leading-relaxed text-gray-500">
+                <p className="text-xs leading-relaxed text-gray-600">
                   {faq.a}
                 </p>
               </div>
@@ -190,11 +190,11 @@ export default function AProposPage() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Suggestion card */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-6">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Une id&eacute;e d&rsquo;am&eacute;lioration ?
               </h3>
-              <p className="mb-3 text-xs text-gray-500">
+              <p className="mb-3 text-xs text-gray-600">
                 Partagez vos suggestions pour am&eacute;liorer la plateforme.
               </p>
               <a
@@ -206,11 +206,11 @@ export default function AProposPage() {
             </div>
 
             {/* Project card */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-6">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Un projet informatique ?
               </h3>
-              <p className="mb-3 text-xs text-gray-500">
+              <p className="mb-3 text-xs text-gray-600">
                 Nous pouvons vous accompagner sur des projets de data science,
                 simulation ou visualisation.
               </p>
@@ -225,7 +225,7 @@ export default function AProposPage() {
         </div>
 
         {/* ---- Bottom banner ---- */}
-        <div className="rounded-2xl bg-gradient-to-br from-primary-dark to-primary p-8 text-center">
+        <div className="rounded-xl bg-primary-dark p-8 text-center">
           <h2 className="mb-2 text-xl font-bold text-white">
             Envie de contribuer ?
           </h2>

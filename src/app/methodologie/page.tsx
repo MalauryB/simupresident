@@ -28,7 +28,7 @@ function SectionCard({
   return (
     <div
       id={id}
-      className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+      className="rounded-xl border border-gray-200 bg-white p-6"
     >
       <h2 className="mb-3 text-lg font-bold text-primary-dark">{title}</h2>
       <div className="space-y-3 text-sm leading-relaxed text-gray-600">
@@ -53,7 +53,7 @@ function ParamCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-gray-200 bg-white p-5">
       <div className="mb-2 flex items-start justify-between gap-2">
         <h3 className="text-sm font-bold text-primary-dark">{title}</h3>
         <span
@@ -626,7 +626,7 @@ export default function MethodologiePage() {
         </SectionCard>
 
         {/* ---- Limites du modele (warning card) ---- */}
-        <div className="rounded-2xl border-2 border-accent/30 bg-accent/5 p-6">
+        <div className="rounded-xl border-2 border-accent/30 bg-accent/5 p-6">
           <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
               <svg

@@ -9,7 +9,7 @@ export function Header() {
           Q<span className="text-accent">?</span>
         </span>
         <span className="text-lg font-extrabold tracking-tight text-primary-dark">
-          Qui sera <span className="text-accent">président</span>
+          Qui pour <span className="text-accent">l&rsquo;&Eacute;lys&eacute;e</span>&nbsp;?
         </span>
       </Link>
       <Navigation />

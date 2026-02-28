@@ -177,7 +177,7 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
     <>
       {/* Backdrop click to skip */}
       <div
-        className="fixed inset-0 z-50"
+        className="fixed inset-0 z-50 cursor-pointer"
         onClick={handleClose}
         role="presentation"
       />

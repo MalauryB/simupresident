@@ -61,14 +61,14 @@ export default function HomePage() {
       {/* ---- Hero section ---- */}
       <section className="mb-20 text-center">
         {/* Badge */}
-        <span className="mb-6 inline-block rounded-lg bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
+        <span className="mb-6 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
           Pr&eacute;sidentielle 2027
         </span>
 
         {/* Title */}
         <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-primary-dark sm:text-5xl lg:text-6xl">
-          Qui sera{" "}
-          <span className="text-accent">pr&eacute;sident</span> ?
+          Qui pour{" "}
+          <span className="text-accent">l&rsquo;&Eacute;lys&eacute;e</span>&nbsp;?
         </h1>
 
         {/* Subtitle */}
@@ -109,7 +109,7 @@ export default function HomePage() {
 
                   {/* Tag badge */}
                   <span
-                    className="mb-1 rounded-lg px-2.5 py-0.5 text-xs font-bold"
+                    className="mb-1 rounded-full px-2.5 py-0.5 text-xs font-bold"
                     style={{
                       backgroundColor: `${colors.accent}18`,
                       color: colors.accent,
@@ -119,7 +119,7 @@ export default function HomePage() {
                   </span>
 
                   {/* Party name */}
-                  <p className="text-center text-xs text-gray-400">
+                  <p className="text-center text-xs text-gray-500">
                     {party.party}
                   </p>
                 </div>

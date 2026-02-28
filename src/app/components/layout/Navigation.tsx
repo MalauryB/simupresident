@@ -75,7 +75,7 @@ export function Navigation() {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/20 md:hidden"
+          className="fixed inset-0 z-40 cursor-pointer bg-black/20 md:hidden"
           onClick={closeMenu}
           aria-hidden="true"
         />
