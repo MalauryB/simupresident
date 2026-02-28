@@ -63,7 +63,7 @@ function ParamCard({
           {tagLabel}
         </span>
       </div>
-      <div className="text-xs leading-relaxed text-gray-500">{children}</div>
+      <div className="text-xs leading-relaxed text-gray-600">{children}</div>
     </div>
   );
 }
@@ -89,7 +89,7 @@ export default function MethodologiePage() {
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
           M&eacute;thodologie
         </h1>
-        <p className="text-gray-500">
+        <p className="text-gray-600">
           Comment fonctionne notre mod&egrave;le de simulation
           &eacute;lectorale.
         </p>
@@ -162,7 +162,7 @@ export default function MethodologiePage() {
               V<sub>i</sub>(t+1) = V<sub>i</sub>(t) + drift<sub>i</sub> +
               W&sdot;&nu;(t) + &epsilon;<sub>i</sub>(t)
             </code>
-            <div className="mt-2 space-y-1 font-mono text-xs text-gray-500">
+            <div className="mt-2 space-y-1 font-mono text-xs text-gray-600">
               <p>
                 drift<sub>i</sub> = (tendance<sub>i</sub> &minus; 0.5) &times;
                 0.0003
@@ -473,7 +473,7 @@ export default function MethodologiePage() {
           </h3>
           <Formula>
             <p>&eta;<sub>t</sub> = (1 &minus; &kappa;) &middot; &eta;<sub>t&minus;1</sub> + u<sub>t, 1:(K&minus;1)</sub></p>
-            <p className="mt-1 text-gray-500 text-xs">&kappa; &ge; 0 : param&egrave;tre de mean-reversion (proche de 0 en pratique)</p>
+            <p className="mt-1 text-gray-600 text-xs">&kappa; &ge; 0 : param&egrave;tre de mean-reversion (proche de 0 en pratique)</p>
             <p className="mt-2 font-semibold">v<sub>t</sub><sup>base</sup> = softmax(&eta;&#771;<sub>t</sub>)</p>
           </Formula>
         </SectionCard>
@@ -489,7 +489,7 @@ export default function MethodologiePage() {
           <Formula>
             a<sub>t</sub> = 1 / (1 + exp((T &minus; t &minus; &tau;<sub>0</sub>) / s<sub>&tau;</sub>)) &nbsp;&isin; (0, 1)
           </Formula>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-600">
             &tau;<sub>0</sub> contr&ocirc;le le moment d&rsquo;activation,{" "}
             s<sub>&tau;</sub> sa pente.
           </p>
@@ -548,7 +548,7 @@ export default function MethodologiePage() {
           <Formula>
             &rho;<sub>k</sub> = &gamma;<sub>ED</sub> &middot; W<sub>k,3</sub> + &gamma;<sub>EG</sub> &middot; W<sub>k,1</sub>
           </Formula>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-600">
             &gamma;<sub>ED</sub>, &gamma;<sub>EG</sub> &ge; 0 contr&ocirc;lent
             l&rsquo;intensit&eacute; du rejet pour les extr&ecirc;mes droite/gauche.
           </p>
@@ -635,6 +635,7 @@ export default function MethodologiePage() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"

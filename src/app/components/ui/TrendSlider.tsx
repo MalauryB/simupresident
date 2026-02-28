@@ -131,6 +131,7 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
             max={1}
             step={0.01}
             value={value}
+            aria-label="Tendance long terme"
             onChange={(e) => onChange(parseFloat(e.target.value))}
             className="absolute z-10 h-full w-full cursor-pointer appearance-none bg-transparent
               [&::-moz-range-thumb]:h-0 [&::-moz-range-thumb]:w-0 [&::-moz-range-thumb]:appearance-none

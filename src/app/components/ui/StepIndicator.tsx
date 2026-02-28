@@ -32,9 +32,9 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
               <div
                 className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
                   isCompleted
-                    ? "bg-accent text-white hover:shadow-md"
+                    ? "bg-accent text-white"
                     : isActive
-                      ? "bg-accent text-white shadow-lg shadow-accent/30"
+                      ? "bg-accent text-white shadow-sm"
                       : "border-2 border-gray-200 bg-white text-gray-400 hover:border-accent/50 hover:text-accent/70"
                 }`}
               >

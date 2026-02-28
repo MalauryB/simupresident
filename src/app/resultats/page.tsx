@@ -76,7 +76,7 @@ export default function ResultatsPage() {
   if (activeParties.length === 0) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
-        <p className="text-sm font-medium text-gray-500">
+        <p className="text-sm font-medium text-gray-600">
           Aucun candidat s&eacute;lectionn&eacute;.
         </p>
         <BackLink href="/simulation" label="Retour &agrave; la simulation" />
@@ -86,7 +86,7 @@ export default function ResultatsPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+      <div role="alert" className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
         <p className="text-sm font-medium text-red-600">
           Erreur lors de la simulation : {error}
         </p>
@@ -97,9 +97,9 @@ export default function ResultatsPage() {
 
   if (computing || !simData) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-dark" />
-        <p className="text-sm font-medium text-gray-500">
+      <div role="status" aria-label="Simulation en cours" className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-dark" aria-hidden="true" />
+        <p className="text-sm font-medium text-gray-600">
           Simulation Monte Carlo en cours&hellip;
         </p>
         <p className="text-xs text-gray-400">{SIM_COUNT} simulations &times; {days} jours</p>
@@ -136,6 +136,7 @@ export default function ResultatsPage() {
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -159,7 +160,7 @@ export default function ResultatsPage() {
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
           R&eacute;sultats de la simulation
         </h1>
-        <p className="text-gray-500">
+        <p className="text-gray-600">
           {simData.probabilities.length} candidats &middot; {SIM_COUNT} simulations Monte
           Carlo &middot; {days} jours &middot; IC 80%
         </p>
@@ -174,7 +175,7 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* Chart */}
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-4" role="img" aria-label="Graphique des trajectoires de sondages pour chaque candidat avec intervalles de confiance à 80%">
             <div className="min-w-[600px]">
             <ResponsiveContainer width="100%" height={400}>
               <AreaChart data={trajectory}>
@@ -193,7 +194,7 @@ export default function ResultatsPage() {
                   formatter={(value) => `${(Number(value) * 100).toFixed(1)}%`}
                   labelFormatter={(label) => `Jour ${label}`}
                   contentStyle={{
-                    borderRadius: "12px",
+                    borderRadius: "8px",
                     border: "1px solid #e5e7eb",
                     fontSize: "12px",
                   }}
@@ -253,22 +254,22 @@ export default function ResultatsPage() {
 
           {/* Side panel */}
           <div className="space-y-4">
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-4">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Lecture du graphique
               </h3>
-              <p className="text-xs leading-relaxed text-gray-500">
+              <p className="text-xs leading-relaxed text-gray-600">
                 Chaque ligne repr&eacute;sente la trajectoire m&eacute;diane du
                 candidat sur {SIM_COUNT} simulations. Les zones color&eacute;es
                 montrent l&rsquo;intervalle de confiance &agrave; 80%
                 (quantiles 10%-90%).
               </p>
             </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-4">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Mod&egrave;le utilis&eacute;
               </h3>
-              <p className="text-xs leading-relaxed text-gray-500">
+              <p className="text-xs leading-relaxed text-gray-600">
                 Processus latent sur logits relatifs avec chocs factoriels
                 (embedding id&eacute;ologique W), drift cibl&eacute; par
                 candidat et transformation de vote utile activ&eacute;e en fin
@@ -287,7 +288,7 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* P(qualification) */}
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" data-tuto="res-qualif">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-5" data-tuto="res-qualif" role="img" aria-label="Probabilité de qualification au second tour par candidat">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </h3>
@@ -321,7 +322,7 @@ export default function ResultatsPage() {
                 <Tooltip
                   formatter={(value) => `${(Number(value) * 100).toFixed(1)}%`}
                   contentStyle={{
-                    borderRadius: "12px",
+                    borderRadius: "8px",
                     border: "1px solid #e5e7eb",
                     fontSize: "12px",
                   }}
@@ -340,7 +341,7 @@ export default function ResultatsPage() {
           </div>
 
           {/* P(victoire) */}
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" data-tuto="res-victoire">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-5" data-tuto="res-victoire" role="img" aria-label="Probabilité de victoire finale par candidat">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </h3>
@@ -374,7 +375,7 @@ export default function ResultatsPage() {
                 <Tooltip
                   formatter={(value) => `${(Number(value) * 100).toFixed(1)}%`}
                   contentStyle={{
-                    borderRadius: "12px",
+                    borderRadius: "8px",
                     border: "1px solid #e5e7eb",
                     fontSize: "12px",
                   }}
@@ -393,7 +394,7 @@ export default function ResultatsPage() {
           </div>
         </div>
 
-        <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-500">
+        <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-600">
           <strong className="text-gray-600">Note :</strong>{" "}
           P(qualification) est la fr&eacute;quence empirique d&rsquo;acc&egrave;s
           au top 2 sur {simData.probabilities.length > 0 ? SIM_COUNT : "0"}{" "}
@@ -410,8 +411,9 @@ export default function ResultatsPage() {
             Duels les plus probables au second tour
           </h2>
 
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
             <table className="w-full min-w-[500px] text-sm">
+              <caption className="sr-only">Les 5 duels les plus probables au second tour</caption>
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/50">
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">
@@ -461,7 +463,7 @@ export default function ResultatsPage() {
                         {(d.probability * 100).toFixed(1)}%
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right text-xs text-gray-500">
+                    <td className="px-4 py-3 text-right text-xs text-gray-600">
                       {(d.avgShareA * 100).toFixed(1)}% &ndash;{" "}
                       {(d.avgShareB * 100).toFixed(1)}%
                     </td>
@@ -482,7 +484,7 @@ export default function ResultatsPage() {
 
           <div className="grid gap-6 sm:grid-cols-2">
             {/* Participation */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Participation estim&eacute;e
               </h3>
@@ -501,7 +503,7 @@ export default function ResultatsPage() {
             </div>
 
             {/* Blanc/nul */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Blanc / Nul estim&eacute;
               </h3>
@@ -524,11 +526,11 @@ export default function ResultatsPage() {
 
       {/* ---- Section 5: Methodology note ---- */}
       <section className="mb-16">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h3 className="mb-3 text-sm font-bold text-primary-dark">
             Note m&eacute;thodologique
           </h3>
-          <p className="mb-2 text-xs leading-relaxed text-gray-500">
+          <p className="mb-2 text-xs leading-relaxed text-gray-600">
             Les r&eacute;sultats sont produits par {SIM_COUNT} it&eacute;rations
             d&rsquo;une simulation de Monte Carlo. Chaque it&eacute;ration
             g&eacute;n&egrave;re une trajectoire quotidienne sur {days} jours en
@@ -541,7 +543,7 @@ export default function ResultatsPage() {
             vote B, abstention, blanc/nul) avec p&eacute;nalit&eacute; de
             barrage.
           </p>
-          <p className="text-xs leading-relaxed text-gray-500">
+          <p className="text-xs leading-relaxed text-gray-600">
             Cette simulation est un exercice p&eacute;dagogique et ne constitue
             pas une pr&eacute;vision &eacute;lectorale.
           </p>

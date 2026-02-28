@@ -26,7 +26,7 @@ import type { PartyData } from "@/types/simulation";
 /* ------------------------------------------------------------------ */
 function ChevronLeft() {
   return (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   );
@@ -34,7 +34,7 @@ function ChevronLeft() {
 
 function ChevronRight() {
   return (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   );
@@ -51,19 +51,19 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl transition-all duration-300"
+      className="relative overflow-hidden rounded-xl transition-all duration-200"
       style={{
         background: party.active ? "#fff" : "rgba(243,244,246,0.13)",
-        border: party.active ? `2.5px solid ${colors.accent}` : "2.5px solid transparent",
+        border: party.active ? `2px solid ${colors.accent}` : "2px solid transparent",
         opacity: party.active ? 1 : 0.5,
-        transform: party.active ? "scale(1)" : "scale(0.97)",
-        boxShadow: party.active ? `0 4px 20px ${colors.accent}20` : "0 2px 8px rgba(0,0,0,0.04)",
       }}
     >
       <button
         type="button"
         onClick={onToggle}
-        className="w-full cursor-pointer px-4 pt-[18px] text-center"
+        aria-label={`${party.active ? "Désactiver" : "Activer"} ${candidate.name}`}
+        aria-pressed={party.active}
+        className="w-full cursor-pointer px-4 pt-[18px] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
       >
         <div
           className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-bold text-white"
@@ -99,7 +99,8 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
                 key={v.name}
                 type="button"
                 onClick={(e) => { e.stopPropagation(); switchVariant(party.tag, idx); }}
-                className="flex-1 truncate py-[7px] px-1 text-[11px] font-bold transition-colors"
+                aria-label={`Choisir ${v.name}`}
+                className="flex-1 truncate py-[7px] px-1 text-[11px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 style={{
                   background: party.selectedIdx === idx ? colors.accent : "transparent",
                   color: party.selectedIdx === idx ? colors.fg : colors.bg,
@@ -135,7 +136,7 @@ function StepCandidats({ showTutorial, onCloseTutorial }: { showTutorial: boolea
 
   return (
     <div>
-      <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-4">
+      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4">
         <h3 className="mb-3 text-sm font-bold text-primary-dark">Scénarios d'alliance</h3>
         <div className="flex flex-wrap gap-2">
           {ALLIANCE_PRESETS.map((preset) => (
@@ -187,7 +188,7 @@ function ConfigCard({ party, isTutorial }: { party: PartyData; isTutorial?: bool
   const colors = partyColors[party.tag];
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
       <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: `3px solid ${colors.accent}` }}>
         <Avatar candidate={candidate} colors={colors} size={10} />
         <div className="flex-1">
@@ -221,7 +222,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
         <ConfigCard key={party.tag} party={party} isTutorial={showTutorial && i === 0} />
       ))}
       {activeParties.length === 0 && (
-        <div className="rounded-2xl border-2 border-dashed border-gray-200 py-12 text-center">
+        <div className="rounded-xl border-2 border-dashed border-gray-200 py-12 text-center">
           <p className="text-gray-400">Aucun candidat sélectionné. Retournez à l'étape précédente.</p>
         </div>
       )}
@@ -276,13 +277,13 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
             key={src.id}
             type="button"
             onClick={() => setPollSource(src.id)}
-            className={`rounded-2xl border-2 p-5 text-left transition-all duration-200 hover:shadow-md ${
-              pollSource === src.id ? "border-accent bg-white shadow-md" : "border-gray-200 bg-white/60 hover:border-gray-300"
+            className={`rounded-xl border-2 p-5 text-left transition-colors duration-200 ${
+              pollSource === src.id ? "border-accent bg-white" : "border-gray-200 bg-white/60 hover:border-accent/50"
             }`}
           >
             <div className="mb-2 text-2xl">{src.icon}</div>
             <h3 className="mb-1 text-sm font-bold text-primary-dark">{src.label}</h3>
-            <p className="text-xs text-gray-500">{src.desc}</p>
+            <p className="text-xs text-gray-600">{src.desc}</p>
           </button>
         ))}
       </div>
@@ -311,7 +312,7 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
           ))}
         </div>
         <div className="mt-3 flex items-center justify-end gap-2 text-sm">
-          <span className="text-gray-500">Total :</span>
+          <span className="text-gray-600">Total :</span>
           <span className={`font-mono font-bold ${total === 100 ? "text-green-600" : "text-amber-600"}`}>
             {total}%
           </span>
@@ -332,9 +333,9 @@ function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean;
   const { gammaRejetED, gammaRejetEG, setGammaRejetED, setGammaRejetEG } = useSimulation();
   return (
     <div className="mx-auto max-w-lg space-y-6">
-      <div className="rounded-2xl border border-orange-200 bg-orange-50/50 p-6">
+      <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Vote barrage (second tour)</h3>
-        <p className="mb-5 text-sm text-gray-500">
+        <p className="mb-5 text-sm text-gray-600">
           Ces coefficients pénalisent les candidats extrêmes lorsqu'ils accèdent au second tour.
           La pénalité de chaque candidat est calculée à partir de son vecteur idéologique :
           {" "}&rho;<sub>k</sub> = &gamma;<sub>ED</sub> &times; W<sub>droite</sub> + &gamma;<sub>EG</sub> &times; W<sub>gauche</sub>.
@@ -366,9 +367,9 @@ function StepHorizon() {
 
   return (
     <div className="mx-auto max-w-lg space-y-6">
-      <div className="rounded-2xl border border-orange-200 bg-orange-50/50 p-6">
+      <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Horizon de simulation</h3>
-        <p className="mb-5 text-sm text-gray-500">
+        <p className="mb-5 text-sm text-gray-600">
           Nombre de jours avant l'élection sur lesquels la simulation est projetée.
           Un horizon court (30–90 j) donne des résultats plus stables ;
           un horizon long (365 j) capture davantage d'incertitude.
@@ -415,6 +416,7 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">
       <table className="w-full min-w-[500px] text-left text-sm">
+        <caption className="sr-only">Résumé de la configuration de simulation</caption>
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
             <th className="px-4 py-3 font-semibold text-gray-600">Candidat</th>
@@ -466,7 +468,7 @@ function StepSummary() {
           <span className="text-xl">{selectedSource.icon}</span>
           <div>
             <p className="text-sm font-bold text-primary-dark">{selectedSource.label}</p>
-            <p className="text-xs text-gray-500">{selectedSource.desc}</p>
+            <p className="text-xs text-gray-600">{selectedSource.desc}</p>
           </div>
         </div>
       )}
@@ -536,7 +538,7 @@ export default function SimulationPage() {
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
           Configurer la simulation
         </h1>
-        <p className="text-gray-500">{stepSubtitles[step]}</p>
+        <p className="text-gray-600">{stepSubtitles[step]}</p>
         {step <= 3 && (
           <div className="mt-3">
             <GuideButton onClick={openGuide} />
@@ -560,12 +562,12 @@ export default function SimulationPage() {
 
       {/* Sticky bottom navigation card */}
       <div className="fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
-        <div className="flex w-full max-w-md items-center justify-between rounded-2xl border border-gray-200 bg-white/90 px-5 py-3 shadow-lg backdrop-blur-md">
+        <div className="flex w-full max-w-md items-center justify-between rounded-xl border border-gray-200 bg-white/95 px-5 py-3 shadow-sm backdrop-blur-md">
           <button
             type="button"
             onClick={() => goToStep(Math.max(0, step - 1))}
             disabled={step === 0}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <ChevronLeft />
             Précédent
@@ -576,7 +578,7 @@ export default function SimulationPage() {
               type="button"
               onClick={() => goToStep(Math.min(WIZARD_STEPS.length - 1, step + 1))}
               disabled={step === 2 && pollSource === "custom" && total !== 100}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Suivant
               <ChevronRight />
@@ -585,9 +587,8 @@ export default function SimulationPage() {
             <button
               type="button"
               onClick={() => router.push("/resultats")}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-[#FF7B73] px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
-              <span aria-hidden="true">🗳️</span>
               Lancer la simulation
             </button>
           )}
