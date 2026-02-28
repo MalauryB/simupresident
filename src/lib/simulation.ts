@@ -73,10 +73,7 @@ interface SimConfig {
   S: number;
   sigma_f: [number, number, number];
   sigma_eps: number;
-  kappa: number;
   // Vote utile (1er tour)
-  tau_vote: number;
-  s_v: number;
   lambda_cos: number;
   beta_viab: number;
   eps_viab: number;
@@ -84,6 +81,12 @@ interface SimConfig {
   s_tau: number;
   psi_scale: number;
   drift_scale: number;
+  q0: number;
+  sig_q: number;
+  r_min: number;
+  r_max: number;
+  // Drift
+  lambda_drift: number;
   // Second tour
   beta_2: number;
   alpha_abst: number;
@@ -100,16 +103,18 @@ const DEFAULT_CONFIG: SimConfig = {
   S: 200,
   sigma_f: [0.01, 0.005, 0.01],
   sigma_eps: 0.01,
-  kappa: 0,
-  tau_vote: 0.1,
-  s_v: 0.5,
   lambda_cos: 6,
-  beta_viab: 5,
+  beta_viab: 10,
   eps_viab: 1e-4,
   T0_offset: 10,
-  s_tau: 10,
+  s_tau: 5,
   psi_scale: 16,
   drift_scale: 0.001,
+  q0: 0.15,
+  sig_q: 0.10,
+  r_min: 0.70,
+  r_max: 0.95,
+  lambda_drift: 6,
   beta_2: 7,
   alpha_abst: -1.8144596,
   kappa_abst: 0.1,
@@ -160,22 +165,87 @@ export function getTrendLabel(v: number): string {
   return "Forte baisse";
 }
 
+// ===== Drift vectorisé =====
+// Mirrors R: apply_drift_vec(u, W, delta, lambda_drift, ...)
+
+function applyDriftVec(
+  u: number[],
+  cosMat: number[][],
+  drift: number[],
+  cfg: SimConfig,
+): number[] {
+  const K = u.length;
+
+  // drift est déjà pré-scalé par drift_scale (= 1e-3 * raw_delta)
+  // Centrer
+  const meanDrift = drift.reduce((a, b) => a + b, 0) / K;
+  const delta0 = drift.map((d) => d - meanDrift);
+
+  // S = max(cosMat, 0)^lambda_drift, diag = 0
+  const S: number[][] = [];
+  for (let i = 0; i < K; i++) {
+    S.push([]);
+    for (let j = 0; j < K; j++) {
+      S[i].push(
+        i === j
+          ? 0
+          : Math.pow(Math.max(cosMat[i][j], 0), cfg.lambda_drift),
+      );
+    }
+  }
+
+  // Normaliser par ligne (fallback uniforme si dégénéré)
+  for (let i = 0; i < K; i++) {
+    const den = S[i].reduce((a, b) => a + b, 0);
+    if (den < 1e-12) {
+      for (let j = 0; j < K; j++) S[i][j] = j === i ? 0 : 1 / (K - 1);
+    } else {
+      for (let j = 0; j < K; j++) S[i][j] /= den;
+    }
+  }
+
+  // comp[k] = Σ_i S[i][k] * (-delta0[i])  →  t(S) %*% (-delta0)
+  const comp = new Array<number>(K).fill(0);
+  for (let i = 0; i < K; i++) {
+    for (let k = 0; k < K; k++) {
+      comp[k] += S[i][k] * -delta0[i];
+    }
+  }
+
+  return u.map((uk, k) => uk + delta0[k] + comp[k]);
+}
+
 // ===== Vote Utile Transform =====
-// Mirrors R: vote_utile_transform(v, W, psi, lambda_cos, beta_viab)
+// Mirrors R: vote_utile_transform_vec(v, W, psi, ...)
 
 function voteUtileTransform(
   v: number[],
-  W: number[][],
+  cosMat: number[][],
   psi: number[],
   cfg: SimConfig,
 ): number[] {
   const K = v.length;
 
-  // Retention douce (logistique)
-  const r = v.map((vk) => 1 / (1 + Math.exp(-(vk - cfg.tau_vote) / cfg.s_v)));
+  // Enjeu gaussien : plus grand près de q0
+  const enjeu = v.map(
+    (vk) => Math.exp(-0.5 * ((vk - cfg.q0) / cfg.sig_q) ** 2),
+  );
+
+  // Rétention : r = r_max - (r_max-r_min)*enjeu, clampé [0,1]
+  const r = enjeu.map((e) => {
+    const val = cfg.r_max - (cfg.r_max - cfg.r_min) * e;
+    return Math.min(Math.max(val, 0), 1);
+  });
+
   const m = v.map((vk, i) => (1 - r[i]) * vk);
   const v_keep = v.map((vk, i) => r[i] * vk);
 
+  // Attractivité : exp(psi + beta_viab * log(enjeu + eps_viab))
+  const att = psi.map((p, k) =>
+    Math.exp(p + cfg.beta_viab * Math.log(enjeu[k] + cfg.eps_viab)),
+  );
+
+  // Scores[j][k] = Kern[j][k] * att[k], normalisé par ligne
   const v_new = [...v_keep];
 
   for (let j = 0; j < K; j++) {
@@ -183,22 +253,14 @@ function voteUtileTransform(
     let denom = 0;
 
     for (let k = 0; k < K; k++) {
-      const cs = cosSim(W[j], W[k]);
-      const kern = Math.pow(Math.max(0, cs), cfg.lambda_cos);
-      const viab = Math.log(v[k] + cfg.eps_viab);
-      const att = Math.exp(psi[k] + cfg.beta_viab * viab);
-      scores[k] = kern * att;
+      const kern = Math.pow(Math.max(cosMat[j][k], 0), cfg.lambda_cos);
+      scores[k] = kern * att[k];
       denom += scores[k];
     }
 
     if (denom <= 0) {
-      denom = 0;
-      for (let k = 0; k < K; k++) {
-        scores[k] = Math.exp(
-          cfg.beta_viab * Math.log(v[k] + cfg.eps_viab),
-        );
-        denom += scores[k];
-      }
+      for (let k = 0; k < K; k++) scores[k] = 1;
+      denom = K;
     }
 
     for (let k = 0; k < K; k++) {
@@ -208,7 +270,7 @@ function voteUtileTransform(
 
   const vPos = v_new.map((x) => Math.max(x, 0));
   const total = vPos.reduce((a, b) => a + b, 0);
-  if (total <= 0) return v.map(() => 1 / v.length); // uniform fallback
+  if (total <= 0) return v.map(() => 1 / K);
   return vPos.map((x) => x / total);
 }
 
@@ -217,7 +279,7 @@ function voteUtileTransform(
 
 function simulateOne(
   candidates: CandidateInput[],
-  W: number[][],
+  ideoW: number[][],
   psi: number[],
   cosMat: number[][],
   cfg: SimConfig,
@@ -261,41 +323,24 @@ function simulateOne(
       eps.push(rng.randn() * cfg.sigma_eps);
     }
 
-    // u = W * nu + eps
+    // u = Ideo * nu + eps
     const u: number[] = [];
     for (let k = 0; k < K; k++) {
       let Wnu = 0;
       for (let b = 0; b < B; b++) {
-        Wnu += W[k][b] * nu[b];
+        Wnu += ideoW[k][b] * nu[b];
       }
       u.push(Wnu + eps[k]);
     }
 
-    // Drift ciblé + compensation par proximité cosinus
-    for (let k = 0; k < K; k++) {
-      if (Math.abs(drift[k]) < 1e-10) continue;
-
-      u[k] += drift[k];
-
-      let sumSim = 0;
-      for (let j = 0; j < K; j++) {
-        if (j !== k) sumSim += cosMat[k][j];
-      }
-
-      if (sumSim > 0) {
-        for (let j = 0; j < K; j++) {
-          if (j !== k) {
-            u[j] -= drift[k] * (cosMat[k][j] / sumSim);
-          }
-        }
-      }
-    }
+    // Drift vectorisé (centré + compensation via matrice de similarité)
+    const u_drifted = applyDriftVec(u, cosMat, drift, cfg);
 
     // Update logits relatifs (exclure baseline K)
-    const u_rel = u.slice(0, K - 1);
+    const u_rel = u_drifted.slice(0, K - 1);
     const eta_t: number[] = [];
     for (let k = 0; k < K - 1; k++) {
-      eta_t.push((1 - cfg.kappa) * eta[t - 1][k] + u_rel[k]);
+      eta_t.push(eta[t - 1][k] + u_rel[k]);
     }
     eta.push(eta_t);
 
@@ -307,7 +352,7 @@ function simulateOne(
     const a_t = 1 / (1 + Math.exp((tau_t - tau0) / cfg.s_tau));
 
     // Transformation vote utile
-    const v_tilde = voteUtileTransform(v_base, W, psi, cfg);
+    const v_tilde = voteUtileTransform(v_base, cosMat, psi, cfg);
 
     // Mixture
     const v_mix: number[] = [];

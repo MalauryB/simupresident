@@ -6,7 +6,7 @@ interface StepIndicatorProps {
 
 export function StepIndicator({ current, labels, onStepClick }: StepIndicatorProps) {
   return (
-    <div className="flex items-center justify-center gap-0">
+    <div className="flex items-center justify-center">
       {labels.map((label, i) => {
         const isCompleted = i < current;
         const isActive = i === current;
@@ -16,7 +16,7 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
             {/* Connector line before (except first) */}
             {i > 0 && (
               <div
-                className={`h-0.5 w-8 sm:w-12 transition-colors duration-300 ${
+                className={`h-0.5 w-4 sm:w-8 md:w-12 transition-colors duration-300 ${
                   i <= current ? "bg-accent" : "bg-gray-200"
                 }`}
               />
@@ -27,10 +27,10 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
               type="button"
               onClick={() => { onStepClick?.(i); }}
               aria-label={`${label}${isCompleted ? " (terminé)" : isActive ? " (en cours)" : ""}`}
-              className="flex flex-col items-center gap-1.5 cursor-pointer"
+              className="flex flex-col items-center gap-1 cursor-pointer sm:gap-1.5"
             >
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all duration-300 ${
+                className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
                   isCompleted
                     ? "bg-accent text-white hover:shadow-md"
                     : isActive
@@ -40,7 +40,7 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
               >
                 {isCompleted ? (
                   <svg
-                    className="h-4 w-4"
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -58,7 +58,7 @@ export function StepIndicator({ current, labels, onStepClick }: StepIndicatorPro
                 )}
               </div>
               <span
-                className={`text-xs font-medium transition-colors duration-300 ${
+                className={`hidden text-xs font-medium transition-colors duration-300 sm:block ${
                   isActive
                     ? "text-accent"
                     : isCompleted
