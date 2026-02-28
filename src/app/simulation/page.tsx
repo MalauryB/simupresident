@@ -10,7 +10,6 @@ import { Slider } from "@/app/components/ui/Slider";
 import { TrendSlider } from "@/app/components/ui/TrendSlider";
 import { TriSlider } from "@/app/components/ui/TriSlider";
 import { Avatar } from "@/app/components/ui/Avatar";
-import { BackLink } from "@/app/components/ui/BackLink";
 import { GuideButton } from "@/app/components/ui/GuideButton";
 import {
   TutorialOverlay,
@@ -63,7 +62,7 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
         onClick={onToggle}
         aria-label={`${party.active ? "Désactiver" : "Activer"} ${candidate.name}`}
         aria-pressed={party.active}
-        className="w-full cursor-pointer px-4 pt-[18px] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        className="w-full px-4 pt-[18px] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
       >
         <div
           className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-bold text-white"
@@ -145,7 +144,7 @@ function StepCandidats({ showTutorial, onCloseTutorial }: { showTutorial: boolea
               type="button"
               onClick={() => setPartiesActive(preset.inactive)}
               aria-label={preset.desc}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                 currentPresetId === preset.id
                   ? "bg-accent text-white"
                   : "border border-gray-200 bg-white text-gray-600 hover:border-accent/50 hover:text-accent"
@@ -180,52 +179,140 @@ function StepCandidats({ showTutorial, onCloseTutorial }: { showTutorial: boolea
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 1 — Config card                                               */
+/*  Step 1 — Parameters (tabbed)                                       */
 /* ------------------------------------------------------------------ */
-function ConfigCard({ party, isTutorial }: { party: PartyData; isTutorial?: boolean }) {
-  const { updateVariant, partyColors } = useSimulation();
-  const candidate = getSelected(party);
-  const colors = partyColors[party.tag];
-
-  return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-      <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: `3px solid ${colors.accent}` }}>
-        <Avatar candidate={candidate} colors={colors} size={10} />
-        <div className="flex-1">
-          <h3 className="text-sm font-bold text-primary-dark">{candidate.name}</h3>
-          <p className="text-xs text-gray-400">{party.party}</p>
-        </div>
-        <span className="rounded-full px-2.5 py-0.5 text-xs font-bold" style={{ backgroundColor: `${colors.accent}18`, color: colors.accent }}>
-          {party.tag}
-        </span>
-      </div>
-      <div className="space-y-4 px-5 py-4">
-        <div {...(isTutorial ? { "data-tuto": "attractivite" } : {})}>
-          <Slider label="Attractivité" value={candidate.attractivite} onChange={(v) => updateVariant(party.tag, "attractivite", v)} color={colors.accent} />
-        </div>
-        <div {...(isTutorial ? { "data-tuto": "tendance" } : {})}>
-          <TrendSlider value={candidate.tendance} onChange={(v) => updateVariant(party.tag, "tendance", v)} />
-        </div>
-        <div {...(isTutorial ? { "data-tuto": "ideologie" } : {})}>
-          <TriSlider left={candidate.left} center={candidate.center} right={candidate.right} onChange={(v) => updateVariant(party.tag, "ideology", v)} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; onCloseTutorial: () => void }) {
-  const { activeParties } = useSimulation();
+  const { activeParties, updateVariant, partyColors } = useSimulation();
+  const [selectedIdx, setSelectedIdx] = useState(0);
+
+  // Clamp index if candidates change
+  const idx = Math.min(selectedIdx, Math.max(0, activeParties.length - 1));
+  const party = activeParties[idx];
+  const candidate = party ? getSelected(party) : null;
+  const colors = party ? partyColors[party.tag] : null;
+  const isTutorial = showTutorial && idx === 0;
+
+  if (activeParties.length === 0) {
+    return (
+      <div className="rounded-xl border-2 border-dashed border-gray-200 py-12 text-center">
+        <p className="text-gray-400">Aucun candidat sélectionné. Retournez à l&apos;étape précédente.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {activeParties.map((party, i) => (
-        <ConfigCard key={party.tag} party={party} isTutorial={showTutorial && i === 0} />
-      ))}
-      {activeParties.length === 0 && (
-        <div className="rounded-xl border-2 border-dashed border-gray-200 py-12 text-center">
-          <p className="text-gray-400">Aucun candidat sélectionné. Retournez à l'étape précédente.</p>
+    <div>
+      {/* Candidate tabs */}
+      <div className="mb-6 flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+        {activeParties.map((p, i) => {
+          const c = getSelected(p);
+          const col = partyColors[p.tag];
+          const isActive = i === idx;
+          return (
+            <button
+              key={p.tag}
+              type="button"
+              onClick={() => setSelectedIdx(i)}
+              className={`flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-left transition-all duration-200 ${
+                isActive
+                  ? "bg-white shadow-sm"
+                  : "bg-transparent hover:bg-white/60"
+              }`}
+              style={{
+                border: isActive ? `2px solid ${col.accent}` : "2px solid transparent",
+              }}
+            >
+              <Avatar candidate={c} colors={col} size={8} grayscale={!isActive} />
+              <div className="min-w-0">
+                <div className={`truncate text-xs font-bold ${isActive ? "text-primary-dark" : "text-gray-500"}`}>
+                  {c.name.split(" ").pop()}
+                </div>
+                <div
+                  className="truncate text-[10px] font-semibold"
+                  style={{ color: isActive ? col.accent : "#9ca3af" }}
+                >
+                  {p.tag}
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Selected candidate parameters */}
+      {party && candidate && colors && (
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+          {/* Header */}
+          <div
+            className="flex items-center gap-3 px-5 py-4"
+            style={{ borderBottom: `3px solid ${colors.accent}` }}
+          >
+            <Avatar candidate={candidate} colors={colors} size={10} />
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-primary-dark">{candidate.name}</h3>
+              <p className="text-xs text-gray-400">{party.party}</p>
+            </div>
+            <span
+              className="rounded-full px-2.5 py-0.5 text-xs font-bold"
+              style={{ backgroundColor: `${colors.accent}18`, color: colors.accent }}
+            >
+              {party.tag}
+            </span>
+          </div>
+
+          {/* Controls */}
+          <div className="space-y-4 px-5 py-4">
+            <div {...(isTutorial ? { "data-tuto": "attractivite" } : {})}>
+              <Slider
+                label="Attractivité"
+                value={candidate.attractivite}
+                onChange={(v) => updateVariant(party.tag, "attractivite", v)}
+                color={colors.accent}
+              />
+            </div>
+            <div {...(isTutorial ? { "data-tuto": "tendance" } : {})}>
+              <TrendSlider
+                value={candidate.tendance}
+                onChange={(v) => updateVariant(party.tag, "tendance", v)}
+              />
+            </div>
+            <div {...(isTutorial ? { "data-tuto": "ideologie" } : {})}>
+              <TriSlider
+                left={candidate.left}
+                center={candidate.center}
+                right={candidate.right}
+                onChange={(v) => updateVariant(party.tag, "ideology", v)}
+              />
+            </div>
+          </div>
         </div>
       )}
+
+      {/* Navigation hint */}
+      <div className="mt-4 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => setSelectedIdx(Math.max(0, idx - 1))}
+          disabled={idx === 0}
+          className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-500 transition-colors hover:bg-white hover:text-primary-dark disabled:opacity-0"
+        >
+          <ChevronLeft />
+          {idx > 0 ? getSelected(activeParties[idx - 1]).name.split(" ").pop() : ""}
+        </button>
+        <span className="text-xs text-gray-400">
+          {idx + 1} / {activeParties.length}
+        </span>
+        <button
+          type="button"
+          onClick={() => setSelectedIdx(Math.min(activeParties.length - 1, idx + 1))}
+          disabled={idx === activeParties.length - 1}
+          className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-500 transition-colors hover:bg-white hover:text-primary-dark disabled:opacity-0"
+        >
+          {idx < activeParties.length - 1 ? getSelected(activeParties[idx + 1]).name.split(" ").pop() : ""}
+          <ChevronRight />
+        </button>
+      </div>
+
       {showTutorial && (
         <TutorialOverlay steps={PARAMS_TUTORIAL_STEPS} storageKey="tutoParamsSeen" onClose={onCloseTutorial} />
       )}
@@ -379,7 +466,7 @@ function StepHorizon() {
           <button
             type="button"
             onClick={() => setDays(daysUntilElection)}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
               days === daysUntilElection
                 ? "bg-orange-600 text-white"
                 : "border border-orange-300 bg-orange-50 text-orange-600 hover:bg-orange-100"
@@ -392,7 +479,7 @@ function StepHorizon() {
               key={d}
               type="button"
               onClick={() => setDays(d)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                 days === d
                   ? "bg-orange-600 text-white"
                   : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:text-orange-600"
@@ -511,9 +598,12 @@ export default function SimulationPage() {
     if (step < TUTORIAL_STORAGE_KEYS.length) setActiveTutorial(step);
   }, [step]);
 
+  const contentRef = useCallback((node: HTMLDivElement | null) => {
+    if (node) node.scrollTop = 0;
+  }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const goToStep = useCallback((target: number) => {
     setStep(target);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const total = useMemo(() => {
@@ -531,38 +621,90 @@ export default function SimulationPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <BackLink href="/" />
-
-      <div className="mb-8 text-center">
-        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
-          Configurer la simulation
-        </h1>
-        <p className="text-gray-600">{stepSubtitles[step]}</p>
-        {step <= 3 && (
-          <div className="mt-3">
-            <GuideButton onClick={openGuide} />
+    <div className="flex flex-col lg:h-[calc(100vh-80px)]">
+      {/* Mobile: titre + StepIndicator horizontal */}
+      <div className="px-4 pt-4 pb-4 sm:px-6 lg:hidden">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-sm font-bold text-primary-dark">Configurer la simulation</h1>
+            <p className="mt-0.5 text-xs text-gray-500">{stepSubtitles[step]}</p>
           </div>
-        )}
-      </div>
-
-      <div className="mb-10">
+          {step <= 3 && <GuideButton onClick={openGuide} />}
+        </div>
         <StepIndicator current={step} labels={WIZARD_STEPS} onStepClick={goToStep} />
       </div>
 
-      {step === 0 && <StepCandidats showTutorial={activeTutorial === 0 && step === 0} onCloseTutorial={closeTutorial} />}
-      {step === 1 && <StepParams showTutorial={activeTutorial === 1 && step === 1} onCloseTutorial={closeTutorial} />}
-      {step === 2 && <StepStartingPoint showTutorial={activeTutorial === 2 && step === 2} onCloseTutorial={closeTutorial} total={total} />}
-      {step === 3 && <StepBarrage showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
-      {step === 4 && <StepHorizon />}
-      {step === 5 && <StepSummary />}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Contenu principal — scroll interne */}
+        <div
+          ref={contentRef}
+          className={`scrollbar-thin flex-1 overflow-y-auto px-4 py-4 sm:px-6 lg:px-8 ${
+            step === 3 || step === 4 ? "flex flex-col items-center justify-center" : ""
+          }`}
+        >
+          <div className={`w-full ${step === 3 || step === 4 ? "" : "mx-auto max-w-4xl"}`}>
+            {step === 0 && <StepCandidats showTutorial={activeTutorial === 0 && step === 0} onCloseTutorial={closeTutorial} />}
+            {step === 1 && <StepParams showTutorial={activeTutorial === 1 && step === 1} onCloseTutorial={closeTutorial} />}
+            {step === 2 && <StepStartingPoint showTutorial={activeTutorial === 2 && step === 2} onCloseTutorial={closeTutorial} total={total} />}
+            {step === 3 && <StepBarrage showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
+            {step === 4 && <StepHorizon />}
+            {step === 5 && <StepSummary />}
 
-      {/* Spacer for sticky footer */}
-      <div className="h-20" />
+            {/* Spacer for bottom nav — only on steps with tall content */}
+            {(step <= 2 || step === 5) && <div className="h-20" />}
+          </div>
+        </div>
 
-      {/* Sticky bottom navigation card */}
-      <div className="fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
-        <div className="flex w-full max-w-md items-center justify-between rounded-xl border border-gray-200 bg-white/95 px-5 py-3 shadow-sm backdrop-blur-md">
+        {/* Sidebar droite — desktop only */}
+        <aside className="hidden w-72 shrink-0 flex-col px-6 py-5 lg:flex">
+          <div className="flex-1">
+            <h1 className="text-sm font-bold text-primary-dark">Configurer la simulation</h1>
+            <p className="mt-0.5 min-h-[2rem] text-xs text-gray-500">{stepSubtitles[step]}</p>
+            <div className="mt-2 min-h-[28px]">
+              {step <= 3 && <GuideButton onClick={openGuide} />}
+            </div>
+            <div className="mt-4 pt-4">
+              <StepIndicator vertical current={step} labels={WIZARD_STEPS} onStepClick={goToStep} />
+            </div>
+          </div>
+
+          {/* Boutons navigation — dans la sidebar */}
+          <div className="mt-4 flex flex-col gap-2 pt-4">
+            {step < WIZARD_STEPS.length - 1 ? (
+              <button
+                type="button"
+                onClick={() => goToStep(Math.min(WIZARD_STEPS.length - 1, step + 1))}
+                disabled={step === 2 && pollSource === "custom" && total !== 100}
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Suivant
+                <ChevronRight />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => router.push("/resultats")}
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              >
+                Lancer la simulation
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => goToStep(Math.max(0, step - 1))}
+              disabled={step === 0}
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <ChevronLeft />
+              Précédent
+            </button>
+          </div>
+        </aside>
+      </div>
+
+      {/* Bottom navigation — mobile only */}
+      <div className="shrink-0 border-t border-gray-200 bg-white/95 px-4 py-3 backdrop-blur-md lg:hidden">
+        <div className="mx-auto flex max-w-md items-center justify-between">
           <button
             type="button"
             onClick={() => goToStep(Math.max(0, step - 1))}

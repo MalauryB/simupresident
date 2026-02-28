@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Qui sera président",
-    short_name: "Qui sera président",
-    description: "Qui sera président — Simulateur interactif de l'élection présidentielle 2027",
+    name: "Qui pour l\u2019\u00c9lys\u00e9e\u202f?",
+    short_name: "Qui pour l\u2019\u00c9lys\u00e9e\u202f?",
+    description: "Qui pour l\u2019\u00c9lys\u00e9e\u202f? \u2014 Simulateur interactif de l\u2019\u00e9lection pr\u00e9sidentielle 2027",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

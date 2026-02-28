@@ -102,7 +102,7 @@ export default function ResultatsPage() {
         <p className="text-sm font-medium text-gray-600">
           Simulation Monte Carlo en cours&hellip;
         </p>
-        <p className="text-xs text-gray-400">{SIM_COUNT} simulations &times; {days} jours</p>
+        <p className="text-xs text-gray-500">{SIM_COUNT} simulations &times; {days} jours</p>
       </div>
     );
   }
@@ -292,7 +292,7 @@ export default function ResultatsPage() {
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </h3>
-            <p className="mb-4 text-xs text-gray-400">
+            <p className="mb-4 text-xs text-gray-500">
               P(qualification au 2nd tour)
             </p>
             <div className="min-w-[400px]">
@@ -345,7 +345,7 @@ export default function ResultatsPage() {
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </h3>
-            <p className="mb-4 text-xs text-gray-400">
+            <p className="mb-4 text-xs text-gray-500">
               P(victoire finale)
             </p>
             <div className="min-w-[400px]">
@@ -445,7 +445,7 @@ export default function ResultatsPage() {
                         <span className="font-medium text-gray-700">
                           {d.nameA}
                         </span>
-                        <span className="text-xs text-gray-400">vs</span>
+                        <span className="text-xs text-gray-500">vs</span>
                         <span
                           className="inline-block h-2.5 w-2.5 rounded-full"
                           style={{
@@ -488,14 +488,14 @@ export default function ResultatsPage() {
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Participation estim&eacute;e
               </h3>
-              <p className="mb-4 text-xs text-gray-400">
+              <p className="mb-4 text-xs text-gray-500">
                 Sur l&rsquo;&eacute;chelle des inscrits (IC 75%)
               </p>
               <div className="flex items-end gap-3">
                 <span className="text-4xl font-extrabold text-primary-dark">
                   {(secondRound.participation.median * 100).toFixed(1)}%
                 </span>
-                <span className="mb-1 text-sm text-gray-400">
+                <span className="mb-1 text-sm text-gray-500">
                   [{(secondRound.participation.lo * 100).toFixed(1)}% &ndash;{" "}
                   {(secondRound.participation.hi * 100).toFixed(1)}%]
                 </span>
@@ -507,14 +507,14 @@ export default function ResultatsPage() {
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Blanc / Nul estim&eacute;
               </h3>
-              <p className="mb-4 text-xs text-gray-400">
+              <p className="mb-4 text-xs text-gray-500">
                 Sur l&rsquo;&eacute;chelle des inscrits (IC 75%)
               </p>
               <div className="flex items-end gap-3">
                 <span className="text-4xl font-extrabold text-primary-dark">
                   {(secondRound.blancNul.median * 100).toFixed(1)}%
                 </span>
-                <span className="mb-1 text-sm text-gray-400">
+                <span className="mb-1 text-sm text-gray-500">
                   [{(secondRound.blancNul.lo * 100).toFixed(1)}% &ndash;{" "}
                   {(secondRound.blancNul.hi * 100).toFixed(1)}%]
                 </span>

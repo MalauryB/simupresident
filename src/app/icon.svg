@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <!-- Background -->
-  <rect width="32" height="32" rx="7" fill="#2D3A50"/>
+  <rect width="32" height="32" rx="7" fill="#0F2444"/>
 
   <!-- "Q" in white -->
   <text x="5" y="24" font-size="22" font-weight="800" fill="#FFFFFF" font-family="ui-monospace, 'Courier New', monospace">Q</text>
 
   <!-- "?" in accent -->
-  <text x="20" y="21" font-size="16" font-weight="800" fill="#FF584D" font-family="ui-monospace, 'Courier New', monospace">?</text>
+  <text x="20" y="21" font-size="16" font-weight="800" fill="#E4002B" font-family="ui-monospace, 'Courier New', monospace">?</text>
 </svg>
