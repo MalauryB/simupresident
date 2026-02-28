@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
-import { WIZARD_STEPS, ALLIANCE_PRESETS, ELECTION_DATE, DAY_PRESETS } from "@/lib/constants";
+import { WIZARD_STEPS, ALLIANCE_PRESETS } from "@/lib/constants";
 import { getSelected, getTrendColor, getStartField } from "@/lib/simulation";
 import { StepIndicator } from "@/app/components/ui/StepIndicator";
 import { Slider } from "@/app/components/ui/Slider";
@@ -262,12 +262,12 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
 
           {/* Controls */}
           <div className="space-y-4 px-5 py-4">
-            <div {...(isTutorial ? { "data-tuto": "attractivite" } : {})}>
-              <Slider
-                label="Attractivité"
-                value={candidate.attractivite}
-                onChange={(v) => updateVariant(party.tag, "attractivite", v)}
-                color={colors.accent}
+            <div {...(isTutorial ? { "data-tuto": "ideologie" } : {})}>
+              <TriSlider
+                left={candidate.left}
+                center={candidate.center}
+                right={candidate.right}
+                onChange={(v) => updateVariant(party.tag, "ideology", v)}
               />
             </div>
             <div {...(isTutorial ? { "data-tuto": "tendance" } : {})}>
@@ -276,12 +276,12 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
                 onChange={(v) => updateVariant(party.tag, "tendance", v)}
               />
             </div>
-            <div {...(isTutorial ? { "data-tuto": "ideologie" } : {})}>
-              <TriSlider
-                left={candidate.left}
-                center={candidate.center}
-                right={candidate.right}
-                onChange={(v) => updateVariant(party.tag, "ideology", v)}
+            <div {...(isTutorial ? { "data-tuto": "attractivite" } : {})}>
+              <Slider
+                label="Effet vote utile"
+                value={candidate.attractivite}
+                onChange={(v) => updateVariant(party.tag, "attractivite", v)}
+                color={colors.accent}
               />
             </div>
           </div>
@@ -323,13 +323,14 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
 /* ------------------------------------------------------------------ */
 /*  Step 2 — Starting point row                                        */
 /* ------------------------------------------------------------------ */
-function StartingPointRow({ party, sourceId }: { party: PartyData; sourceId: string }) {
+function StartingPointRow({ party, sourceId, total }: { party: PartyData; sourceId: string; total: number }) {
   const { updateVariant, partyColors } = useSimulation();
   const candidate = getSelected(party);
   const colors = partyColors[party.tag];
   const fieldKey = getStartField(sourceId);
   const value = candidate[fieldKey];
   const isCustom = sourceId === "custom";
+  const normalized = total > 0 ? (value / total * 100).toFixed(1) : "0.0";
 
   return (
     <div className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3">
@@ -348,14 +349,28 @@ function StartingPointRow({ party, sourceId }: { party: PartyData; sourceId: str
           className="w-16 rounded-lg border border-gray-200 px-2 py-1 text-right font-mono text-sm font-semibold text-primary-dark focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
         />
       ) : (
-        <span className="font-mono text-sm font-semibold text-primary-dark">{value}%</span>
+        <span className="font-mono text-sm font-semibold text-primary-dark">{normalized}%</span>
       )}
     </div>
   );
 }
 
 function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutorial: boolean; onCloseTutorial: () => void; total: number }) {
-  const { activeParties, pollSource, pollSources, setPollSource, unpolledActive } = useSimulation();
+  const { activeParties, pollSource, pollSources, setPollSource, unpolledActive, updateVariant } = useSimulation();
+  const isCustom = pollSource === "custom";
+
+  const normalizeCustom = useCallback(() => {
+    if (total <= 0) return;
+    const entries = activeParties.map((p) => ({ tag: p.tag, val: getSelected(p).startCustom }));
+    const normalized = entries.map((e) => Math.round((e.val / total) * 1000) / 10);
+    const sumTenths = normalized.reduce((s, v) => s + Math.round(v * 10), 0);
+    const diff = 1000 - sumTenths;
+    if (diff !== 0) {
+      const maxIdx = normalized.indexOf(Math.max(...normalized));
+      normalized[maxIdx] = Math.round(normalized[maxIdx] * 10 + diff) / 10;
+    }
+    entries.forEach((e, i) => updateVariant(e.tag, "startCustom", normalized[i]));
+  }, [activeParties, total, updateVariant]);
   return (
     <div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-3" {...(showTutorial ? { "data-tuto": "source-sondage" } : {})}>
@@ -395,14 +410,29 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
         </h3>
         <div className="space-y-2">
           {activeParties.map((p) => (
-            <StartingPointRow key={p.tag} party={p} sourceId={pollSource} />
+            <StartingPointRow key={p.tag} party={p} sourceId={pollSource} total={total} />
           ))}
         </div>
         <div className="mt-3 flex items-center justify-end gap-2 text-sm">
           <span className="text-gray-600">Total :</span>
-          <span className={`font-mono font-bold ${total === 100 ? "text-green-600" : "text-amber-600"}`}>
-            {total}%
-          </span>
+          {isCustom ? (
+            <>
+              <span className={`font-mono font-bold ${total === 100 ? "text-green-600" : "text-amber-600"}`}>
+                {total}%
+              </span>
+              {total !== 100 && total > 0 && (
+                <button
+                  type="button"
+                  onClick={normalizeCustom}
+                  className="rounded-lg bg-accent/10 px-2.5 py-0.5 text-xs font-semibold text-accent transition-colors hover:bg-accent/20"
+                >
+                  Normaliser
+                </button>
+              )}
+            </>
+          ) : (
+            <span className="font-mono font-bold text-green-600">100%</span>
+          )}
         </div>
       </div>
 
@@ -414,17 +444,13 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 3 — Barrage & Horizon                                         */
+/*  Step 3 — Barrage                                                   */
 /* ------------------------------------------------------------------ */
-function StepBarrageHorizon({ showTutorial, onCloseTutorial }: { showTutorial: boolean; onCloseTutorial: () => void }) {
-  const { gammaRejetED, gammaRejetEG, setGammaRejetED, setGammaRejetEG, days, setDays } = useSimulation();
-  const daysUntilElection = useMemo(() => {
-    return Math.max(7, Math.min(365, Math.round((ELECTION_DATE.getTime() - Date.now()) / 86_400_000)));
-  }, []);
+function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean; onCloseTutorial: () => void }) {
+  const { gammaRejetED, gammaRejetEG, setGammaRejetED, setGammaRejetEG } = useSimulation();
 
   return (
     <div className="mx-auto max-w-lg space-y-6">
-      {/* Barrage */}
       <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Vote barrage (second tour)</h3>
         <p className="mb-5 text-sm text-gray-600">
@@ -441,45 +467,6 @@ function StepBarrageHorizon({ showTutorial, onCloseTutorial }: { showTutorial: b
           </div>
         </div>
       </div>
-
-      {/* Horizon */}
-      <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
-        <h3 className="mb-1 text-base font-bold text-primary-dark">Horizon de simulation</h3>
-        <p className="mb-5 text-sm text-gray-600">
-          Nombre de jours avant l'élection sur lesquels la simulation est projetée.
-          Un horizon court (30–90 j) donne des résultats plus stables ;
-          un horizon long (365 j) capture davantage d'incertitude.
-        </p>
-        <Slider label="Jours avant l'élection" value={days} onChange={(v) => setDays(Math.round(v))} min={7} max={365} step={1} color="#ea580c" />
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setDays(daysUntilElection)}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-              days === daysUntilElection
-                ? "bg-orange-600 text-white"
-                : "border border-orange-300 bg-orange-50 text-orange-600 hover:bg-orange-100"
-            }`}
-          >
-            Aujourd'hui ({daysUntilElection}j)
-          </button>
-          {DAY_PRESETS.map((d) => (
-            <button
-              key={d}
-              type="button"
-              onClick={() => setDays(d)}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                days === d
-                  ? "bg-orange-600 text-white"
-                  : "border border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:text-orange-600"
-              }`}
-            >
-              {d} jours
-            </button>
-          ))}
-        </div>
-      </div>
-
       {showTutorial && (
         <TutorialOverlay steps={BARRAGE_TUTORIAL_STEPS} storageKey="tutoBarrageSeen" onClose={onCloseTutorial} />
       )}
@@ -493,6 +480,7 @@ function StepBarrageHorizon({ showTutorial, onCloseTutorial }: { showTutorial: b
 function ReviewTable({ parties }: { parties: PartyData[] }) {
   const { partyColors, pollSource } = useSimulation();
   const field = getStartField(pollSource);
+  const total = parties.reduce((s, p) => s + getSelected(p)[field], 0);
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">
       <table className="w-full min-w-[500px] text-left text-sm">
@@ -522,7 +510,7 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
                     {p.tag}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-right font-mono font-semibold text-primary-dark">{c[field]}%</td>
+                <td className="px-4 py-3 text-right font-mono font-semibold text-primary-dark">{total > 0 ? (c[field] / total * 100).toFixed(1) : 0}%</td>
                 <td className="px-4 py-3 text-right">
                   <span className="font-mono font-semibold" style={{ color: getTrendColor(c.tendance) }}>
                     {c.tendance.toFixed(2)}
@@ -608,7 +596,7 @@ export default function SimulationPage() {
     "Sélectionnez les candidats à inclure dans la simulation.",
     "Ajustez les paramètres de chaque candidat.",
     "Choisissez la source de sondages et vérifiez les points de départ.",
-    "Configurez le vote barrage et l'horizon temporel.",
+    "Configurez l'intensité du vote barrage au second tour.",
     "Vérifiez la configuration avant de lancer la simulation.",
   ];
 
@@ -638,7 +626,7 @@ export default function SimulationPage() {
             {step === 0 && <StepCandidats showTutorial={activeTutorial === 0 && step === 0} onCloseTutorial={closeTutorial} />}
             {step === 1 && <StepParams showTutorial={activeTutorial === 1 && step === 1} onCloseTutorial={closeTutorial} />}
             {step === 2 && <StepStartingPoint showTutorial={activeTutorial === 2 && step === 2} onCloseTutorial={closeTutorial} total={total} />}
-            {step === 3 && <StepBarrageHorizon showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
+            {step === 3 && <StepBarrage showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
             {step === 4 && <StepSummary />}
 
             {/* Spacer for bottom nav — only on steps with tall content */}

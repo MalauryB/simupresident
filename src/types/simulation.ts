@@ -64,6 +64,8 @@ export interface DuelProbability {
   probability: number;
   avgShareA: number;
   avgShareB: number;
+  pWinA: number;
+  pWinB: number;
 }
 
 export interface QuantileSummary {

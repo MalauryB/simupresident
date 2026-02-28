@@ -13,22 +13,29 @@ const AXES = [
   { key: "right" as const, label: "Droite", color: "#0066CC" },
 ];
 
-function normalize(l: number, c: number, r: number) {
-  const s = l + c + r;
-  if (s === 0) return { left: 0.33, center: 0.34, right: 0.33 };
-  return {
-    left: +((l / s).toFixed(2)),
-    center: +((c / s).toFixed(2)),
-    right: +((r / s).toFixed(2)),
-  };
-}
-
 export function TriSlider({ left, center, right, onChange }: TriSliderProps) {
   const vals = { left, center, right };
 
   const handleChange = (key: "left" | "center" | "right", v: number) => {
-    const raw = { ...vals, [key]: v };
-    onChange(normalize(raw.left, raw.center, raw.right));
+    const clamped = Math.round(Math.min(1, Math.max(0, v)) * 100) / 100;
+    const otherKeys = (["left", "center", "right"] as const).filter((k) => k !== key);
+    const otherSum = otherKeys.reduce((s, k) => s + vals[k], 0);
+    const remaining = Math.round((1 - clamped) * 100) / 100;
+
+    let o0: number, o1: number;
+    if (otherSum > 0) {
+      o0 = Math.round(((vals[otherKeys[0]] / otherSum) * remaining) * 100) / 100;
+      o1 = Math.round((remaining - o0) * 100) / 100;
+    } else {
+      o0 = Math.round((remaining / 2) * 100) / 100;
+      o1 = Math.round((remaining - o0) * 100) / 100;
+    }
+
+    const result = { left: vals.left, center: vals.center, right: vals.right };
+    result[key] = clamped;
+    result[otherKeys[0]] = o0;
+    result[otherKeys[1]] = o1;
+    onChange(result);
   };
 
   return (
