@@ -5,12 +5,12 @@ import { getTrendColor, getTrendLabel } from "@/lib/simulation";
 /* ── Sparkline mini-graph ── */
 function TrendSparkline({ value, width = 64, height = 28 }: { value: number; width?: number; height?: number }) {
   const color = getTrendColor(value);
-  const slope = (value - 0.5) * 2;
+  const slope = value;
   const sY = height / 2 + slope * (height * 0.35);
   const eY = height / 2 - slope * (height * 0.35);
   const m1 = sY + (eY - sY) * 0.3 + Math.sin(value * 5) * 4;
   const m2 = sY + (eY - sY) * 0.65 - Math.cos(value * 3) * 3;
-  const id = `tg-${Math.round(value * 100)}`;
+  const id = `tg-${Math.round((value + 1) * 100)}`;
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="block">
@@ -39,7 +39,7 @@ function TrendSparkline({ value, width = 64, height = 28 }: { value: number; wid
 /* ── Rotating arrow indicator ── */
 function TrendArrow({ value, size = 20 }: { value: number; size?: number }) {
   const color = getTrendColor(value);
-  const rot = (1 - value) * 180 - 90;
+  const rot = -value * 90;
 
   return (
     <div
@@ -73,9 +73,12 @@ interface TrendSliderProps {
 
 export function TrendSlider({ value, onChange }: TrendSliderProps) {
   const color = getTrendColor(value);
-  const pct = value * 100;
+  const pct = ((value + 1) / 2) * 100; // 0% at -1, 50% at 0, 100% at 1
   const label = getTrendLabel(value);
-  const arrow = value >= 0.6 ? "\u2197" : value >= 0.45 ? "\u2192" : "\u2198";
+  const arrow = value >= 0.2 ? "\u2197" : value >= -0.1 ? "\u2192" : "\u2198";
+
+  const monthly = value * 0.381;
+  const monthlyStr = monthly >= 0 ? `+${monthly.toFixed(1)}` : monthly.toFixed(1);
 
   return (
     <div>
@@ -115,19 +118,25 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
               opacity: 0.3,
             }}
           />
-          {/* Active fill */}
+          {/* Active fill from center */}
           <div
             className="absolute h-2.5 rounded-full"
             style={{
-              width: `${pct}%`,
-              background: `linear-gradient(90deg,#dc2626,${color})`,
+              left: value >= 0 ? "50%" : `${pct}%`,
+              width: `${Math.abs(pct - 50)}%`,
+              background: color,
               opacity: 0.6,
             }}
+          />
+          {/* Center tick */}
+          <div
+            className="absolute h-4 w-0.5 rounded-full bg-gray-300"
+            style={{ left: "50%", transform: "translateX(-50%)" }}
           />
           {/* Invisible range input */}
           <input
             type="range"
-            min={0}
+            min={-1}
             max={1}
             step={0.01}
             value={value}
@@ -151,6 +160,13 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Monthly approximation legend */}
+      <div className="mt-1.5 text-right">
+        <span className="text-[11px] text-gray-400">
+          &asymp; {monthlyStr} pts/mois
+        </span>
       </div>
     </div>
   );
