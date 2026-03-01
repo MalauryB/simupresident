@@ -77,7 +77,7 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
   const label = getTrendLabel(value);
   const arrow = value >= 0.2 ? "\u2197" : value >= -0.1 ? "\u2192" : "\u2198";
 
-  const monthly = value * 0.381;
+  const monthly = value * 0.762;
   const monthlyStr = monthly >= 0 ? `+${monthly.toFixed(1)}` : monthly.toFixed(1);
 
   return (

@@ -76,7 +76,6 @@ interface SimConfig {
   // Vote utile (1er tour)
   lambda_cos: number;
   beta_viab: number;
-  eps_viab: number;
   T0_offset: number;
   s_tau: number;
   psi_scale: number;
@@ -102,7 +101,6 @@ const DEFAULT_CONFIG: SimConfig = {
   sigma_eps: 1.766046e-02,
   lambda_cos: 6,
   beta_viab: 5,
-  eps_viab: 1e-4,
   T0_offset: 7,
   s_tau: 7,
   psi_scale: 4,
@@ -113,8 +111,8 @@ const DEFAULT_CONFIG: SimConfig = {
   r_max: 0.95,
   lambda_drift: 6,
   beta_2: 7,
-  alpha_nonexpr: -2.259496,
-  gamma_rejet_ED: 4.909881,
+  alpha_nonexpr: -2.259515,
+  gamma_rejet_ED: 4.909898,
   gamma_rejet_EG: 2.240084,
   lambda_cos_2: 3,
 };
@@ -233,9 +231,9 @@ function voteUtileTransform(
   const m = v.map((vk, i) => (1 - r[i]) * vk);
   const v_keep = v.map((vk, i) => r[i] * vk);
 
-  // Attractivité : exp(psi + beta_viab * log(enjeu + eps_viab))
+  // Attractivité : exp(psi + beta_viab * enjeu)  [R: exp(4*psi + beta_utile*enjeu)]
   const att = psi.map((p, k) =>
-    Math.exp(p + cfg.beta_viab * Math.log(enjeu[k] + cfg.eps_viab)),
+    Math.exp(p + cfg.beta_viab * enjeu[k]),
   );
 
   // Scores[j][k] = Kern[j][k] * att[k], normalisé par ligne
@@ -300,7 +298,7 @@ function simulateOne(
 
   // Drift par candidat
   const drift = candidates.map(
-    (c) => (c.tendance / 2) * cfg.drift_scale,
+    (c) => c.tendance * cfg.drift_scale,
   );
 
   for (let t = 1; t < T; t++) {
