@@ -453,10 +453,15 @@ function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean;
     <div className="mx-auto max-w-lg space-y-6">
       <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Vote barrage (second tour)</h3>
-        <p className="mb-5 text-sm text-gray-600">
-          Ces coefficients pénalisent les candidats extrêmes lorsqu'ils accèdent au second tour.
-          La pénalité de chaque candidat est calculée à partir de son vecteur idéologique :
-          {" "}&rho;<sub>k</sub> = &gamma;<sub>ED</sub> &times; W<sub>droite</sub> + &gamma;<sub>EG</sub> &times; W<sub>gauche</sub>.
+        <p className="mb-3 text-sm text-gray-600">
+          Au second tour, les &eacute;lecteurs des candidats &eacute;limin&eacute;s se reportent
+          vers le finaliste le plus proche id&eacute;ologiquement, mais peuvent aussi s&rsquo;abstenir
+          ou voter blanc. Ces coefficients ajoutent une <strong>p&eacute;nalit&eacute; de rejet</strong> pour
+          les candidats per&ccedil;us comme extr&ecirc;mes, repr&eacute;sentant le &laquo;&nbsp;front
+          r&eacute;publicain&nbsp;&raquo;.
+        </p>
+        <p className="mb-5 font-mono text-xs text-gray-500">
+          &rho;<sub>k</sub> = &gamma;<sub>ED</sub> &times; W<sub>k,droite</sub> + &gamma;<sub>EG</sub> &times; W<sub>k,gauche</sub>
         </p>
         <div className="space-y-4">
           <div {...(showTutorial ? { "data-tuto": "barrage-ed" } : {})}>
