@@ -49,8 +49,8 @@ export const DEFAULT_PARTIES: PartyData[] = [
   {
     tag: "LR", party: "Les Républicains", active: true, selectedIdx: 0,
     variants: [
-      { name: "Bruno Retailleau", initials: "BR", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.0, left: 0.0, center: 0.7, right: 0.3, startAgrege: 8, startCustom: 8, photoUrl: `${PHOTO_BASE}bruno-retailleau.jpg` },
-      { name: "Laurent Wauquiez", initials: "LW", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.0, left: 0.0, center: 0.7, right: 0.3, startAgrege: 9, startCustom: 9, photoUrl: `${PHOTO_BASE}laurent-wauquiez.jpg` },
+      { name: "Bruno Retailleau", initials: "BR", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.0, left: 0.0, center: 0.3, right: 0.7, startAgrege: 8, startCustom: 8, photoUrl: `${PHOTO_BASE}bruno-retailleau.jpg` },
+      { name: "Laurent Wauquiez", initials: "LW", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.0, left: 0.0, center: 0.3, right: 0.7, startAgrege: 9, startCustom: 9, photoUrl: `${PHOTO_BASE}laurent-wauquiez.jpg` },
     ],
   },
   {
@@ -88,4 +88,4 @@ export const DEFAULT_COLORS: PartyColors = { bg: "#556C96", fg: "#FFFFFF", accen
 export const ELECTION_DATE = new Date(2027, 3, 10); // 10 avril 2027
 
 
-export const SIM_COUNT = 200;
+export const SIM_COUNT = 500;

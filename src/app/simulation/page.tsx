@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
-import { WIZARD_STEPS, ALLIANCE_PRESETS } from "@/lib/constants";
+import { WIZARD_STEPS } from "@/lib/constants";
 import { getSelected, getTrendColor, getStartField } from "@/lib/simulation";
 import { StepIndicator } from "@/app/components/ui/StepIndicator";
 import { Slider } from "@/app/components/ui/Slider";
@@ -121,13 +121,7 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
 /*  Step 0 — Candidates                                                */
 /* ------------------------------------------------------------------ */
 function StepCandidats({ showTutorial, onCloseTutorial }: { showTutorial: boolean; onCloseTutorial: () => void }) {
-  const { parties, toggleParty, setPartiesActive } = useSimulation();
-
-  const currentPresetId = useMemo(() => {
-    return ALLIANCE_PRESETS.find((preset) =>
-      parties.every((p) => preset.inactive.includes(p.tag) ? !p.active : p.active)
-    )?.id ?? null;
-  }, [parties]);
+  const { parties, toggleParty } = useSimulation();
 
   const firstVariantIdx = showTutorial
     ? parties.findIndex((p, i) => i !== 0 && p.variants.length > 1 && p.active)
@@ -135,27 +129,6 @@ function StepCandidats({ showTutorial, onCloseTutorial }: { showTutorial: boolea
 
   return (
     <div>
-      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4">
-        <h3 className="mb-3 text-sm font-bold text-primary-dark">Scénarios d'alliance</h3>
-        <div className="flex flex-wrap gap-2">
-          {ALLIANCE_PRESETS.map((preset) => (
-            <button
-              key={preset.id}
-              type="button"
-              onClick={() => setPartiesActive(preset.inactive)}
-              aria-label={preset.desc}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                currentPresetId === preset.id
-                  ? "bg-accent text-white"
-                  : "border border-gray-200 bg-white text-gray-600 hover:border-accent/50 hover:text-accent"
-              }`}
-            >
-              {preset.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {parties.map((party, i) => {
           const tutoAttr = showTutorial && i === 0
@@ -453,22 +426,18 @@ function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean;
     <div className="mx-auto max-w-lg space-y-6">
       <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-6">
         <h3 className="mb-1 text-base font-bold text-primary-dark">Vote barrage (second tour)</h3>
-        <p className="mb-3 text-sm text-gray-600">
+        <p className="mb-5 text-sm text-gray-600">
           Au second tour, les &eacute;lecteurs des candidats &eacute;limin&eacute;s se reportent
           vers le finaliste le plus proche id&eacute;ologiquement, mais peuvent aussi s&rsquo;abstenir
-          ou voter blanc. Ces coefficients ajoutent une <strong>p&eacute;nalit&eacute; de rejet</strong> pour
-          les candidats per&ccedil;us comme extr&ecirc;mes, repr&eacute;sentant le &laquo;&nbsp;front
-          r&eacute;publicain&nbsp;&raquo;.
-        </p>
-        <p className="mb-5 font-mono text-xs text-gray-500">
-          &rho;<sub>k</sub> = &gamma;<sub>ED</sub> &times; W<sub>k,droite</sub> + &gamma;<sub>EG</sub> &times; W<sub>k,gauche</sub>
+          ou voter blanc. Ces coefficients ajustent l&rsquo;intensit&eacute; du rejet
+          envers les candidats per&ccedil;us comme extr&ecirc;mes.
         </p>
         <div className="space-y-4">
           <div {...(showTutorial ? { "data-tuto": "barrage-ed" } : {})}>
-            <Slider label="Barrage extrême droite (γ_ED)" value={gammaRejetED} onChange={setGammaRejetED} min={0} max={10} step={0.1} color="#2563eb" />
+            <Slider label="Barrage extrême droite" value={gammaRejetED} onChange={setGammaRejetED} min={0} max={10} step={0.1} color="#2563eb" />
           </div>
           <div {...(showTutorial ? { "data-tuto": "barrage-eg" } : {})}>
-            <Slider label="Barrage extrême gauche (γ_EG)" value={gammaRejetEG} onChange={setGammaRejetEG} min={0} max={10} step={0.1} color="#dc2626" />
+            <Slider label="Barrage gauche radicale" value={gammaRejetEG} onChange={setGammaRejetEG} min={0} max={10} step={0.1} color="#dc2626" />
           </div>
         </div>
       </div>
