@@ -143,18 +143,18 @@ export function getStartField(source: string): "startAgrege" | "startCustom" {
 }
 
 export function getTrendColor(v: number): string {
-  if (v >= 0.65) return "#16a34a";
-  if (v >= 0.55) return "#65a30d";
-  if (v >= 0.45) return "#ca8a04";
-  if (v >= 0.35) return "#ea580c";
+  if (v >= 0.3) return "#16a34a";
+  if (v >= 0.1) return "#65a30d";
+  if (v >= -0.1) return "#ca8a04";
+  if (v >= -0.3) return "#ea580c";
   return "#dc2626";
 }
 
 export function getTrendLabel(v: number): string {
-  if (v >= 0.75) return "Forte hausse";
-  if (v >= 0.6) return "Hausse";
-  if (v >= 0.45) return "Stable";
-  if (v >= 0.3) return "Baisse";
+  if (v >= 0.5) return "Forte hausse";
+  if (v >= 0.2) return "Hausse";
+  if (v >= -0.1) return "Stable";
+  if (v >= -0.4) return "Baisse";
   return "Forte baisse";
 }
 
@@ -300,7 +300,7 @@ function simulateOne(
 
   // Drift par candidat
   const drift = candidates.map(
-    (c) => (c.tendance - 0.5) * cfg.drift_scale,
+    (c) => (c.tendance / 2) * cfg.drift_scale,
   );
 
   for (let t = 1; t < T; t++) {
