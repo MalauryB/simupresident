@@ -63,8 +63,8 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
                 const dbV = dbParty.variants.find((dv) => dv.name === v.name);
                 if (!dbV) return v; // Candidat absent de la BDD → garder le défaut
                 return {
-                  ...v,
                   ...dbV,
+                  ...v,
                   photoUrl: dbV.photoUrl ?? v.photoUrl,
                 };
               }),
