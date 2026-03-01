@@ -43,11 +43,11 @@ K <- nrow(Ideo)
 B <- ncol(Ideo)
 
 # Tendance long terme (drift) : vecteur K
-delta <-c(0.5, 0, 0, -0.5, 0.2, -0.2, 0)
+delta <-c(0.2, 0, 0, -0.5, 0, -0.2, 0)
 
-# Focalisation vote utile : vecteur K
+# Effet vote utile : vecteur K
 psi <- c(1, 0, 0.5, 0, 0.5, 0, 0)
-psi <- psi - mean(psi)  # centrage conseillé
+psi <- psi - mean(psi)  # centrage 
 
 # Conditions initiales (parts jour 1)
 v0 <- c(0.12, 0.09, 0.135, 0.17, 0.08, 0.35, 0.055)
@@ -66,17 +66,16 @@ parms <- list(
     days_on = 7,      # activation sur les 'days_on' derniers jours
     s_tau   = 7,      # pente logistique
     lambda_cos = 6,    # concentration vers proches (W^lambda)
-    beta_viab  = 5,    # poids "viabilité"
-    q0 = 0.15,         # niveau visé par "enjeu"
+    beta_utile  = 5,    # poids vote utile
+    q0 = 0.15,         # seuil de qualification fixé à 15%
     sig_q = 0.2,
-    r_min = 0.6,      # retention min
-    r_max = 0.95,
-    eps_viab = 1e-4
+    r_min = 0.6,      # retention min (proportion d'electeurs qui reste fidèle quoi qu'il arrive)
+    r_max = 0.95     # retention max (proportion d'electeurs qui reste fidèle dans le meilleure scénario)
   ),
   # dynamique
   dyn = list(
-    sigma_f = c(1.664767e-05, 1.664767e-05, 1.664767e-05),  # facteurs (taille B)
-    sigma_eps = rep(1.766046e-02, K)        # idiosyncratique (taille K)
+    sigma_f = c(1.664767e-05),  # facteur choc (estimé avec la presidentielle 2022)
+    sigma_eps = rep(1.766046e-02, K) # idiosyncratique (estimé avec la presidentielle 2022)
   ),
   # drift
   drift = list(
@@ -84,9 +83,15 @@ parms <- list(
     positive_only = TRUE,
     eps = 1e-12
   ),
+  # Second tour
+  sec_t = list(
+    alpha_nonexpr = -2.259515,
+    rejet_D = 4.909898,
+    rejet_G = 2.240084
+  ),
   # Monte Carlo
   mc = list(
-    S = 100,
+    S = 200,
     probs = c(0.10, 0.50, 0.90)
   )
 )
@@ -147,10 +152,9 @@ apply_drift_vec <- function(u, W, delta, lambda_drift = 6, positive_only = TRUE,
 # ----------------------------
 vote_utile_transform_vec <- function(v, W, psi,
                                      lambda_cos = 6,
-                                     beta_viab  = 3,
+                                     beta_utile  = 3,
                                      q0 = 0.15, sig_q = 0.10,
-                                     r_min = 0.70, r_max = 0.95,
-                                     eps_viab = 1e-4) {
+                                     r_min = 0.70, r_max = 0.95) {
   K <- length(v)
   stopifnot(nrow(W) == K, length(psi) == K)
   
@@ -167,9 +171,9 @@ vote_utile_transform_vec <- function(v, W, psi,
   # Matrice de transition A_{j,k} ∝ (W_{j,k}^lambda) * att_k
   Kern <- pmax(W, 0)^lambda_cos
   
-  att <- exp(4 * psi + beta_viab * log(enjeu + eps_viab))  # taille K
+  att <- exp(4 * psi + beta_utile * enjeu )  # taille K
   
-  # scores_{j,k} = Kern_{j,k} * att_k  (broadcast colonne)
+  # scores_{j,k} = Kern_{j,k} * att_k  
   Scores <- Kern * rep(att, each = K)
   
   denom <- rowSums(Scores)
@@ -229,10 +233,9 @@ simulate_one <- function(Ideo, W, v0, delta, psi, parms) {
     v_tilde <- vote_utile_transform_vec(
       v_base[t, ], W, psi,
       lambda_cos = parms$vote_utile$lambda_cos,
-      beta_viab  = parms$vote_utile$beta_viab,
+      beta_utile  = parms$vote_utile$beta_utile,
       q0 = parms$vote_utile$q0, sig_q = parms$vote_utile$sig_q,
-      r_min = parms$vote_utile$r_min, r_max = parms$vote_utile$r_max,
-      eps_viab = parms$vote_utile$eps_viab
+      r_min = parms$vote_utile$r_min, r_max = parms$vote_utile$r_max
     )
     
     v_obs[t, ] <- (1 - a_t) * v_base[t, ] + a_t * v_tilde
@@ -325,8 +328,8 @@ softmax3 <- function(x) {
 }
 
 # (inchangé) règle rho
-rho_rule <- function(Ideo, gamma_rejet_ED, gamma_rejet_EG) {
-  gamma_rejet_ED * Ideo[,3] + gamma_rejet_EG * Ideo[,1]
+rho_rule <- function(Ideo, rejet_D, rejet_G) {
+  rejet_D * Ideo[,3] + rejet_G * Ideo[,1]
 }
 
 # Build M with 3 columns: A, B, nonexpr
@@ -358,14 +361,14 @@ build_M_second_round3 <- function(W, A, B,
 
 simulate_second_round3 <- function(v1, Ideo, W,
                                    beta = 7,
-                                   alpha_nonexpr = -1.8, 
-                                   gamma_rejet_ED = 4,
-                                   gamma_rejet_EG = 0,
+                                   alpha_nonexpr = -2, 
+                                   rejet_D = 5,
+                                   rejet_G = 2,
                                    lambda_cos = 3) {
   ord <- order(v1, decreasing = TRUE)
   A <- ord[1]; B <- ord[2]
   
-  rho <- rho_rule(Ideo, gamma_rejet_ED, gamma_rejet_EG)
+  rho <- rho_rule(Ideo, rejet_D, rejet_G)
   
   M <- build_M_second_round3(W, A, B,
                              beta = beta,
@@ -400,9 +403,9 @@ for (s in 1:S) {
   out2 <- simulate_second_round3(
     v1, Ideo, W,
     beta = 7,
-    alpha_nonexpr = -2.259496,
-    gamma_rejet_ED = 4.909881   ,
-    gamma_rejet_EG = 2.240084  ,
+    alpha_nonexpr = parms$sec_t$alpha_nonexpr,
+    rejet_D = parms$sec_t$rejet_D,
+    rejet_G = parms$sec_t$rejet_G,
     lambda_cos = 3
   )
   

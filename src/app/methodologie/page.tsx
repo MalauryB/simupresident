@@ -164,7 +164,7 @@ export default function MethodologiePage() {
             </code>
             <div className="mt-2 space-y-1 font-mono text-xs text-gray-600">
               <p>
-                drift<sub>i</sub> = (tendance<sub>i</sub> / 2) &times;
+                drift<sub>i</sub> = tendance<sub>i</sub> &times;
                 0.001
               </p>
               <p>
@@ -243,12 +243,11 @@ export default function MethodologiePage() {
             Pour chaque &eacute;lectorat (les &eacute;lecteurs du candidat 1, du
             2, etc.), le mod&egrave;le calcule la probabilit&eacute; de :
           </p>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="grid grid-cols-3 gap-2">
             {[
               { label: "Voter pour A", color: "#556C96" },
               { label: "Voter pour B", color: "#B6CDE8" },
-              { label: "S'abstenir", color: "#ca8a04" },
-              { label: "Voter blanc/nul", color: "#9ca3af" },
+              { label: "Non-exprim\u00e9s", color: "#ca8a04" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -500,11 +499,12 @@ export default function MethodologiePage() {
             R&eacute;tention et masse mobile
           </h3>
           <p>
-            Une fonction logistique d&eacute;termine la fraction de voix que
-            chaque candidat conserve :
+            Un &laquo;&nbsp;enjeu&nbsp;&raquo; gaussien d&eacute;termine quels candidats sont
+            dans la zone de qualification. La r&eacute;tention d&eacute;pend de cet enjeu :
           </p>
           <Formula>
-            <p>r(v) = 1 / (1 + exp(&minus;(v &minus; &tau;<sub>vote</sub>) / s<sub>v</sub>))</p>
+            <p>enjeu<sub>k</sub> = exp(&minus;0.5 &middot; ((v<sub>k</sub> &minus; q<sub>0</sub>) / &sigma;<sub>q</sub>)&sup2;)</p>
+            <p className="mt-1">r<sub>k</sub> = r<sub>max</sub> &minus; (r<sub>max</sub> &minus; r<sub>min</sub>) &middot; enjeu<sub>k</sub></p>
             <p className="mt-1">m<sub>k</sub> = (1 &minus; r<sub>k</sub>) &middot; v<sub>t,k</sub><sup>base</sup> &nbsp;&nbsp;<span className="text-gray-400">(masse mobile)</span></p>
             <p>v<sub>k</sub><sup>keep</sup> = r<sub>k</sub> &middot; v<sub>t,k</sub><sup>base</sup> &nbsp;&nbsp;<span className="text-gray-400">(fraction conserv&eacute;e)</span></p>
           </Formula>
@@ -514,11 +514,12 @@ export default function MethodologiePage() {
           </h3>
           <p>
             Le score de transfert d&rsquo;un candidat source <em>j</em> vers une
-            destination <em>k</em> combine proximit&eacute; id&eacute;ologique,
-            viabilit&eacute; et biais structurel :
+            destination <em>k</em> combine proximit&eacute; id&eacute;ologique
+            et biais structurel :
           </p>
           <Formula>
-            <p>score<sub>j&rarr;k</sub> = cos(W<sub>j</sub>, W<sub>k</sub>)<sup>&lambda;<sub>cos</sub></sup> &middot; exp(&psi;<sub>k</sub> + &beta;<sub>viab</sub> &middot; log(v<sub>t,k</sub><sup>base</sup> + &epsilon;))</p>
+            <p>att<sub>k</sub> = exp(&psi;<sub>k</sub> + &beta;<sub>viab</sub> &middot; enjeu<sub>k</sub>)</p>
+            <p className="mt-1">score<sub>j&rarr;k</sub> = cos(W<sub>j</sub>, W<sub>k</sub>)<sup>&lambda;<sub>cos</sub></sup> &middot; att<sub>k</sub></p>
             <p className="mt-1">A<sub>j&rarr;k</sub> = score<sub>j&rarr;k</sub> / &sum;<sub>&ell;</sub> score<sub>j&rarr;&ell;</sub></p>
           </Formula>
 
@@ -556,22 +557,20 @@ export default function MethodologiePage() {
           </p>
 
           <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            Logits &agrave; 4 issues par &eacute;lectorat source <em>s</em>
+            Logits &agrave; 3 issues par &eacute;lectorat source <em>s</em>
           </h3>
           <Formula>
             <p>&ell;<sub>A</sub>(s) = &beta; &middot; cos(W<sub>s</sub>, W<sub>A</sub>)<sup>&lambda;</sup> &minus; &rho;<sub>A</sub></p>
             <p>&ell;<sub>B</sub>(s) = &beta; &middot; cos(W<sub>s</sub>, W<sub>B</sub>)<sup>&lambda;</sup> &minus; &rho;<sub>B</sub></p>
-            <p className="mt-1">&ell;<sub>abst</sub>(s) = &alpha;<sub>abst</sub> + &kappa;<sub>abst</sub> &middot; d<sub>s</sub></p>
-            <p>&ell;<sub>bn</sub>(s) = &alpha;<sub>bn</sub> + &kappa;<sub>bn</sub> &middot; d<sub>s</sub></p>
-            <p className="mt-1 text-xs text-gray-400">o&ugrave; d<sub>s</sub> = 1 &minus; max(simA<sub>s</sub>, simB<sub>s</sub>)</p>
+            <p className="mt-1">&ell;<sub>nonexpr</sub>(s) = &alpha;<sub>nonexpr</sub></p>
           </Formula>
 
           <h3 className="mt-4 text-sm font-bold text-primary-dark">
             Matrice de transition et agr&eacute;gation
           </h3>
           <Formula>
-            <p>M<sub>s,&middot;</sub> = softmax(&ell;<sub>A</sub>(s), &ell;<sub>B</sub>(s), &ell;<sub>abst</sub>(s), &ell;<sub>bn</sub>(s))</p>
-            <p className="mt-2">V<sup>(2)</sup><sub>ins</sub> = (v<sub>T</sub><sup>obs</sup>)<sup>T</sup> &middot; M &nbsp;&isin; &real;<sup>4</sup></p>
+            <p>M<sub>s,&middot;</sub> = softmax(&ell;<sub>A</sub>(s), &ell;<sub>B</sub>(s), &ell;<sub>nonexpr</sub>(s))</p>
+            <p className="mt-2">V<sup>(2)</sup><sub>ins</sub> = (v<sub>T</sub><sup>obs</sup>)<sup>T</sup> &middot; M &nbsp;&isin; &real;<sup>3</sup></p>
             <p className="mt-1 font-semibold">V<sup>(2)</sup><sub>expr</sub>(A) = V<sup>(2)</sup><sub>ins</sub>(A) / (V<sup>(2)</sup><sub>ins</sub>(A) + V<sup>(2)</sup><sub>ins</sub>(B))</p>
           </Formula>
         </SectionCard>
@@ -604,6 +603,151 @@ export default function MethodologiePage() {
               12.5%&ndash;87.5%).
             </li>
           </ul>
+        </SectionCard>
+
+        {/* ---- Code source de l'algorithme ---- */}
+        <div id="code">
+          <div className="mb-4 text-center">
+            <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
+              IMPL&Eacute;MENTATION
+            </span>
+          </div>
+          <h2 className="mb-6 text-center text-2xl font-extrabold tracking-tight text-primary-dark">
+            Code source (R)
+          </h2>
+        </div>
+
+        <SectionCard id="code-1er-tour" title="Premier tour : une simulation">
+          <p>
+            Chaque appel &agrave;{" "}
+            <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-primary-dark">simulate_one()</code>{" "}
+            g&eacute;n&egrave;re une trajectoire compl&egrave;te sur T jours.
+          </p>
+          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
+{`simulate_one <- function(Ideo, W, v0, delta, psi, parms) {
+  K <- length(v0); B <- ncol(Ideo); T <- parms$T
+
+  Qf <- diag(parms$dyn$sigma_f^2, B)
+  D  <- diag(parms$dyn$sigma_eps^2, K)
+
+  # Logits relatifs (baseline = candidat K)
+  eta <- matrix(NA, T, K-1)
+  eta[1,] <- log(v0[1:(K-1)] / v0[K])
+  v_base[1,] <- softmax(c(eta[1,], 0))
+  v_obs[1,]  <- v_base[1,]
+
+  for (t in 2:T) {
+    # Chocs factoriels + idiosyncratiques
+    nu  <- mvrnorm(1, rep(0, B), Qf)
+    eps <- mvrnorm(1, rep(0, K), D)
+    u   <- Ideo %*% nu + eps
+
+    # Drift vectorisé (centré + compensation)
+    u <- apply_drift_vec(u, W, delta)
+
+    # Logits relatifs
+    eta[t,] <- eta[t-1,] + (u[1:(K-1)] - u[K])
+    v_base[t,] <- softmax(c(eta[t,], 0))
+
+    # Vote utile (activation sigmoïde en fin de campagne)
+    a_t <- 1 / (1 + exp((T-t - tau0) / s_tau))
+    v_tilde <- vote_utile_transform(v_base[t,], W, psi)
+    v_obs[t,] <- (1-a_t)*v_base[t,] + a_t*v_tilde
+  }
+  v_obs
+}`}
+          </pre>
+        </SectionCard>
+
+        <SectionCard id="code-drift" title="Drift vectoris&eacute;">
+          <p>
+            Le drift est centr&eacute; (somme nulle) et les voix perdues sont
+            redistribu&eacute;es aux candidats proches via la matrice de
+            similarit&eacute;.
+          </p>
+          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
+{`apply_drift_vec <- function(u, W, delta, lambda_drift=6) {
+  delta <- 1e-3 * delta           # mise à l'échelle
+  delta0 <- delta - mean(delta)   # centrage (somme nulle)
+
+  S <- pmax(W, 0)^lambda_drift   # noyau de similarité
+  diag(S) <- 0
+  S <- S / rowSums(S)            # normalisation par ligne
+
+  # Compensation : t(S) %*% (-delta0)
+  comp <- crossprod(S, -delta0)
+
+  u + (delta0 + comp)
+}`}
+          </pre>
+        </SectionCard>
+
+        <SectionCard id="code-vote-utile" title="Vote utile">
+          <p>
+            Redistribution des voix mobiles selon la proximit&eacute;
+            id&eacute;ologique et l&rsquo;attractivit&eacute; de chaque candidat.
+          </p>
+          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
+{`vote_utile_transform <- function(v, W, psi,
+    lambda_cos=6, beta_utile=5,
+    q0=0.15, sig_q=0.2, r_min=0.6, r_max=0.95) {
+
+  # Enjeu : gaussienne centrée sur le seuil de qualification
+  enjeu <- exp(-0.5 * ((v - q0) / sig_q)^2)
+
+  # Rétention : plus un candidat est loin de q0, plus il garde ses voix
+  r <- r_max - (r_max - r_min) * enjeu
+  m <- (1 - r) * v       # masse à redistribuer
+  v_keep <- r * v         # fraction conservée
+
+  # Attractivité = f(psi, enjeu)
+  att <- exp(4*psi + beta_utile * enjeu)
+
+  # Matrice de transition A[j,k] ∝ Kern[j,k] * att[k]
+  Kern <- pmax(W, 0)^lambda_cos
+  Scores <- Kern * rep(att, each=K)
+  A <- Scores / rowSums(Scores)
+
+  # Redistribution
+  v_new <- v_keep + t(A) %*% m
+  v_new / sum(v_new)
+}`}
+          </pre>
+        </SectionCard>
+
+        <SectionCard id="code-2nd-tour" title="Second tour">
+          <p>
+            Softmax &agrave; 3 issues (vote A, vote B, non-exprim&eacute;s) avec
+            p&eacute;nalit&eacute; de barrage.
+          </p>
+          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
+{`simulate_second_round <- function(v1, Ideo, W,
+    beta=7, alpha_nonexpr=-2.26,
+    rejet_D=4.91, rejet_G=2.24, lambda_cos=3) {
+
+  A <- which.max(v1); B <- which.max(v1[-A])
+
+  # Pénalité de rejet
+  rho <- rejet_D * Ideo[,3] + rejet_G * Ideo[,1]
+
+  # Matrice M (K × 3) : pour chaque électorat source s
+  for (s in 1:K) {
+    simA <- pmax(W[s,A], 0)^lambda_cos
+    simB <- pmax(W[s,B], 0)^lambda_cos
+
+    lA      <- beta * simA - rho[A]
+    lB      <- beta * simB - rho[B]
+    lNonExp <- alpha_nonexpr
+
+    M[s,] <- softmax(c(lA, lB, lNonExp))
+  }
+
+  # Agrégation pondérée par les parts du 1er tour
+  V2_ins <- t(v1) %*% M       # (A, B, nonexpr)
+  expr <- V2_ins[1] + V2_ins[2]
+  V2_expr <- c(V2_ins[1]/expr, V2_ins[2]/expr)
+}`}
+          </pre>
         </SectionCard>
 
         {/* ---- Sources des données ---- */}
