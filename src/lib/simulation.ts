@@ -96,9 +96,9 @@ interface SimConfig {
 
 const DEFAULT_CONFIG: SimConfig = {
   T: 365,
-  S: 200,
-  sigma_f: [1.664767e-05, 1.664767e-05, 1.664767e-05],
-  sigma_eps: 1.766046e-02,
+  S: 500,
+  sigma_f: [0.01368569, 0.01368569, 0.01368569],
+  sigma_eps: 0.01910283,
   lambda_cos: 6,
   beta_viab: 5,
   T0_offset: 7,
@@ -107,7 +107,7 @@ const DEFAULT_CONFIG: SimConfig = {
   drift_scale: 0.001,
   q0: 0.15,
   sig_q: 0.20,
-  r_min: 0.60,
+  r_min: 0.65,
   r_max: 0.95,
   lambda_drift: 6,
   beta_2: 7,

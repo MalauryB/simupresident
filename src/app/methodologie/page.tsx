@@ -1,19 +1,6 @@
 import { BackLink } from "@/app/components/ui/BackLink";
 
 /* ------------------------------------------------------------------ */
-/*  Formula block (math notation in monospace)                         */
-/* ------------------------------------------------------------------ */
-function Formula({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="overflow-x-auto rounded-xl bg-gray-50 px-4 py-3">
-      <div className="font-mono text-sm leading-relaxed text-primary-dark">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  Section card                                                       */
 /* ------------------------------------------------------------------ */
 function SectionCard({
@@ -39,37 +26,7 @@ function SectionCard({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Parameter card                                                     */
-/* ------------------------------------------------------------------ */
-function ParamCard({
-  title,
-  tagLabel,
-  tagColor,
-  children,
-}: {
-  title: string;
-  tagLabel: string;
-  tagColor: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <div className="mb-2 flex items-start justify-between gap-2">
-        <h3 className="text-sm font-bold text-primary-dark">{title}</h3>
-        <span
-          className="shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-          style={{ backgroundColor: `${tagColor}18`, color: tagColor }}
-        >
-          {tagLabel}
-        </span>
-      </div>
-      <div className="text-xs leading-relaxed text-gray-600">{children}</div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Methodology page (server component)                                */
+/*  Methodology page                                                   */
 /* ------------------------------------------------------------------ */
 export default function MethodologiePage() {
   return (
@@ -87,685 +44,309 @@ export default function MethodologiePage() {
       {/* Title */}
       <div className="mb-12 text-center">
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
-          M&eacute;thodologie
+          Note m&eacute;thodologique
         </h1>
         <p className="text-gray-600">
-          Comment fonctionne notre mod&egrave;le de simulation
-          &eacute;lectorale.
+          Mod&egrave;le de simulation d&rsquo;une &eacute;lection pr&eacute;sidentielle &agrave; deux tours
         </p>
       </div>
 
       <div className="space-y-8">
-        {/* ---- Idée générale ---- */}
-        <SectionCard title="L'id&eacute;e g&eacute;n&eacute;rale">
+        {/* ---- Introduction ---- */}
+        <SectionCard title="Objectif du mod&egrave;le">
           <p>
-            Le programme simule une &eacute;lection pr&eacute;sidentielle en{" "}
-            <strong>deux temps</strong> :
+            Ce mod&egrave;le vise &agrave; simuler l&rsquo;&eacute;volution d&rsquo;une campagne
+            pr&eacute;sidentielle et &agrave; estimer, par simulations r&eacute;p&eacute;t&eacute;es,
+            les probabilit&eacute;s de qualification au second tour puis de victoire finale.
           </p>
-          <ul className="ml-4 list-disc space-y-2">
-            <li>
-              <strong>Premier tour :</strong> on simule jour apr&egrave;s jour
-              l&rsquo;&eacute;volution des intentions de vote des candidats,
-              avec une part de hasard (comme des &laquo; petits
-              &eacute;v&eacute;nements &raquo; quotidiens).
-            </li>
-            <li>
-              <strong>Second tour :</strong> &agrave; la fin, on regarde qui
-              sont les deux premiers, puis on simule comment les &eacute;lecteurs
-              des autres candidats se reportent, en tenant compte de la
-              proximit&eacute; id&eacute;ologique, de l&rsquo;abstention, et
-              d&rsquo;un possible vote barrage (refus d&rsquo;un candidat
-              jug&eacute; extr&ecirc;me).
-            </li>
+          <p>
+            L&rsquo;objectif n&rsquo;est pas de pr&eacute;dire un score exact, mais
+            d&rsquo;&eacute;valuer des sc&eacute;narios probables en tenant compte :
+          </p>
+          <ul className="ml-4 list-disc space-y-1">
+            <li>des &eacute;quilibres id&eacute;ologiques,</li>
+            <li>des al&eacute;as de campagne,</li>
+            <li>des tendances structurelles,</li>
+            <li>et du vote utile en fin de campagne.</li>
           </ul>
-          <p>
-            L&rsquo;ensemble repose sur une m&eacute;thode{" "}
-            <strong>Monte Carlo</strong> : on r&eacute;p&egrave;te la simulation
-            des centaines de fois pour obtenir non seulement une courbe moyenne,
-            mais aussi des <strong>bandes d&rsquo;incertitude</strong>.
-          </p>
         </SectionCard>
 
-        {/* ---- A) Dynamique de base ---- */}
-        <SectionCard
-          id="dynamique"
-          title="A) La dynamique de base (premier tour)"
-        >
-          <p>
-            Chaque candidat a une courbe d&rsquo;intentions de vote qui bouge
-            chaque jour. On part d&rsquo;une{" "}
-            <strong>situation initiale</strong> (les parts v<sub>0</sub>).
-          </p>
-          <p>Chaque jour, il y a :</p>
-          <ul className="ml-4 list-disc space-y-2">
-            <li>
-              Un <strong>choc &laquo; id&eacute;ologique &raquo; commun</strong>{" "}
-              (3 dimensions dans &nu;) qui impacte les candidats selon leur
-              position dans l&rsquo;espace politique (matrice W).
-            </li>
-            <li>
-              Un{" "}
-              <strong>bruit propre &agrave; chaque candidat</strong>{" "}
-              (&eacute;v&eacute;nements, bourdes, actualit&eacute;s).
-            </li>
-          </ul>
-          <p>
-            En plus, le mod&egrave;le introduit une petite{" "}
-            <strong>tendance n&eacute;gative (drift)</strong> sur certains
-            candidats : ils perdent l&eacute;g&egrave;rement chaque jour, et ces
-            voix sont redistribu&eacute;es en partie vers les autres candidats
-            proches d&rsquo;eux.
-          </p>
-
-          <div className="rounded-xl bg-gray-50 p-4">
-            <code className="block font-mono text-sm text-primary-dark">
-              V<sub>i</sub>(t+1) = V<sub>i</sub>(t) + drift<sub>i</sub> +
-              W&sdot;&nu;(t) + &epsilon;<sub>i</sub>(t)
-            </code>
-            <div className="mt-2 space-y-1 font-mono text-xs text-gray-600">
-              <p>
-                drift<sub>i</sub> = tendance<sub>i</sub> &times;
-                0.001
-              </p>
-              <p>
-                &nu;(t) ~ N(0, &Sigma;) &mdash; choc commun en 3 dimensions
-              </p>
-              <p>
-                &epsilon;<sub>i</sub>(t) ~ N(0, &sigma;<sup>2</sup>) &mdash;
-                bruit propre au candidat
-              </p>
-            </div>
-          </div>
-
-          <p className="text-xs italic text-gray-400">
-            R&eacute;sultat : m&ecirc;me sans vote utile, on obtient des
-            trajectoires plausibles et incertaines des intentions de vote.
-          </p>
-        </SectionCard>
-
-        {/* ---- B) Vote utile ---- */}
-        <SectionCard id="vote-utile" title="B) Le vote utile (premier tour)">
-          <p>
-            Le vote utile n&rsquo;est pas actif tout le temps : il est
-            activ&eacute; seulement{" "}
-            <strong>&agrave; la fin de la campagne</strong> (derniers jours),
-            via une fonction progressive{" "}
-            <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-primary-dark">
-              activation(t)
-            </code>
-            .
-          </p>
-          <p>
-            Quand il s&rsquo;active, une partie des &eacute;lecteurs des
-            &laquo; petits &raquo; candidats se d&eacute;place vers des
-            candidats :
-          </p>
-          <ul className="ml-4 list-disc space-y-2">
-            <li>
-              <strong>Id&eacute;ologiquement proches</strong> (proximit&eacute;
-              via cosinus sur la matrice W).
-            </li>
-            <li>
-              <strong>Jug&eacute;s plus viables</strong> (ceux qui sont
-              d&eacute;j&agrave; hauts dans les intentions).
-            </li>
-            <li>
-              &Eacute;ventuellement{" "}
-              <strong>favoris&eacute;s/d&eacute;favoris&eacute;s structurellement</strong>{" "}
-              par le param&egrave;tre &psi;.
-            </li>
-          </ul>
-          <p>
-            L&rsquo;effet est <strong>&laquo; doux &raquo;</strong> : ce
-            n&rsquo;est pas un transfert brutal. Chaque candidat garde une
-            fraction de ses voix, et l&rsquo;autre fraction est
-            redistribu&eacute;e selon une r&egrave;gle probabiliste.
-          </p>
-          <div className="rounded-xl bg-primary/5 p-4">
-            <p className="text-xs font-medium text-primary-dark">
-              Le vote utile sert &agrave; reproduire une dynamique
-              r&eacute;aliste de &laquo; cristallisation &raquo; en fin de
-              campagne.
-            </p>
-          </div>
-        </SectionCard>
-
-        {/* ---- C) Vote barrage ---- */}
-        <SectionCard
-          id="vote-barrage"
-          title="C) Le vote barrage (second tour)"
-        >
-          <p>
-            Au second tour, on prend les{" "}
-            <strong>deux premiers du premier tour</strong> : A et B.
-          </p>
-          <p>
-            Pour chaque &eacute;lectorat (les &eacute;lecteurs du candidat 1, du
-            2, etc.), le mod&egrave;le calcule la probabilit&eacute; de :
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { label: "Voter pour A", color: "#556C96" },
-              { label: "Voter pour B", color: "#B6CDE8" },
-              { label: "Non-exprim\u00e9s", color: "#ca8a04" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-lg border p-3 text-center"
-                style={{ borderColor: `${item.color}40` }}
-              >
-                <div
-                  className="mx-auto mb-1 h-2 w-8 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-xs font-medium text-gray-600">
-                  {item.label}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p>
-            Les &eacute;lecteurs ont tendance &agrave; choisir le finaliste le
-            plus <strong>proche d&rsquo;eux</strong> dans l&rsquo;espace
-            id&eacute;ologique (via cosinus sur W).
-          </p>
-          <p>
-            Mais le mod&egrave;le ajoute une chose tr&egrave;s importante : une{" "}
-            <strong>p&eacute;nalit&eacute; de rejet</strong> si un candidat
-            finaliste est per&ccedil;u comme &laquo; extr&ecirc;me &raquo;.
-          </p>
-          <div className="rounded-xl bg-accent/5 p-4">
-            <p className="mb-2 text-xs font-bold text-accent">
-              Deux param&egrave;tres globaux de barrage
-            </p>
-            <ul className="ml-4 list-disc space-y-1 text-xs text-gray-600">
-              <li>
-                <strong>&gamma;_ED</strong> (barrage extr&ecirc;me droite) : p&eacute;nalise
-                les candidats selon leur composante droite (W<sub>droite</sub>).
-              </li>
-              <li>
-                <strong>&gamma;_EG</strong> (barrage extr&ecirc;me gauche) : p&eacute;nalise
-                les candidats selon leur composante gauche (W<sub>gauche</sub>).
-              </li>
-              <li>
-                La p&eacute;nalit&eacute; de chaque candidat est calcul&eacute;e automatiquement :
-                &rho;<sub>k</sub> = &gamma;_ED &times; W<sub>k,droite</sub> + &gamma;_EG &times; W<sub>k,gauche</sub>.
-              </li>
-              <li>
-                C&rsquo;est une fa&ccedil;on simple et calibrable de
-                repr&eacute;senter le &laquo; front r&eacute;publicain &raquo;
-                ou au contraire son affaiblissement.
-              </li>
-            </ul>
-          </div>
-        </SectionCard>
-
-        {/* ---- Paramètres du modèle ---- */}
+        {/* ---- I. Premier tour ---- */}
         <div>
-          <h2 className="mb-4 text-lg font-bold text-primary-dark">
-            Les param&egrave;tres ajustables
+          <h2 className="mb-4 text-xl font-extrabold text-primary-dark">
+            I. Le mod&egrave;le de premier tour
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <ParamCard
-              title="Point de d&eacute;part (v₀)"
-              tagLabel="sondages"
-              tagColor="#556C96"
-            >
+          <div className="space-y-6">
+            {/* 1) Blocs idéologiques */}
+            <SectionCard title="1) Les blocs id&eacute;ologiques">
               <p>
-                Intention de vote initiale, issue des sondages
-                agr&eacute;g&eacute;s, d&eacute;biais&eacute;s ou
-                personnalis&eacute;s. C&rsquo;est la valeur de d&eacute;part de
-                la trajectoire.
+                En science politique, on analyse souvent l&rsquo;&eacute;lectorat comme
+                structur&eacute; en grands blocs id&eacute;ologiques relativement stables
+                (par exemple : gauche, centre, droite, extr&ecirc;me droite).
               </p>
-            </ParamCard>
+              <p>L&rsquo;id&eacute;e centrale est simple :</p>
+              <div className="rounded-xl bg-primary/5 p-4">
+                <p className="text-xs font-medium text-primary-dark">
+                  Les &eacute;lecteurs votent tr&egrave;s majoritairement pour un candidat
+                  appartenant &agrave; leur bloc id&eacute;ologique, et beaucoup plus rarement
+                  pour un candidat d&rsquo;un bloc oppos&eacute;.
+                </p>
+              </div>
+              <p>Dans le mod&egrave;le :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>Chaque candidat est associ&eacute; &agrave; un profil id&eacute;ologique.</li>
+                <li>Certains candidats sont clairement positionn&eacute;s dans un bloc.</li>
+                <li>D&rsquo;autres peuvent &ecirc;tre situ&eacute;s entre deux blocs, ce qui leur permet de capter une partie de chacun.</li>
+              </ul>
+              <p>Cela permet de mod&eacute;liser le fait que :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>Les gains d&rsquo;un candidat proviennent principalement de candidats id&eacute;ologiquement proches.</li>
+                <li>Les transferts entre blocs &eacute;loign&eacute;s sont rares.</li>
+              </ul>
+            </SectionCard>
 
-            <ParamCard
-              title="Tendance (drift)"
-              tagLabel="dynamique"
-              tagColor="#16a34a"
-            >
+            {/* 2) Dynamique de campagne */}
+            <SectionCard title="2) La dynamique de campagne : les &eacute;v&eacute;nements impr&eacute;visibles">
               <p>
-                Param&egrave;tre entre &minus;1 et 1 repr&eacute;sentant la dynamique
-                de long terme. Au-dessus de 0, le candidat progresse ;
-                en-dessous, il recule. Les voix perdues sont redistribu&eacute;es
-                aux candidats id&eacute;ologiquement proches.
+                Une campagne &eacute;lectorale est marqu&eacute;e par des &eacute;v&eacute;nements
+                difficiles &agrave; anticiper : pol&eacute;miques, d&eacute;bats, affaires,
+                crises internationales, prises de position, erreurs de communication.
               </p>
-            </ParamCard>
+              <p>
+                Ces &eacute;v&eacute;nements sont mod&eacute;lis&eacute;s comme une{" "}
+                <strong>marche al&eacute;atoire</strong>, c&rsquo;est-&agrave;-dire une succession
+                de chocs impr&eacute;visibles.
+              </p>
+              <p>Deux types d&rsquo;&eacute;v&eacute;nements sont distingu&eacute;s :</p>
 
-            <ParamCard
-              title="Effet vote utile"
-              tagLabel="strat&eacute;gie"
-              tagColor="#FFB800"
-            >
+              <h3 className="mt-2 text-sm font-bold text-primary-dark">a) Les chocs de bloc</h3>
               <p>
-                Sur les derniers jours de la campagne, une portion des
-                &eacute;lecteurs d&eacute;cide de voter pour le candidat le
-                mieux plac&eacute; pour se qualifier au second tour. Plus
-                l&rsquo;effet vote utile est &eacute;lev&eacute;, plus le
-                candidat capte les &eacute;lecteurs strat&eacute;giques.
+                Certains &eacute;v&eacute;nements affectent tout un bloc id&eacute;ologique.
+                Par exemple, une crise s&eacute;curitaire peut b&eacute;n&eacute;ficier &agrave;
+                l&rsquo;ensemble des candidats d&rsquo;un bloc. Un d&eacute;bat sur les retraites
+                peut affecter globalement les candidats de gauche ou de droite.
               </p>
-            </ParamCard>
+              <p>
+                Dans le mod&egrave;le, ces chocs d&eacute;placent simultan&eacute;ment tous les
+                candidats appartenant au m&ecirc;me bloc.
+              </p>
 
-            <ParamCard
-              title="Barrage ED / EG (&gamma;)"
-              tagLabel="2nd tour"
-              tagColor="#ea580c"
-            >
+              <h3 className="mt-2 text-sm font-bold text-primary-dark">b) Les chocs individuels</h3>
               <p>
-                Deux coefficients globaux qui p&eacute;nalisent les candidats
-                extr&ecirc;mes au second tour. &gamma;_ED s&rsquo;applique
-                proportionnellement &agrave; la composante droite, &gamma;_EG
-                &agrave; la composante gauche du vecteur id&eacute;ologique.
+                D&rsquo;autres &eacute;v&eacute;nements concernent un candidat en particulier :
+                une d&eacute;claration pol&eacute;mique, une erreur strat&eacute;gique, une bonne
+                prestation m&eacute;diatique. Ces chocs affectent uniquement le candidat concern&eacute;.
               </p>
-            </ParamCard>
 
-            <ParamCard
-              title="Positionnement id&eacute;ologique (W)"
-              tagLabel="reports"
-              tagColor="#8B5CF6"
-            >
-              <p>
-                R&eacute;partition gauche/centre/droite en 3 dimensions,
-                utilis&eacute;e pour mod&eacute;liser les chocs communs, le vote
-                utile et les reports au second tour.
-              </p>
-            </ParamCard>
+              <div className="rounded-xl bg-gray-50 p-4">
+                <h3 className="mb-1 text-xs font-bold text-primary-dark">Calibration des param&egrave;tres</h3>
+                <p className="text-xs text-gray-600">
+                  L&rsquo;intensit&eacute; de ces chocs n&rsquo;est pas choisie arbitrairement.
+                  Les param&egrave;tres ont &eacute;t&eacute; estim&eacute;s de mani&egrave;re &agrave;
+                  reproduire la volatilit&eacute; observ&eacute;e pendant la campagne pr&eacute;sidentielle
+                  de 2022 et l&rsquo;ampleur moyenne des variations de sondages.
+                </p>
+              </div>
+            </SectionCard>
 
-            <ParamCard
-              title="Vote utile (&psi;)"
-              tagLabel="1er tour"
-              tagColor="#0891b2"
-            >
+            {/* 3) Tendance */}
+            <SectionCard title="3) La tendance de long terme (effet structurel)">
               <p>
-                Facteur structurel favorisant ou d&eacute;favorisant certains
-                candidats lors de la cristallisation en fin de campagne. Agit en
-                compl&eacute;ment de la proximit&eacute; id&eacute;ologique.
+                Au-del&agrave; des al&eacute;as quotidiens, certains candidats peuvent &ecirc;tre
+                port&eacute;s par une dynamique de fond.
               </p>
-            </ParamCard>
+              <p>Exemples :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>Un gouvernement sortant peut s&rsquo;user apr&egrave;s plusieurs ann&eacute;es de pouvoir.</li>
+                <li>Un courant politique peut b&eacute;n&eacute;ficier d&rsquo;un contexte favorable.</li>
+                <li>Un candidat peut s&rsquo;installer progressivement comme figure centrale.</li>
+              </ul>
+              <p>Dans le mod&egrave;le :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>Chaque candidat peut avoir une tendance structurelle &agrave; gagner ou perdre des points.</li>
+                <li>Cette tendance est lente et cumulative.</li>
+                <li>
+                  Les points gagn&eacute;s ou perdus ne disparaissent pas :
+                  ils sont redistribu&eacute;s principalement vers les candidats id&eacute;ologiquement proches.
+                </li>
+              </ul>
+              <p>
+                Cela permet de mod&eacute;liser des ph&eacute;nom&egrave;nes comme
+                l&rsquo;&eacute;rosion progressive d&rsquo;un bloc, la mont&eacute;e structurelle
+                d&rsquo;un autre, ou la recomposition interne d&rsquo;un espace politique.
+              </p>
+            </SectionCard>
+
+            {/* 4) Vote utile */}
+            <SectionCard title="4) L&rsquo;effet du vote utile">
+              <p>
+                En fin de campagne, une part significative des &eacute;lecteurs d&eacute;clare
+                voter &laquo;&nbsp;utile&nbsp;&raquo;. Les enqu&ecirc;tes sugg&egrave;rent que cette
+                proportion pourrait se situer entre 25&nbsp;% et 35&nbsp;%.
+              </p>
+              <p>
+                Le vote utile correspond au comportement suivant : un &eacute;lecteur choisit non
+                pas son candidat pr&eacute;f&eacute;r&eacute;, mais celui qui semble le mieux
+                plac&eacute; pour atteindre le second tour.
+              </p>
+
+              <h3 className="mt-2 text-sm font-bold text-primary-dark">Comment le mod&egrave;le l&rsquo;int&egrave;gre</h3>
+              <p>
+                Le vote utile est activ&eacute; progressivement dans les derniers jours de campagne.
+                Il d&eacute;pend de deux &eacute;l&eacute;ments :
+              </p>
+
+              <h3 className="mt-2 text-sm font-bold text-primary-dark">a) L&rsquo;enjeu</h3>
+              <p>
+                Plus un candidat est proche du seuil estim&eacute; de qualification (fix&eacute;
+                dans les simulations &agrave; 15&nbsp;%), plus l&rsquo;&laquo;&nbsp;enjeu&nbsp;&raquo;
+                est &eacute;lev&eacute;. Un candidat &agrave; 14&ndash;16&nbsp;% d&eacute;clenche
+                donc davantage de vote utile qu&rsquo;un candidat &agrave; 5&nbsp;% ou &agrave; 30&nbsp;%.
+              </p>
+
+              <h3 className="mt-2 text-sm font-bold text-primary-dark">b) La capacit&eacute; &agrave; capter le vote utile</h3>
+              <p>
+                Tous les candidats ne b&eacute;n&eacute;ficient pas &eacute;galement du vote utile.
+                Un param&egrave;tre sp&eacute;cifique mesure la cr&eacute;dibilit&eacute;,
+                l&rsquo;exp&eacute;rience, la perception de capacit&eacute; &agrave; gouverner et
+                la stature pr&eacute;sidentielle.
+              </p>
+              <p>
+                Ainsi, deux candidats &agrave; 14&nbsp;% ne capteront pas n&eacute;cessairement
+                la m&ecirc;me quantit&eacute; de vote utile.
+              </p>
+            </SectionCard>
+
+            {/* 5) Monte Carlo */}
+            <SectionCard title="5) Pourquoi utiliser des simulations Monte Carlo&nbsp;?">
+              <p>
+                Le mod&egrave;le ne produit pas une seule trajectoire. Il simule des centaines
+                de campagnes possibles, chacune avec ses chocs al&eacute;atoires.
+              </p>
+              <p>On en d&eacute;duit :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>une trajectoire m&eacute;diane,</li>
+                <li>des intervalles d&rsquo;incertitude,</li>
+                <li>des probabilit&eacute;s de qualification au second tour.</li>
+              </ul>
+              <p>Cela permet d&rsquo;&eacute;valuer :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>le degr&eacute; d&rsquo;incertitude,</li>
+                <li>la robustesse d&rsquo;un sc&eacute;nario,</li>
+                <li>la probabilit&eacute; de retournement.</li>
+              </ul>
+            </SectionCard>
           </div>
         </div>
 
-        {/* ---- Formalisation mathématique ---- */}
-        <div id="maths">
-          <div className="mb-4 text-center">
-            <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
-              FORMALISATION
-            </span>
-          </div>
-          <h2 className="mb-6 text-center text-2xl font-extrabold tracking-tight text-primary-dark">
-            Mod&egrave;le math&eacute;matique
+        {/* ---- II. Second tour ---- */}
+        <div>
+          <h2 className="mb-4 text-xl font-extrabold text-primary-dark">
+            II. Le mod&egrave;le de second tour
           </h2>
+          <div className="space-y-6">
+            <SectionCard title="1) Logique g&eacute;n&eacute;rale">
+              <p>
+                Le second tour est mod&eacute;lis&eacute; &agrave; partir des r&eacute;sultats
+                simul&eacute;s du premier tour. On identifie automatiquement les deux candidats
+                qualifi&eacute;s dans chaque simulation, puis on mod&eacute;lise les reports de voix.
+              </p>
+              <p>
+                Les &eacute;lecteurs du second tour adoptent l&rsquo;un des trois comportements :
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: "Voter pour A", color: "#556C96" },
+                  { label: "Voter pour B", color: "#B6CDE8" },
+                  { label: "Ne pas s\u2019exprimer", color: "#ca8a04" },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-lg border p-3 text-center"
+                    style={{ borderColor: `${item.color}40` }}
+                  >
+                    <div
+                      className="mx-auto mb-1 h-2 w-8 rounded-full"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span className="text-xs font-medium text-gray-600">
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p>Leur choix d&eacute;pend :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>de leur proximit&eacute; id&eacute;ologique avec les finalistes,</li>
+                <li>de m&eacute;canismes de &laquo;&nbsp;barrage&nbsp;&raquo;,</li>
+                <li>d&rsquo;un taux structurel de non-expression.</li>
+              </ul>
+            </SectionCard>
+
+            <SectionCard title="2) Le vote de proximit&eacute;">
+              <p>
+                Les &eacute;lecteurs votent en priorit&eacute; pour le candidat le plus proche
+                id&eacute;ologiquement d&rsquo;eux. C&rsquo;est la r&egrave;gle de base du mod&egrave;le.
+              </p>
+            </SectionCard>
+
+            <SectionCard title="3) Le non-vote">
+              <p>
+                Si aucun des deux candidats n&rsquo;appartient au bloc d&rsquo;un &eacute;lecteur,
+                une partie peut s&rsquo;abstenir, voter blanc, ou refuser de choisir.
+                Ce comportement est mod&eacute;lis&eacute; par un param&egrave;tre sp&eacute;cifique.
+              </p>
+            </SectionCard>
+
+            <SectionCard title="4) Les effets de &laquo;&nbsp;barrage&nbsp;&raquo;">
+              <p>Le mod&egrave;le int&egrave;gre deux param&egrave;tres suppl&eacute;mentaires :</p>
+              <ul className="ml-4 list-disc space-y-1">
+                <li>un taux de rejet de l&rsquo;extr&ecirc;me droite,</li>
+                <li>un taux de rejet de la gauche radicale.</li>
+              </ul>
+              <p>
+                Cela permet de mod&eacute;liser les ph&eacute;nom&egrave;nes observ&eacute;s dans
+                les seconds tours pass&eacute;s, o&ugrave; certains &eacute;lecteurs votent non pas
+                pour soutenir un candidat, mais pour emp&ecirc;cher l&rsquo;autre de gagner.
+              </p>
+              <div className="rounded-xl bg-gray-50 p-4">
+                <p className="text-xs text-gray-600">
+                  Les valeurs par d&eacute;faut de ces param&egrave;tres sont estim&eacute;es &agrave;
+                  partir des comportements observ&eacute;s lors des &eacute;lections l&eacute;gislatives de 2024.
+                </p>
+              </div>
+            </SectionCard>
+          </div>
         </div>
 
-        {/* -- Notations -- */}
-        <SectionCard id="notations" title="Notations">
-          <p>
-            On consid&egrave;re <strong>K</strong> candidats. &Agrave; chaque date{" "}
-            <em>t &isin; {"{"}1, &hellip;, T{"}"}</em>, on note{" "}
-            <strong>v<sub>t</sub></strong> le vecteur des intentions de vote
-            (parts) vivant sur le simplexe :
-          </p>
-          <Formula>
-            v<sub>t</sub> &isin; &Delta;<sup>K&minus;1</sup> &nbsp;&nbsp;
-            (v<sub>t,k</sub> &ge; 0, &nbsp; &sum;<sub>k</sub> v<sub>t,k</sub> = 1)
-          </Formula>
-          <p>
-            On dispose d&rsquo;un <em>embedding</em> id&eacute;ologique{" "}
-            <strong>W &isin; &real;<sup>K&times;B</sup></strong> o&ugrave;{" "}
-            <em>B = 3</em> (gauche, centre, droite).
-          </p>
-          <p>
-            On travaille en <strong>logits relatifs</strong> &agrave; une baseline
-            (candidat K) :
-          </p>
-          <Formula>
-            &eta;<sub>t</sub> &isin; &real;<sup>K&minus;1</sup>, &nbsp;&nbsp;
-            <span className="text-gray-400">
-              &eta;&#771;<sub>t</sub> = (&eta;<sub>t</sub>, 0)
-            </span>
-          </Formula>
-          <p>
-            La transformation softmax convertit les logits en parts :{" "}
-            <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-primary-dark">
-              softmax(x)<sub>k</sub> = exp(x<sub>k</sub>) / &sum;<sub>j</sub> exp(x<sub>j</sub>)
-            </code>
-          </p>
-          <p>
-            La similarit&eacute; cosinus entre deux vecteurs :{" "}
-            <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-primary-dark">
-              cos(a, b) = &lang;a, b&rang; / (||a|| &middot; ||b||)
-            </code>
-          </p>
-        </SectionCard>
-
-        {/* -- Premier tour : dynamique latente -- */}
-        <SectionCard
-          id="dynamique-latente"
-          title="Premier tour : dynamique latente"
-        >
-          <h3 className="text-sm font-bold text-primary-dark">
-            Chocs factoriels et idiosyncratiques
-          </h3>
-          <p>
-            Chaque jour, un facteur id&eacute;ologique commun affecte tous les
-            candidats selon leur position dans l&rsquo;espace W :
-          </p>
-          <Formula>
-            <p>&nu;<sub>t</sub> ~ N(0, Q<sub>f</sub>)&nbsp;&nbsp; avec Q<sub>f</sub> = diag(&sigma;<sub>f,1</sub><sup>2</sup>, &hellip;, &sigma;<sub>f,B</sub><sup>2</sup>)</p>
-            <p className="mt-1">&epsilon;<sub>t</sub> ~ N(0, D)&nbsp;&nbsp; avec D = diag(&sigma;<sub>&epsilon;,1</sub><sup>2</sup>, &hellip;, &sigma;<sub>&epsilon;,K</sub><sup>2</sup>)</p>
-            <p className="mt-2 font-semibold">u<sub>t</sub> = W&middot;&nu;<sub>t</sub> + &epsilon;<sub>t</sub></p>
-          </Formula>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            Drift cibl&eacute; et compensation
-          </h3>
-          <p>
-            Un drift &delta; &lt; 0 est appliqu&eacute; sur un candidat c* (perte
-            progressive). Les voix perdues sont redistribu&eacute;es aux candidats
-            proches :
-          </p>
-          <Formula>
-            <p>s<sub>k</sub> = cos(W<sub>c*</sub>, W<sub>k</sub>), &nbsp;&nbsp; w<sub>k</sub> = s<sub>k</sub> / &sum;<sub>j&ne;c*</sub> s<sub>j</sub></p>
-            <p className="mt-1">u<sub>t,k</sub> &larr; u<sub>t,k</sub> &minus; &delta; &middot; w<sub>k</sub></p>
-          </Formula>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            &Eacute;volution des logits et parts
-          </h3>
-          <Formula>
-            <p>&eta;<sub>t</sub> = (1 &minus; &kappa;) &middot; &eta;<sub>t&minus;1</sub> + u<sub>t, 1:(K&minus;1)</sub></p>
-            <p className="mt-1 text-gray-600 text-xs">&kappa; &ge; 0 : param&egrave;tre de mean-reversion (proche de 0 en pratique)</p>
-            <p className="mt-2 font-semibold">v<sub>t</sub><sup>base</sup> = softmax(&eta;&#771;<sub>t</sub>)</p>
-          </Formula>
-        </SectionCard>
-
-        {/* -- Vote utile : formalisation -- */}
-        <SectionCard
-          id="vote-utile-maths"
-          title="Vote utile : formalisation"
-        >
-          <h3 className="text-sm font-bold text-primary-dark">
-            Activation temporelle
-          </h3>
-          <Formula>
-            a<sub>t</sub> = 1 / (1 + exp((T &minus; t &minus; &tau;<sub>0</sub>) / s<sub>&tau;</sub>)) &nbsp;&isin; (0, 1)
-          </Formula>
-          <p className="text-xs text-gray-600">
-            &tau;<sub>0</sub> contr&ocirc;le le moment d&rsquo;activation,{" "}
-            s<sub>&tau;</sub> sa pente.
-          </p>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            R&eacute;tention et masse mobile
-          </h3>
-          <p>
-            Un &laquo;&nbsp;enjeu&nbsp;&raquo; gaussien d&eacute;termine quels candidats sont
-            dans la zone de qualification. La r&eacute;tention d&eacute;pend de cet enjeu :
-          </p>
-          <Formula>
-            <p>enjeu<sub>k</sub> = exp(&minus;0.5 &middot; ((v<sub>k</sub> &minus; q<sub>0</sub>) / &sigma;<sub>q</sub>)&sup2;)</p>
-            <p className="mt-1">r<sub>k</sub> = r<sub>max</sub> &minus; (r<sub>max</sub> &minus; r<sub>min</sub>) &middot; enjeu<sub>k</sub></p>
-            <p className="mt-1">m<sub>k</sub> = (1 &minus; r<sub>k</sub>) &middot; v<sub>t,k</sub><sup>base</sup> &nbsp;&nbsp;<span className="text-gray-400">(masse mobile)</span></p>
-            <p>v<sub>k</sub><sup>keep</sup> = r<sub>k</sub> &middot; v<sub>t,k</sub><sup>base</sup> &nbsp;&nbsp;<span className="text-gray-400">(fraction conserv&eacute;e)</span></p>
-          </Formula>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            Matrice de redistribution
-          </h3>
-          <p>
-            Le score de transfert d&rsquo;un candidat source <em>j</em> vers une
-            destination <em>k</em> combine proximit&eacute; id&eacute;ologique
-            et biais structurel :
-          </p>
-          <Formula>
-            <p>att<sub>k</sub> = exp(&psi;<sub>k</sub> + &beta;<sub>viab</sub> &middot; enjeu<sub>k</sub>)</p>
-            <p className="mt-1">score<sub>j&rarr;k</sub> = cos(W<sub>j</sub>, W<sub>k</sub>)<sup>&lambda;<sub>cos</sub></sup> &middot; att<sub>k</sub></p>
-            <p className="mt-1">A<sub>j&rarr;k</sub> = score<sub>j&rarr;k</sub> / &sum;<sub>&ell;</sub> score<sub>j&rarr;&ell;</sub></p>
-          </Formula>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            Transformation finale
-          </h3>
-          <Formula>
-            <p>v<sub>t</sub><sup>VU</sup> = v<sup>keep</sup> + m<sup>T</sup> &middot; A &nbsp;&nbsp;<span className="text-gray-400">(puis renormalis&eacute;)</span></p>
-            <p className="mt-2 font-semibold">v<sub>t</sub><sup>obs</sup> = (1 &minus; a<sub>t</sub>) &middot; v<sub>t</sub><sup>base</sup> + a<sub>t</sub> &middot; v<sub>t</sub><sup>VU</sup></p>
-          </Formula>
-        </SectionCard>
-
-        {/* -- Second tour -- */}
-        <SectionCard
-          id="second-tour-maths"
-          title="Second tour : reports, abstention et barrage"
-        >
-          <h3 className="text-sm font-bold text-primary-dark">
-            S&eacute;lection des finalistes
-          </h3>
-          <Formula>
-            A = argmax<sub>k</sub> v<sub>T,k</sub><sup>obs</sup>, &nbsp;&nbsp;
-            B = argmax<sub>k&ne;A</sub> v<sub>T,k</sub><sup>obs</sup>
-          </Formula>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            P&eacute;nalit&eacute; de rejet (vote barrage)
-          </h3>
-          <Formula>
-            &rho;<sub>k</sub> = &gamma;<sub>ED</sub> &middot; W<sub>k,3</sub> + &gamma;<sub>EG</sub> &middot; W<sub>k,1</sub>
-          </Formula>
-          <p className="text-xs text-gray-600">
-            &gamma;<sub>ED</sub>, &gamma;<sub>EG</sub> &ge; 0 contr&ocirc;lent
-            l&rsquo;intensit&eacute; du rejet pour les extr&ecirc;mes droite/gauche.
-          </p>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            Logits &agrave; 3 issues par &eacute;lectorat source <em>s</em>
-          </h3>
-          <Formula>
-            <p>&ell;<sub>A</sub>(s) = &beta; &middot; cos(W<sub>s</sub>, W<sub>A</sub>)<sup>&lambda;</sup> &minus; &rho;<sub>A</sub></p>
-            <p>&ell;<sub>B</sub>(s) = &beta; &middot; cos(W<sub>s</sub>, W<sub>B</sub>)<sup>&lambda;</sup> &minus; &rho;<sub>B</sub></p>
-            <p className="mt-1">&ell;<sub>nonexpr</sub>(s) = &alpha;<sub>nonexpr</sub></p>
-          </Formula>
-
-          <h3 className="mt-4 text-sm font-bold text-primary-dark">
-            Matrice de transition et agr&eacute;gation
-          </h3>
-          <Formula>
-            <p>M<sub>s,&middot;</sub> = softmax(&ell;<sub>A</sub>(s), &ell;<sub>B</sub>(s), &ell;<sub>nonexpr</sub>(s))</p>
-            <p className="mt-2">V<sup>(2)</sup><sub>ins</sub> = (v<sub>T</sub><sup>obs</sup>)<sup>T</sup> &middot; M &nbsp;&isin; &real;<sup>3</sup></p>
-            <p className="mt-1 font-semibold">V<sup>(2)</sup><sub>expr</sub>(A) = V<sup>(2)</sup><sub>ins</sub>(A) / (V<sup>(2)</sup><sub>ins</sub>(A) + V<sup>(2)</sup><sub>ins</sub>(B))</p>
-          </Formula>
-        </SectionCard>
-
-        {/* -- Monte Carlo -- */}
-        <SectionCard id="monte-carlo" title="Monte Carlo et probabilit&eacute;s">
-          <p>
-            On r&eacute;p&egrave;te <strong>S</strong> simulations
-            ind&eacute;pendantes. &Agrave; chaque simulation <em>s</em>, on
-            obtient une trajectoire compl&egrave;te puis le duel final.
-          </p>
-          <p>On estime alors :</p>
-          <ul className="ml-4 list-disc space-y-2">
-            <li>
-              <strong>P(qualification)</strong> :{" "}
-              <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-primary-dark">
-                P(k &isin; {"{"}A, B{"}"}) &approx; (1/S) &middot; &sum; 1{"{"}k &isin; {"{"}A<sup>(s)</sup>, B<sup>(s)</sup>{"}"}{"}"}</code>
-            </li>
-            <li>
-              <strong>Probabilit&eacute;s de duels</strong> : fr&eacute;quences
-              empiriques des paires (A<sup>(s)</sup>, B<sup>(s)</sup>).
-            </li>
-            <li>
-              <strong>P(victoire)</strong> : fr&eacute;quence empirique du
-              gagnant au second tour.
-            </li>
-            <li>
-              <strong>Intervalles de cr&eacute;dibilit&eacute;</strong> :
-              quantiles des distributions simul&eacute;es (ex. 10%&ndash;90% ou
-              12.5%&ndash;87.5%).
-            </li>
+        {/* ---- III. Ce que produit le modèle ---- */}
+        <SectionCard title="III. Ce que produit le mod&egrave;le">
+          <p>&Agrave; l&rsquo;issue des simulations, le mod&egrave;le fournit :</p>
+          <ul className="ml-4 list-disc space-y-1">
+            <li>la probabilit&eacute; de qualification au second tour de chaque candidat,</li>
+            <li>la probabilit&eacute; de chaque duel possible,</li>
+            <li>la probabilit&eacute; de victoire finale.</li>
           </ul>
         </SectionCard>
 
-        {/* ---- Code source de l'algorithme ---- */}
-        <div id="code">
-          <div className="mb-4 text-center">
-            <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
-              IMPL&Eacute;MENTATION
-            </span>
-          </div>
-          <h2 className="mb-6 text-center text-2xl font-extrabold tracking-tight text-primary-dark">
-            Code source (R)
-          </h2>
-        </div>
-
-        <SectionCard id="code-1er-tour" title="Premier tour : une simulation">
-          <p>
-            Chaque appel &agrave;{" "}
-            <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-primary-dark">simulate_one()</code>{" "}
-            g&eacute;n&egrave;re une trajectoire compl&egrave;te sur T jours.
-          </p>
-          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
-{`simulate_one <- function(Ideo, W, v0, delta, psi, parms) {
-  K <- length(v0); B <- ncol(Ideo); T <- parms$T
-
-  Qf <- diag(parms$dyn$sigma_f^2, B)
-  D  <- diag(parms$dyn$sigma_eps^2, K)
-
-  # Logits relatifs (baseline = candidat K)
-  eta <- matrix(NA, T, K-1)
-  eta[1,] <- log(v0[1:(K-1)] / v0[K])
-  v_base[1,] <- softmax(c(eta[1,], 0))
-  v_obs[1,]  <- v_base[1,]
-
-  for (t in 2:T) {
-    # Chocs factoriels + idiosyncratiques
-    nu  <- mvrnorm(1, rep(0, B), Qf)
-    eps <- mvrnorm(1, rep(0, K), D)
-    u   <- Ideo %*% nu + eps
-
-    # Drift vectorisé (centré + compensation)
-    u <- apply_drift_vec(u, W, delta)
-
-    # Logits relatifs
-    eta[t,] <- eta[t-1,] + (u[1:(K-1)] - u[K])
-    v_base[t,] <- softmax(c(eta[t,], 0))
-
-    # Vote utile (activation sigmoïde en fin de campagne)
-    a_t <- 1 / (1 + exp((T-t - tau0) / s_tau))
-    v_tilde <- vote_utile_transform(v_base[t,], W, psi)
-    v_obs[t,] <- (1-a_t)*v_base[t,] + a_t*v_tilde
-  }
-  v_obs
-}`}
-          </pre>
+        {/* ---- IV. Philosophie ---- */}
+        <SectionCard title="IV. Philosophie g&eacute;n&eacute;rale du mod&egrave;le">
+          <p>Ce mod&egrave;le repose sur quatre id&eacute;es structurantes :</p>
+          <ul className="ml-4 list-decimal space-y-1">
+            <li>L&rsquo;&eacute;lectorat est organis&eacute; en blocs relativement stables.</li>
+            <li>Les campagnes sont domin&eacute;es par l&rsquo;incertitude et les chocs impr&eacute;visibles.</li>
+            <li>Des tendances structurelles peuvent modifier lentement les &eacute;quilibres.</li>
+            <li>Le vote utile et les logiques de barrage modifient les comportements &agrave; l&rsquo;approche du scrutin.</li>
+          </ul>
+          <p>Il ne pr&eacute;tend pas pr&eacute;dire l&rsquo;avenir avec certitude. Il vise &agrave; :</p>
+          <ul className="ml-4 list-disc space-y-1">
+            <li>mesurer l&rsquo;incertitude,</li>
+            <li>quantifier les sc&eacute;narios plausibles,</li>
+            <li>&eacute;clairer les dynamiques possibles.</li>
+          </ul>
         </SectionCard>
 
-        <SectionCard id="code-drift" title="Drift vectoris&eacute;">
-          <p>
-            Le drift est centr&eacute; (somme nulle) et les voix perdues sont
-            redistribu&eacute;es aux candidats proches via la matrice de
-            similarit&eacute;.
-          </p>
-          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
-{`apply_drift_vec <- function(u, W, delta, lambda_drift=6) {
-  delta <- 1e-3 * delta           # mise à l'échelle
-  delta0 <- delta - mean(delta)   # centrage (somme nulle)
-
-  S <- pmax(W, 0)^lambda_drift   # noyau de similarité
-  diag(S) <- 0
-  S <- S / rowSums(S)            # normalisation par ligne
-
-  # Compensation : t(S) %*% (-delta0)
-  comp <- crossprod(S, -delta0)
-
-  u + (delta0 + comp)
-}`}
-          </pre>
-        </SectionCard>
-
-        <SectionCard id="code-vote-utile" title="Vote utile">
-          <p>
-            Redistribution des voix mobiles selon la proximit&eacute;
-            id&eacute;ologique et l&rsquo;attractivit&eacute; de chaque candidat.
-          </p>
-          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
-{`vote_utile_transform <- function(v, W, psi,
-    lambda_cos=6, beta_utile=5,
-    q0=0.15, sig_q=0.2, r_min=0.6, r_max=0.95) {
-
-  # Enjeu : gaussienne centrée sur le seuil de qualification
-  enjeu <- exp(-0.5 * ((v - q0) / sig_q)^2)
-
-  # Rétention : plus un candidat est loin de q0, plus il garde ses voix
-  r <- r_max - (r_max - r_min) * enjeu
-  m <- (1 - r) * v       # masse à redistribuer
-  v_keep <- r * v         # fraction conservée
-
-  # Attractivité = f(psi, enjeu)
-  att <- exp(4*psi + beta_utile * enjeu)
-
-  # Matrice de transition A[j,k] ∝ Kern[j,k] * att[k]
-  Kern <- pmax(W, 0)^lambda_cos
-  Scores <- Kern * rep(att, each=K)
-  A <- Scores / rowSums(Scores)
-
-  # Redistribution
-  v_new <- v_keep + t(A) %*% m
-  v_new / sum(v_new)
-}`}
-          </pre>
-        </SectionCard>
-
-        <SectionCard id="code-2nd-tour" title="Second tour">
-          <p>
-            Softmax &agrave; 3 issues (vote A, vote B, non-exprim&eacute;s) avec
-            p&eacute;nalit&eacute; de barrage.
-          </p>
-          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-100">
-{`simulate_second_round <- function(v1, Ideo, W,
-    beta=7, alpha_nonexpr=-2.26,
-    rejet_D=4.91, rejet_G=2.24, lambda_cos=3) {
-
-  A <- which.max(v1); B <- which.max(v1[-A])
-
-  # Pénalité de rejet
-  rho <- rejet_D * Ideo[,3] + rejet_G * Ideo[,1]
-
-  # Matrice M (K × 3) : pour chaque électorat source s
-  for (s in 1:K) {
-    simA <- pmax(W[s,A], 0)^lambda_cos
-    simB <- pmax(W[s,B], 0)^lambda_cos
-
-    lA      <- beta * simA - rho[A]
-    lB      <- beta * simB - rho[B]
-    lNonExp <- alpha_nonexpr
-
-    M[s,] <- softmax(c(lA, lB, lNonExp))
-  }
-
-  # Agrégation pondérée par les parts du 1er tour
-  V2_ins <- t(v1) %*% M       # (A, B, nonexpr)
-  expr <- V2_ins[1] + V2_ins[2]
-  V2_expr <- c(V2_ins[1]/expr, V2_ins[2]/expr)
-}`}
-          </pre>
-        </SectionCard>
-
-        {/* ---- Sources des données ---- */}
-        <SectionCard title="Sources des donn&eacute;es">
-          <p>
-            <strong>Sondage agr&eacute;g&eacute; :</strong> Moyenne
-            pond&eacute;r&eacute;e des sondages publi&eacute;s par les
-            principaux instituts (IFOP, Ipsos, Elabe, Harris Interactive,
-            OpinionWay).
-          </p>
-          <p>
-            <strong>Personnalisable :</strong> Permet &agrave;
-            l&rsquo;utilisateur de d&eacute;finir librement les points de
-            d&eacute;part.
-          </p>
-        </SectionCard>
-
-        {/* ---- Limites du modele (warning card) ---- */}
+        {/* ---- Limites du modele ---- */}
         <div className="rounded-xl border-2 border-accent/30 bg-accent/5 p-6">
           <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
@@ -795,9 +376,9 @@ export default function MethodologiePage() {
                   crises, changements d&rsquo;alliances).
                 </li>
                 <li>
-                  Les reports de voix au second tour sont simplifi&eacute;s via
-                  la matrice W et le coefficient &rho;, sans mod&eacute;liser les
-                  dynamiques de campagne de l&rsquo;entre-deux-tours.
+                  Les reports de voix au second tour sont simplifi&eacute;s,
+                  sans mod&eacute;liser les dynamiques de campagne de
+                  l&rsquo;entre-deux-tours.
                 </li>
                 <li>
                   Les param&egrave;tres initiaux sont calibr&eacute;s sur les
@@ -806,14 +387,29 @@ export default function MethodologiePage() {
                 </li>
                 <li>
                   Ce simulateur est un{" "}
-                  <strong>outil p&eacute;dagogique</strong> : il n&rsquo;a pas
-                  vocation &agrave; pr&eacute;dire le r&eacute;sultat de
-                  l&rsquo;&eacute;lection.
+                  <strong>outil p&eacute;dagogique et de strat&eacute;gie politique</strong> :
+                  il n&rsquo;a pas vocation &agrave; pr&eacute;dire le r&eacute;sultat
+                  de l&rsquo;&eacute;lection.
                 </li>
               </ul>
             </div>
           </div>
         </div>
+
+        {/* ---- Sources ---- */}
+        <SectionCard title="Sources des donn&eacute;es">
+          <p>
+            <strong>Sondage agr&eacute;g&eacute; :</strong> Moyenne
+            pond&eacute;r&eacute;e des sondages publi&eacute;s par les
+            principaux instituts (IFOP, Ipsos, Elabe, Harris Interactive,
+            OpinionWay).
+          </p>
+          <p>
+            <strong>Personnalisable :</strong> Permet &agrave;
+            l&rsquo;utilisateur de d&eacute;finir librement les points de
+            d&eacute;part.
+          </p>
+        </SectionCard>
       </div>
     </div>
   );
