@@ -49,8 +49,8 @@ export const DEFAULT_PARTIES: PartyData[] = [
   {
     tag: "LR", party: "Les Républicains", active: true, selectedIdx: 0,
     variants: [
-      { name: "Bruno Retailleau", initials: "BR", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.5, left: 0.3, center: 0.7, right: 0.0, startAgrege: 8, startCustom: 8, photoUrl: `${PHOTO_BASE}bruno-retailleau.jpg` },
-      { name: "Laurent Wauquiez", initials: "LW", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.5, left: 0.3, center: 0.7, right: 0.0, startAgrege: 9, startCustom: 9, photoUrl: `${PHOTO_BASE}laurent-wauquiez.jpg` },
+      { name: "Bruno Retailleau", initials: "BR", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.5, left: 0.0, center: 0.7, right: 0.3, startAgrege: 8, startCustom: 8, photoUrl: `${PHOTO_BASE}bruno-retailleau.jpg` },
+      { name: "Laurent Wauquiez", initials: "LW", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.5, left: 0.0, center: 0.7, right: 0.3, startAgrege: 9, startCustom: 9, photoUrl: `${PHOTO_BASE}laurent-wauquiez.jpg` },
     ],
   },
   {
