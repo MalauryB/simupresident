@@ -164,8 +164,8 @@ export default function MethodologiePage() {
             </code>
             <div className="mt-2 space-y-1 font-mono text-xs text-gray-600">
               <p>
-                drift<sub>i</sub> = (tendance<sub>i</sub> &minus; 0.5) &times;
-                0.0003
+                drift<sub>i</sub> = (tendance<sub>i</sub> / 2) &times;
+                0.001
               </p>
               <p>
                 &nu;(t) ~ N(0, &Sigma;) &mdash; choc commun en 3 dimensions
@@ -326,9 +326,10 @@ export default function MethodologiePage() {
               tagColor="#16a34a"
             >
               <p>
-                Param&egrave;tre entre 0 et 1 repr&eacute;sentant la dynamique
-                de long terme. Au-dessus de 0.5, le candidat progresse ;
-                en-dessous, il recule.
+                Param&egrave;tre entre &minus;1 et 1 repr&eacute;sentant la dynamique
+                de long terme. Au-dessus de 0, le candidat progresse ;
+                en-dessous, il recule. Les voix perdues sont redistribu&eacute;es
+                aux candidats id&eacute;ologiquement proches.
               </p>
             </ParamCard>
 
@@ -612,12 +613,6 @@ export default function MethodologiePage() {
             pond&eacute;r&eacute;e des sondages publi&eacute;s par les
             principaux instituts (IFOP, Ipsos, Elabe, Harris Interactive,
             OpinionWay).
-          </p>
-          <p>
-            <strong>Sondage d&eacute;biais&eacute; :</strong> Sondages
-            corrig&eacute;s des biais historiques de chaque institut (
-            <em>house effects</em>), calibr&eacute;s sur les r&eacute;sultats
-            r&eacute;els des &eacute;lections pr&eacute;c&eacute;dentes.
           </p>
           <p>
             <strong>Personnalisable :</strong> Permet &agrave;

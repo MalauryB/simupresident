@@ -7,7 +7,6 @@ import { generateSimData, getSelected } from "@/lib/simulation";
 import { TutorialOverlay, RESULTS_TUTORIAL_STEPS } from "@/app/components/ui/TutorialOverlay";
 import { BackLink } from "@/app/components/ui/BackLink";
 import { GuideButton } from "@/app/components/ui/GuideButton";
-import { Avatar } from "@/app/components/ui/Avatar";
 import { SIM_COUNT } from "@/lib/constants";
 import type { SimulationData } from "@/types/simulation";
 import {
@@ -23,6 +22,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 /* ------------------------------------------------------------------ */
@@ -178,7 +178,7 @@ export default function ResultatsPage() {
           <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-4" role="img" aria-label="Graphique des trajectoires de sondages pour chaque candidat avec intervalles de confiance à 80%">
             <div className="min-w-[600px]">
             <ResponsiveContainer width="100%" height={400}>
-              <AreaChart data={trajectory}>
+              <AreaChart data={trajectory} margin={{ right: 50 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis
                   dataKey="jour"
@@ -237,6 +237,7 @@ export default function ResultatsPage() {
                 })}
                 {activeParties.map((p) => {
                   const color = partyColors[p.tag]?.chart ?? "#999";
+                  const lastIdx = trajectory.length - 1;
                   return (
                     <Line
                       key={p.tag}
@@ -246,7 +247,26 @@ export default function ResultatsPage() {
                       strokeWidth={2.5}
                       dot={false}
                       name={getSelected(p).name}
-                    />
+                    >
+                      <LabelList
+                        dataKey={p.tag}
+                        content={({ x, y, value, index }) => {
+                          if (index !== lastIdx) return null;
+                          return (
+                            <text
+                              x={Number(x) + 8}
+                              y={Number(y)}
+                              fill={color}
+                              fontSize={11}
+                              fontWeight={700}
+                              dominantBaseline="central"
+                            >
+                              {(Number(value) * 100).toFixed(1)}%
+                            </text>
+                          );
+                        }}
+                      />
+                    </Line>
                   );
                 })}
               </AreaChart>
@@ -277,6 +297,12 @@ export default function ResultatsPage() {
                 candidat et transformation de vote utile activ&eacute;e en fin
                 de campagne.
               </p>
+              <Link
+                href="/methodologie"
+                className="no-print mt-2 inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
+              >
+                Voir la m&eacute;thodologie compl&egrave;te &rarr;
+              </Link>
             </div>
           </div>
         </div>
@@ -485,35 +511,21 @@ export default function ResultatsPage() {
       )}
 
 
-      {/* ---- Section 5: Methodology note ---- */}
+      {/* ---- Avertissement ---- */}
       <section className="mb-16">
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <h3 className="mb-3 text-sm font-bold text-primary-dark">
-            Note m&eacute;thodologique
-          </h3>
-          <p className="mb-2 text-xs leading-relaxed text-gray-600">
-            Les r&eacute;sultats sont produits par {SIM_COUNT} it&eacute;rations
-            d&rsquo;une simulation de Monte Carlo. Chaque it&eacute;ration
-            g&eacute;n&egrave;re une trajectoire quotidienne sur {days} jours en
-            appliquant un processus latent sur logits relatifs :
-            &eta;<sub>t</sub> = (1&minus;&kappa;)&eta;<sub>t-1</sub> + W&nu;<sub>t</sub> + &epsilon;<sub>t</sub>.
-            Le vote utile est activ&eacute; progressivement en fin de campagne
-            via une redistribution des parts mobiles selon la proximit&eacute;
-            id&eacute;ologique (similarit&eacute; cosinus). Le second tour est
-            mod&eacute;lis&eacute; par un softmax &agrave; 3 issues (vote A,
-            vote B, non-exprim&eacute;s) avec p&eacute;nalit&eacute; de
-            barrage.
-          </p>
-          <p className="text-xs leading-relaxed text-gray-600">
-            Cette simulation est un exercice p&eacute;dagogique et ne constitue
-            pas une pr&eacute;vision &eacute;lectorale.
-          </p>
-          <Link
-            href="/methodologie"
-            className="no-print mt-3 inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
-          >
-            Voir la m&eacute;thodologie compl&egrave;te &rarr;
-          </Link>
+        <div className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+          <span className="mt-0.5 text-lg leading-none" aria-hidden="true">&#9888;</span>
+          <div>
+            <h3 className="mb-1 text-sm font-bold text-amber-800">Attention</h3>
+            <p className="text-xs leading-relaxed text-amber-700">
+              Ce mod&egrave;le ne peut pas pr&eacute;dire tous les
+              &eacute;v&eacute;nements (scandales, crises, ralliements
+              impr&eacute;vus&hellip;). Il repose sur des hypoth&egrave;ses
+              simplificatrices et ne constitue pas une pr&eacute;vision
+              &eacute;lectorale. C&rsquo;est avant tout un outil
+              d&rsquo;analyse et de strat&eacute;gie politique.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -525,26 +537,6 @@ export default function ResultatsPage() {
         />
       )}
 
-      {/* ---- Legend ---- */}
-      <section className="mb-8">
-        <h3 className="mb-3 text-sm font-bold text-primary-dark">
-          L&eacute;gende
-        </h3>
-        <div className="flex flex-wrap gap-4">
-          {activeParties.map((p) => {
-            const c = getSelected(p);
-            const colors = partyColors[p.tag] ?? { bg: "#999", fg: "#fff", accent: "#999", chart: "#999" };
-            return (
-              <div key={p.tag} className="flex items-center gap-2">
-                <Avatar candidate={c} colors={colors} size={24} />
-                <span className="text-xs font-medium text-gray-600">
-                  {c.name}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </section>
     </div>
   );
 }
