@@ -34,9 +34,9 @@ export const DEFAULT_PARTIES: PartyData[] = [
   {
     tag: "PS", party: "PS / Place Publique", active: true, selectedIdx: 0,
     variants: [
-      { name: "Raphaël Glucksmann", initials: "RG", polled: true, pollGroup: "Place Publique", attractivite: 0.3, tendance: -0.5, left: 0.2, center: 0.8, right: 0.0, startAgrege: 13.5, startCustom: 13.5, photoUrl: `${PHOTO_BASE}raphael-glucksmann.jpg` },
-      { name: "François Hollande", initials: "FH", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.5, left: 0.2, center: 0.8, right: 0.0, startAgrege: 6, startCustom: 6, photoUrl: `${PHOTO_BASE}francois-hollande.jpg` },
-      { name: "Boris Vallaud", initials: "BV", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.0, left: 0.5, center: 0.5, right: 0.0, startAgrege: 7, startCustom: 7, photoUrl: `${PHOTO_BASE}boris-vallaud.jpg` },
+      { name: "Raphaël Glucksmann", initials: "RG", polled: true, pollGroup: "Place Publique", attractivite: 0.3, tendance: -0.5, left: 0.3, center: 0.7, right: 0.0, startAgrege: 13.5, startCustom: 13.5, photoUrl: `${PHOTO_BASE}raphael-glucksmann.jpg` },
+      { name: "François Hollande", initials: "FH", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.3, left: 0.2, center: 0.8, right: 0.0, startAgrege: 6, startCustom: 6, photoUrl: `${PHOTO_BASE}francois-hollande.jpg` },
+      { name: "Boris Vallaud", initials: "BV", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.3, left: 0.5, center: 0.5, right: 0.0, startAgrege: 7, startCustom: 7, photoUrl: `${PHOTO_BASE}boris-vallaud.jpg` },
     ],
   },
   {
@@ -49,7 +49,7 @@ export const DEFAULT_PARTIES: PartyData[] = [
   {
     tag: "LR", party: "Les Républicains", active: true, selectedIdx: 0,
     variants: [
-      { name: "Bruno Retailleau", initials: "BR", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.5, left: 0.0, center: 0.3, right: 0.7, startAgrege: 8, startCustom: 8, photoUrl: `${PHOTO_BASE}bruno-retailleau.jpg` },
+      { name: "Bruno Retailleau", initials: "BR", polled: true, pollGroup: null, attractivite: 0.5, tendance: 0.2, left: 0.0, center: 0.3, right: 0.7, startAgrege: 8, startCustom: 8, photoUrl: `${PHOTO_BASE}bruno-retailleau.jpg` },
       { name: "Laurent Wauquiez", initials: "LW", polled: true, pollGroup: null, attractivite: 0.0, tendance: 0.2, left: 0.0, center: 0.3, right: 0.7, startAgrege: 3, startCustom: 3, photoUrl: `${PHOTO_BASE}laurent-wauquiez.jpg` },
     ],
   },
@@ -63,7 +63,7 @@ export const DEFAULT_PARTIES: PartyData[] = [
   {
     tag: "REC", party: "Reconquête", active: true, selectedIdx: 0,
     variants: [
-      { name: "Éric Zemmour", initials: "ÉZ", polled: true, pollGroup: null, attractivite: 0.0, tendance: -0.2, left: 0.0, center: 0.0, right: 1.0, startAgrege: 4, startCustom: 4, photoUrl: `${PHOTO_BASE}eric-zemmour.jpg` },
+      { name: "Éric Zemmour", initials: "ÉZ", polled: true, pollGroup: null, attractivite: 0.0, tendance: 0.0, left: 0.0, center: 0.0, right: 1.0, startAgrege: 4, startCustom: 4, photoUrl: `${PHOTO_BASE}eric-zemmour.jpg` },
       { name: "Sarah Knafo", initials: "SK", polled: false, pollGroup: "Extrême droite", attractivite: 0.5, tendance: 0.2, left: 0.0, center: 0.0, right: 1.0, startAgrege: 6, startCustom: 6, photoUrl: `${PHOTO_BASE}sarah-knafo.jpg` },
     ],
   },
