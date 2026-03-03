@@ -17,7 +17,7 @@ export const PARAMS_TUTORIAL_STEPS: TutorialStep[] = [
   {
     target: "tendance",
     title: "Tendance",
-    desc: "Repr\u00e9sente la dynamique de long terme du candidat. Au-dessus de 0.5, il progresse dans les sondages\u00a0; en dessous, il recule.",
+    desc: "Repr\u00e9sente la dynamique de long terme du candidat. Au-dessus de 0, il progresse dans les sondages\u00a0; en dessous, il recule.",
   },
   {
     target: "attractivite",
@@ -30,7 +30,7 @@ export const STARTING_POINT_TUTORIAL_STEPS: TutorialStep[] = [
   {
     target: "source-sondage",
     title: "Source de sondage",
-    desc: "Choisissez comment sont d\u00e9termin\u00e9s les points de d\u00e9part\u00a0: moyenne des sondages, correction des biais, ou valeurs personnalis\u00e9es.",
+    desc: "Choisissez comment sont d\u00e9termin\u00e9s les points de d\u00e9part\u00a0: moyenne des sondages ou valeurs personnalis\u00e9es.",
   },
   {
     target: "points-depart",
@@ -55,13 +55,13 @@ export const CANDIDATE_TUTORIAL_STEPS: TutorialStep[] = [
 export const BARRAGE_TUTORIAL_STEPS: TutorialStep[] = [
   {
     target: "barrage-ed",
-    title: "Barrage extrême droite",
-    desc: "Plus ce coefficient est élevé, plus les candidats à forte composante « droite » seront pénalisés au second tour par le vote barrage.",
+    title: "Barrage \u00e0 l\u2019extr\u00eame droite",
+    desc: "Plus ce coefficient est \u00e9lev\u00e9, plus les candidats \u00e0 forte composante \u00ab\u00a0droite\u00a0\u00bb seront p\u00e9nalis\u00e9s au second tour par le vote barrage.",
   },
   {
     target: "barrage-eg",
-    title: "Barrage extrême gauche",
-    desc: "Même logique pour la composante « gauche ». Un coefficient élevé simule un fort rejet de l\u2019extrême gauche au second tour.",
+    title: "Barrage \u00e0 la gauche radicale",
+    desc: "M\u00eame logique pour la composante \u00ab\u00a0gauche\u00a0\u00bb. Un coefficient \u00e9lev\u00e9 simule un fort rejet de la gauche radicale au second tour.",
   },
 ];
 

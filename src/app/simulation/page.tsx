@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
 import { WIZARD_STEPS } from "@/lib/constants";
@@ -11,6 +11,7 @@ import { TrendSlider } from "@/app/components/ui/TrendSlider";
 import { TriSlider } from "@/app/components/ui/TriSlider";
 import { Avatar } from "@/app/components/ui/Avatar";
 import { GuideButton } from "@/app/components/ui/GuideButton";
+import { ScrollableContainer } from "@/app/components/ui/ScrollableContainer";
 import {
   TutorialOverlay,
   CANDIDATE_TUTORIAL_STEPS,
@@ -431,13 +432,15 @@ function StepBarrage({ showTutorial, onCloseTutorial }: { showTutorial: boolean;
           vers le finaliste le plus proche id&eacute;ologiquement, mais peuvent aussi s&rsquo;abstenir
           ou voter blanc. Ces coefficients ajustent l&rsquo;intensit&eacute; du rejet
           envers les candidats per&ccedil;us comme extr&ecirc;mes.
+          Les valeurs par d&eacute;faut ont &eacute;t&eacute; estim&eacute;es &agrave; partir
+          des &eacute;lections l&eacute;gislatives de 2024.
         </p>
         <div className="space-y-4">
           <div {...(showTutorial ? { "data-tuto": "barrage-ed" } : {})}>
-            <Slider label="Barrage extrême droite" value={gammaRejetED} onChange={setGammaRejetED} min={0} max={10} step={0.1} color="#2563eb" />
+            <Slider label="Barrage à l'extrême droite" value={gammaRejetED} onChange={setGammaRejetED} min={0} max={10} step={0.1} color="#2563eb" />
           </div>
           <div {...(showTutorial ? { "data-tuto": "barrage-eg" } : {})}>
-            <Slider label="Barrage gauche radicale" value={gammaRejetEG} onChange={setGammaRejetEG} min={0} max={10} step={0.1} color="#dc2626" />
+            <Slider label="Barrage à la gauche radicale" value={gammaRejetEG} onChange={setGammaRejetEG} min={0} max={10} step={0.1} color="#dc2626" />
           </div>
         </div>
       </div>
@@ -456,7 +459,7 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
   const field = getStartField(pollSource);
   const total = parties.reduce((s, p) => s + getSelected(p)[field], 0);
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200">
+    <ScrollableContainer className="rounded-xl border border-gray-200">
       <table className="w-full min-w-[500px] text-left text-sm">
         <caption className="sr-only">Résumé de la configuration de simulation</caption>
         <thead>
@@ -465,6 +468,7 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
             <th className="px-4 py-3 font-semibold text-gray-600">Parti</th>
             <th className="px-4 py-3 text-right font-semibold text-gray-600">Départ</th>
             <th className="px-4 py-3 text-right font-semibold text-gray-600">Tendance</th>
+            <th className="px-4 py-3 text-right font-semibold text-gray-600">Vote utile</th>
           </tr>
         </thead>
         <tbody>
@@ -490,12 +494,15 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
                     {c.tendance.toFixed(2)}
                   </span>
                 </td>
+                <td className="px-4 py-3 text-right font-mono font-semibold text-primary-dark">
+                  {c.attractivite.toFixed(1)}
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-    </div>
+    </ScrollableContainer>
   );
 }
 
@@ -534,18 +541,17 @@ export default function SimulationPage() {
   const [step, setStep] = useState(0);
   const [activeTutorial, setActiveTutorial] = useState<number | null>(null);
 
+  // Show tutorial for the current step if not yet seen
   useEffect(() => {
     try {
-      for (let i = 0; i < TUTORIAL_STORAGE_KEYS.length; i++) {
-        if (!localStorage.getItem(TUTORIAL_STORAGE_KEYS[i])) {
-          setActiveTutorial(i);
-          return;
-        }
+      const key = TUTORIAL_STORAGE_KEYS[step];
+      if (key && !localStorage.getItem(key)) {
+        setActiveTutorial(step);
       }
     } catch {
       // localStorage not available (private browsing)
     }
-  }, []);
+  }, [step]);
 
   const closeTutorial = useCallback(() => setActiveTutorial(null), []);
 
@@ -553,9 +559,11 @@ export default function SimulationPage() {
     if (step < TUTORIAL_STORAGE_KEYS.length) setActiveTutorial(step);
   }, [step]);
 
-  const contentRef = useCallback((node: HTMLDivElement | null) => {
-    if (node) node.scrollTop = 0;
-  }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  }, [step]);
 
   const goToStep = useCallback((target: number) => {
     setStep(target);
@@ -563,7 +571,8 @@ export default function SimulationPage() {
 
   const total = useMemo(() => {
     const field = getStartField(pollSource);
-    return activeParties.reduce((s, p) => s + getSelected(p)[field], 0);
+    const raw = activeParties.reduce((s, p) => s + getSelected(p)[field], 0);
+    return Math.round(raw * 10) / 10;
   }, [activeParties, pollSource]);
 
   const stepSubtitles = [
