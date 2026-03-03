@@ -7,6 +7,7 @@ import { generateSimData, getSelected } from "@/lib/simulation";
 import { TutorialOverlay, RESULTS_TUTORIAL_STEPS } from "@/app/components/ui/TutorialOverlay";
 import { BackLink } from "@/app/components/ui/BackLink";
 import { GuideButton } from "@/app/components/ui/GuideButton";
+import { ScrollableContainer } from "@/app/components/ui/ScrollableContainer";
 import { SIM_COUNT } from "@/lib/constants";
 import type { SimulationData } from "@/types/simulation";
 import {
@@ -175,7 +176,7 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* Chart */}
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-4" role="img" aria-label="Graphique des trajectoires de sondages pour chaque candidat avec intervalles de confiance à 80%">
+          <ScrollableContainer className="rounded-xl border border-gray-200 bg-white p-4" role="img" aria-label="Graphique des trajectoires de sondages pour chaque candidat avec intervalles de confiance à 80%">
             <div className="min-w-[600px]">
             <ResponsiveContainer width="100%" height={400}>
               <AreaChart data={trajectory} margin={{ right: 50 }}>
@@ -272,7 +273,7 @@ export default function ResultatsPage() {
               </AreaChart>
             </ResponsiveContainer>
             </div>
-          </div>
+          </ScrollableContainer>
 
           {/* Side panel */}
           <div className="space-y-4">
@@ -316,7 +317,7 @@ export default function ResultatsPage() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* P(qualification) */}
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-5" data-tuto="res-qualif" role="img" aria-label="Probabilité de qualification au second tour par candidat">
+          <ScrollableContainer className="rounded-xl border border-gray-200 bg-white p-5" data-tuto="res-qualif" role="img" aria-label="Probabilité de qualification au second tour par candidat">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </h3>
@@ -366,10 +367,10 @@ export default function ResultatsPage() {
               </BarChart>
             </ResponsiveContainer>
             </div>
-          </div>
+          </ScrollableContainer>
 
           {/* P(victoire) */}
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-5" data-tuto="res-victoire" role="img" aria-label="Probabilité de victoire finale par candidat">
+          <ScrollableContainer className="rounded-xl border border-gray-200 bg-white p-5" data-tuto="res-victoire" role="img" aria-label="Probabilité de victoire finale par candidat">
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </h3>
@@ -419,7 +420,7 @@ export default function ResultatsPage() {
               </BarChart>
             </ResponsiveContainer>
             </div>
-          </div>
+          </ScrollableContainer>
         </div>
 
         <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-600">
@@ -439,7 +440,7 @@ export default function ResultatsPage() {
             Duels les plus probables au second tour
           </h2>
 
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+          <ScrollableContainer className="rounded-xl border border-gray-200 bg-white">
             <table className="w-full min-w-[600px] text-sm">
               <caption className="sr-only">Les 5 duels les plus probables au second tour</caption>
               <thead>
@@ -506,7 +507,7 @@ export default function ResultatsPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableContainer>
         </section>
       )}
 

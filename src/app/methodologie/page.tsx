@@ -49,6 +49,16 @@ export default function MethodologiePage() {
         <p className="text-gray-600">
           Mod&egrave;le de simulation d&rsquo;une &eacute;lection pr&eacute;sidentielle &agrave; deux tours
         </p>
+        <a
+          href="/Note_technique.pdf"
+          download
+          className="mt-4 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          T&eacute;l&eacute;charger la note technique (PDF)
+        </a>
       </div>
 
       <div className="space-y-8">
