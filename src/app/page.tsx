@@ -151,19 +151,9 @@ export default function HomePage() {
 
         {/* Project card */}
         <div className="rounded-xl border border-primary/20 bg-primary-dark p-6">
-          <h3 className="mb-2 text-lg font-bold text-white">
-            Un projet informatique ?
-          </h3>
-          <p className="mb-4 text-sm text-primary-light/80">
-            Notre &eacute;quipe peut vous accompagner sur vos projets data et
-            simulation.
+          <p className="text-sm text-primary-light/80">
+            Fait b&eacute;n&eacute;volement par <span className="font-semibold text-white">nimli</span>
           </p>
-          <a
-            href="mailto:projet@quipresident.fr"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-colors hover:text-primary-light"
-          >
-            Discutons-en &rarr;
-          </a>
         </div>
       </section>
     </div>

@@ -7,7 +7,7 @@ import { SimulationProvider } from "@/lib/simulation-context";
 
 const APP_NAME = "Qui pour l\u2019\u00c9lys\u00e9e\u202f?";
 const APP_DESCRIPTION =
-  "Simulez l'élection présidentielle 2027 grâce à notre modèle Monte Carlo interactif.";
+  "Simulez l'élection présidentielle 2027 grâce à notre modèle de simulation interactif.";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,

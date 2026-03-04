@@ -24,7 +24,7 @@ export default function AProposPage() {
           &Agrave; propos
         </h1>
         <p className="text-gray-600">
-          D&eacute;couvrez l&rsquo;&eacute;quipe et la mission derri&egrave;re
+          D&eacute;couvrez la mission derri&egrave;re
           quipr&eacute;sident.fr.
         </p>
       </div>
@@ -49,49 +49,6 @@ export default function AProposPage() {
             essentielle : tous nos mod&egrave;les sont document&eacute;s et les
             param&egrave;tres sont ajustables par l&rsquo;utilisateur.
           </p>
-        </div>
-
-        {/* ---- Team ---- */}
-        <div>
-          <h2 className="mb-4 text-lg font-bold text-primary-dark">
-            L&rsquo;&eacute;quipe
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* Profile 1 */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white">
-                TD
-              </div>
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
-                Thomas Dupont
-              </h3>
-              <p className="mb-2 text-xs font-medium text-accent">
-                Data Scientist &amp; Fondateur
-              </p>
-              <p className="text-xs leading-relaxed text-gray-600">
-                Sp&eacute;cialiste en mod&eacute;lisation statistique et
-                analyse &eacute;lectorale. Dipl&ocirc;m&eacute; de
-                l&rsquo;ENSAE.
-              </p>
-            </div>
-
-            {/* Profile 2 */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent text-2xl font-bold text-white">
-                CM
-              </div>
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
-                Claire Martin
-              </h3>
-              <p className="mb-2 text-xs font-medium text-accent">
-                Ing&eacute;nieure Full-Stack
-              </p>
-              <p className="text-xs leading-relaxed text-gray-600">
-                D&eacute;veloppeuse passionn&eacute;e par les outils
-                p&eacute;dagogiques et la visualisation de donn&eacute;es.
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* ---- How it works ---- */}
@@ -121,7 +78,7 @@ export default function AProposPage() {
                 Simulez
               </h3>
               <p className="text-xs text-gray-600">
-                {SIM_COUNT} simulations Monte Carlo sont
+                {SIM_COUNT} simulations sont
                 g&eacute;n&eacute;r&eacute;es en quelques secondes.
               </p>
             </div>
@@ -153,20 +110,16 @@ export default function AProposPage() {
                 a: "Non. C'est un outil p\u00e9dagogique qui explore des sc\u00e9narios possibles, pas une pr\u00e9vision.",
               },
               {
-                q: "D'o\u00f9 viennent les donn\u00e9es de sondages ?",
-                a: "Les sondages sont agr\u00e9g\u00e9s \u00e0 partir des publications des principaux instituts fran\u00e7ais (IFOP, Ipsos, Elabe, etc.).",
+                q: "Pourquoi seulement 8 candidats ?",
+                a: "Nous avons limit\u00e9 le nombre de candidats pour que le mod\u00e8le reste lisible et ne devienne pas trop complexe. Ajouter davantage de candidats augmenterait consid\u00e9rablement le nombre d\u2019interactions \u00e0 mod\u00e9liser.",
               },
               {
-                q: "Que signifient les param\u00e8tres de barrage ?",
-                a: "Deux coefficients globaux (\u03b3_ED et \u03b3_EG) p\u00e9nalisent les candidats extr\u00eames au second tour. La p\u00e9nalit\u00e9 est calcul\u00e9e automatiquement \u00e0 partir du vecteur id\u00e9ologique de chaque candidat.",
+                q: "Pourquoi ces param\u00e8tres par d\u00e9faut ?",
+                a: "Ces param\u00e8tres nous semblent r\u00e9alistes au regard des connaissances \u00e0 l\u2019instant t, mais il ne s\u2019agit que d\u2019interpr\u00e9tation. Le but est avant tout que chaque utilisateur choisisse ses propres param\u00e8tres.",
               },
               {
-                q: "Puis-je modifier tous les param\u00e8tres ?",
-                a: "Oui ! L'assistant de configuration vous permet d'ajuster chaque param\u00e8tre pour chaque candidat.",
-              },
-              {
-                q: "Le site est-il gratuit ?",
-                a: "Enti\u00e8rement gratuit, sans publicit\u00e9 et open source.",
+                q: "Peut-on avoir acc\u00e8s au code de la simulation ?",
+                a: null,
               },
             ].map((faq) => (
               <div
@@ -176,9 +129,27 @@ export default function AProposPage() {
                 <h3 className="mb-1 text-sm font-bold text-primary-dark">
                   {faq.q}
                 </h3>
-                <p className="text-xs leading-relaxed text-gray-600">
-                  {faq.a}
-                </p>
+                {faq.a ? (
+                  <p className="text-xs leading-relaxed text-gray-600">
+                    {faq.a}
+                  </p>
+                ) : (
+                  <p className="text-xs leading-relaxed text-gray-600">
+                    Oui ! Le projet est enti&egrave;rement open source. Le code
+                    sp&eacute;cifique du mod&egrave;le se trouve dans le fichier{" "}
+                    <code className="rounded bg-gray-100 px-1 py-0.5 text-[11px] font-medium text-primary-dark">
+                      src/lib/simulation.ts
+                    </code>.{" "}
+                    <a
+                      href="https://github.com/MalauryB/simupresident"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-accent hover:text-accent/80"
+                    >
+                      Voir le code sur GitHub &rarr;
+                    </a>
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -208,19 +179,9 @@ export default function AProposPage() {
 
             {/* Project card */}
             <div className="rounded-xl border border-gray-200 bg-white p-6">
-              <h3 className="mb-2 text-sm font-bold text-primary-dark">
-                Un projet informatique ?
-              </h3>
-              <p className="mb-3 text-xs text-gray-600">
-                Nous pouvons vous accompagner sur des projets de data science,
-                simulation ou visualisation.
+              <p className="text-xs text-gray-600">
+                Fait b&eacute;n&eacute;volement par <span className="font-semibold text-primary-dark">nimli</span>
               </p>
-              <a
-                href="mailto:projet@quipresident.fr"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
-              >
-                projet@quipresident.fr &rarr;
-              </a>
             </div>
           </div>
         </div>

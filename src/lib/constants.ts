@@ -10,6 +10,7 @@ export const PARTY_COLORS: Record<string, PartyColors> = {
   LR: { bg: "#0066CC", fg: "#FFFFFF", accent: "#004A99", chart: "#0066CC" },
   RN: { bg: "#1B2A4A", fg: "#EEEDFF", accent: "#002395", chart: "#002395" },
   REC: { bg: "#1a1a2e", fg: "#FFFFFF", accent: "#2D2D5E", chart: "#2D2D5E" },
+  PCF: { bg: "#DD0000", fg: "#FFFFFF", accent: "#BB0000", chart: "#DD0000" },
 };
 
 export const DEFAULT_PARTIES: PartyData[] = [
@@ -19,6 +20,12 @@ export const DEFAULT_PARTIES: PartyData[] = [
       { name: "Jean-Luc Mélenchon", initials: "JLM", polled: true, pollGroup: null, attractivite: 0.9, tendance: 0.2, left: 1.0, center: 0.0, right: 0.0, startAgrege: 13, startCustom: 13, photoUrl: `${PHOTO_BASE}jean-luc-melenchon.jpg` },
       { name: "Clémence Guetté", initials: "CG", polled: false, pollGroup: null, attractivite: 0.6, tendance: 0.5, left: 1.0, center: 0.0, right: 0.0, startAgrege: 10, startCustom: 10, photoUrl: `${PHOTO_BASE}clemence-guette.jpg` },
       { name: "Manuel Bompard", initials: "MB", polled: false, pollGroup: null, attractivite: 0.7, tendance: 0.3, left: 1.0, center: 0.0, right: 0.0, startAgrege: 10, startCustom: 10, photoUrl: `${PHOTO_BASE}manuel-bompard.jpg` },
+    ],
+  },
+  {
+    tag: "PCF", party: "Parti Communiste Français", active: true, selectedIdx: 0,
+    variants: [
+      { name: "Fabien Roussel", initials: "FRo", polled: false, pollGroup: null, attractivite: 0.0, tendance: 0.0, left: 0.8, center: 0.0, right: 0.2, startAgrege: 3, startCustom: 3, photoUrl: `${PHOTO_BASE}fabien-roussel.jpg` },
     ],
   },
   {
@@ -35,8 +42,8 @@ export const DEFAULT_PARTIES: PartyData[] = [
     tag: "PS", party: "PS / Place Publique", active: true, selectedIdx: 0,
     variants: [
       { name: "Raphaël Glucksmann", initials: "RG", polled: true, pollGroup: "Place Publique", attractivite: 0.3, tendance: -0.5, left: 0.3, center: 0.7, right: 0.0, startAgrege: 13.5, startCustom: 13.5, photoUrl: `${PHOTO_BASE}raphael-glucksmann.jpg` },
-      { name: "François Hollande", initials: "FH", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.3, left: 0.2, center: 0.8, right: 0.0, startAgrege: 6, startCustom: 6, photoUrl: `${PHOTO_BASE}francois-hollande.jpg` },
-      { name: "Boris Vallaud", initials: "BV", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.3, left: 0.5, center: 0.5, right: 0.0, startAgrege: 7, startCustom: 7, photoUrl: `${PHOTO_BASE}boris-vallaud.jpg` },
+      { name: "François Hollande", initials: "FH", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.3, left: 0.2, center: 0.8, right: 0.0, startAgrege: 10, startCustom: 10, photoUrl: `${PHOTO_BASE}francois-hollande.jpg` },
+      { name: "Boris Vallaud", initials: "BV", polled: false, pollGroup: "Parti Socialiste", attractivite: 0.5, tendance: 0.3, left: 0.5, center: 0.5, right: 0.0, startAgrege: 10, startCustom: 10, photoUrl: `${PHOTO_BASE}boris-vallaud.jpg` },
     ],
   },
   {
