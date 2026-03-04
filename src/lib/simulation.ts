@@ -9,7 +9,7 @@ import type {
 } from "@/types/simulation";
 
 // ================================================================
-// Port TypeScript du modèle R « Monte Carlo : courbes + 2nd tour »
+// Port TypeScript du modèle R « simulations : courbes + 2nd tour »
 // ================================================================
 
 // ===== PRNG (Linear Congruential Generator) =====
@@ -491,7 +491,7 @@ export function generateSimData(
     }
   }
 
-  // --- Monte Carlo ---
+  // --- Simulations ---
   const rng = new PRNG(42);
   const S = cfg.S;
   const T = cfg.T;

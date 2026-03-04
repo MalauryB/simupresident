@@ -36,7 +36,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [gammaRejetED, setGammaRejetED] = useState(4.909881);
   const [gammaRejetEG, setGammaRejetEG] = useState(2.240084);
-  const days = useMemo(() => Math.max(7, Math.min(365, Math.round((ELECTION_DATE.getTime() - Date.now()) / 86_400_000))), []);
+  const days = useMemo(() => Math.max(7, Math.min(730, Math.round((ELECTION_DATE.getTime() - Date.now()) / 86_400_000))), []);
 
   // Charger les données depuis Supabase au mount
   useEffect(() => {

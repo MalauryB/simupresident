@@ -227,8 +227,8 @@ export default function MethodologiePage() {
               </p>
             </SectionCard>
 
-            {/* 5) Monte Carlo */}
-            <SectionCard title="5) Pourquoi utiliser des simulations Monte Carlo&nbsp;?">
+            {/* 5) Simulations */}
+            <SectionCard title="5) Pourquoi utiliser des simulations&nbsp;?">
               <p>
                 Le mod&egrave;le ne produit pas une seule trajectoire. Il simule des centaines
                 de campagnes possibles, chacune avec ses chocs al&eacute;atoires.

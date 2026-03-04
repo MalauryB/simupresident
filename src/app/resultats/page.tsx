@@ -36,6 +36,8 @@ export default function ResultatsPage() {
   const [computing, setComputing] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showTutoResults, setShowTutoResults] = useState(false);
+  const [focusedTag, setFocusedTag] = useState<string | null>(null);
+  const [dateMode, setDateMode] = useState<"jours" | "dates">("jours");
 
   useEffect(() => {
     if (!localStorage.getItem("tutoResultsSeen")) {
@@ -101,7 +103,7 @@ export default function ResultatsPage() {
       <div role="status" aria-label="Simulation en cours" className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary-dark" aria-hidden="true" />
         <p className="text-sm font-medium text-gray-600">
-          Simulation Monte Carlo en cours&hellip;
+          Simulation en cours&hellip;
         </p>
         <p className="text-xs text-gray-500">{SIM_COUNT} simulations &times; {days} jours</p>
       </div>
@@ -162,8 +164,8 @@ export default function ResultatsPage() {
           R&eacute;sultats de la simulation
         </h1>
         <p className="text-gray-600">
-          {simData.probabilities.length} candidats &middot; {SIM_COUNT} simulations Monte
-          Carlo &middot; {days} jours &middot; IC 80%
+          {simData.probabilities.length} candidats &middot; {SIM_COUNT} simulations
+          &middot; {days} jours &middot; IC 80%
         </p>
         <GuideButton onClick={() => setShowTutoResults(true)} label="Guide des résultats" className="no-print mx-auto mt-3" />
       </div>
@@ -177,13 +179,37 @@ export default function ResultatsPage() {
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* Chart */}
           <ScrollableContainer className="rounded-xl border border-gray-200 bg-white p-4" role="img" aria-label="Graphique des trajectoires de sondages pour chaque candidat avec intervalles de confiance à 80%">
+            <div className="mb-2 flex justify-end">
+              <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 text-xs font-medium">
+                <button
+                  type="button"
+                  onClick={() => setDateMode("jours")}
+                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                >
+                  J0, J1&hellip;
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDateMode("dates")}
+                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "dates" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                >
+                  Dates
+                </button>
+              </div>
+            </div>
             <div className="min-w-[600px]">
             <ResponsiveContainer width="100%" height={400}>
-              <AreaChart data={trajectory} margin={{ right: 50 }}>
+              <AreaChart data={trajectory} margin={{ right: 50 }} onClick={() => setFocusedTag(null)}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis
                   dataKey="jour"
-                  tickFormatter={(v: number) => `J${v}`}
+                  tickFormatter={(v: number) => {
+                    if (dateMode === "dates") {
+                      const d = new Date(Date.now() + v * 86_400_000);
+                      return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+                    }
+                    return `J${v}`;
+                  }}
                   tick={{ fontSize: 11, fill: "#999" }}
                 />
                 <YAxis
@@ -193,7 +219,13 @@ export default function ResultatsPage() {
                 />
                 <Tooltip
                   formatter={(value) => `${(Number(value) * 100).toFixed(1)}%`}
-                  labelFormatter={(label) => `Jour ${label}`}
+                  labelFormatter={(label) => {
+                    if (dateMode === "dates") {
+                      const d = new Date(Date.now() + Number(label) * 86_400_000);
+                      return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+                    }
+                    return `Jour ${label}`;
+                  }}
                   contentStyle={{
                     borderRadius: "8px",
                     border: "1px solid #e5e7eb",
@@ -202,6 +234,7 @@ export default function ResultatsPage() {
                 />
                 {activeParties.map((p) => {
                   const color = partyColors[p.tag]?.chart ?? "#999";
+                  const dimmed = focusedTag !== null && focusedTag !== p.tag;
                   return (
                     <Area
                       key={`${p.tag}_band`}
@@ -209,7 +242,7 @@ export default function ResultatsPage() {
                       dataKey={`${p.tag}_hi`}
                       stroke="none"
                       fill={color}
-                      fillOpacity={0.1}
+                      fillOpacity={dimmed ? 0 : focusedTag === p.tag ? 0.2 : 0.1}
                       name={`${p.tag} IC+`}
                       dot={false}
                       activeDot={false}
@@ -220,6 +253,7 @@ export default function ResultatsPage() {
                 })}
                 {activeParties.map((p) => {
                   const color = partyColors[p.tag]?.chart ?? "#999";
+                  const dimmed = focusedTag !== null && focusedTag !== p.tag;
                   return (
                     <Area
                       key={`${p.tag}_lo`}
@@ -227,7 +261,7 @@ export default function ResultatsPage() {
                       dataKey={`${p.tag}_lo`}
                       stroke="none"
                       fill={color}
-                      fillOpacity={0.05}
+                      fillOpacity={dimmed ? 0 : focusedTag === p.tag ? 0.1 : 0.05}
                       name={`${p.tag} IC-`}
                       dot={false}
                       activeDot={false}
@@ -239,20 +273,28 @@ export default function ResultatsPage() {
                 {activeParties.map((p) => {
                   const color = partyColors[p.tag]?.chart ?? "#999";
                   const lastIdx = trajectory.length - 1;
+                  const dimmed = focusedTag !== null && focusedTag !== p.tag;
                   return (
                     <Line
                       key={p.tag}
                       type="monotone"
                       dataKey={p.tag}
                       stroke={color}
-                      strokeWidth={2.5}
+                      strokeWidth={focusedTag === p.tag ? 3.5 : 2.5}
+                      strokeOpacity={dimmed ? 0.15 : 1}
                       dot={false}
                       name={getSelected(p).name}
+                      style={{ cursor: "pointer" }}
+                      onClick={(e: unknown) => {
+                        if (e && typeof e === "object" && "stopPropagation" in e) (e as React.MouseEvent).stopPropagation();
+                        setFocusedTag(prev => prev === p.tag ? null : p.tag);
+                      }}
                     >
                       <LabelList
                         dataKey={p.tag}
                         content={({ x, y, value, index }) => {
                           if (index !== lastIdx) return null;
+                          if (dimmed) return null;
                           return (
                             <text
                               x={Number(x) + 8}
@@ -279,30 +321,29 @@ export default function ResultatsPage() {
           <div className="space-y-4">
             <div className="rounded-xl border border-gray-200 bg-white p-4">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
-                Lecture du graphique
+                Comment lire ce graphique&nbsp;?
               </h3>
               <p className="text-xs leading-relaxed text-gray-600">
-                Chaque ligne repr&eacute;sente la trajectoire m&eacute;diane du
-                candidat sur {SIM_COUNT} simulations. Les zones color&eacute;es
-                montrent l&rsquo;intervalle de confiance &agrave; 80%
-                (quantiles 10%-90%).
+                Nous avons simul&eacute; <strong>{SIM_COUNT} &eacute;lections
+                pr&eacute;sidentielles</strong> avec des sc&eacute;narios
+                al&eacute;atoires diff&eacute;rents. Chaque <strong>ligne</strong> repr&eacute;sente
+                la valeur m&eacute;diane, c&rsquo;est-&agrave;-dire le r&eacute;sultat
+                le plus central parmi toutes ces simulations.
               </p>
-            </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-4">
-              <h3 className="mb-2 text-sm font-bold text-primary-dark">
-                Mod&egrave;le utilis&eacute;
-              </h3>
-              <p className="text-xs leading-relaxed text-gray-600">
-                Processus latent sur logits relatifs avec chocs factoriels
-                (embedding id&eacute;ologique W), drift cibl&eacute; par
-                candidat et transformation de vote utile activ&eacute;e en fin
-                de campagne.
+              <p className="mt-2 text-xs leading-relaxed text-gray-600">
+                Les <strong>zones color&eacute;es</strong> autour de chaque ligne
+                repr&eacute;sentent l&rsquo;intervalle de confiance &agrave; 80%&nbsp;:
+                dans 8 simulations sur 10, le score du candidat se situe dans
+                cette zone. Plus la zone est large, plus l&rsquo;incertitude est grande.
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-gray-600">
+                Cliquez sur une courbe pour l&rsquo;isoler.
               </p>
               <Link
                 href="/methodologie"
-                className="no-print mt-2 inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
+                className="no-print mt-3 inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
               >
-                Voir la m&eacute;thodologie compl&egrave;te &rarr;
+                En savoir plus sur la m&eacute;thodologie &rarr;
               </Link>
             </div>
           </div>
@@ -322,7 +363,7 @@ export default function ResultatsPage() {
               Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </h3>
             <p className="mb-4 text-xs text-gray-500">
-              P(qualification au 2nd tour)
+              Probabilit&eacute; de qualification au 2nd tour
             </p>
             <div className="min-w-[400px]">
             <ResponsiveContainer width="100%" height={280}>
@@ -375,7 +416,7 @@ export default function ResultatsPage() {
               Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </h3>
             <p className="mb-4 text-xs text-gray-500">
-              P(victoire finale)
+              Probabilit&eacute; de victoire finale
             </p>
             <div className="min-w-[400px]">
             <ResponsiveContainer width="100%" height={280}>
@@ -423,14 +464,6 @@ export default function ResultatsPage() {
           </ScrollableContainer>
         </div>
 
-        <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-600">
-          <strong className="text-gray-600">Note :</strong>{" "}
-          P(qualification) est la fr&eacute;quence empirique d&rsquo;acc&egrave;s
-          au top 2 sur {simData.probabilities.length > 0 ? SIM_COUNT : "0"}{" "}
-          simulations. P(victoire) est la fr&eacute;quence empirique du vainqueur
-          au second tour, int&eacute;grant reports de voix, abstention
-          diff&eacute;rentielle et vote barrage.
-        </div>
       </section>
 
       {/* ---- Section 3: Duels les plus probables ---- */}
