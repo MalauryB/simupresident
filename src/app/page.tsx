@@ -150,11 +150,22 @@ export default function HomePage() {
         </div>
 
         {/* Project card */}
-        <div className="rounded-xl border border-primary/20 bg-primary-dark p-6">
-          <p className="text-sm text-primary-light/80">
-            Fait b&eacute;n&eacute;volement par <span className="font-semibold text-white">nimli</span>
-          </p>
-        </div>
+        <a
+          href="https://nimli.fr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-4 rounded-xl border border-neutral-800 bg-neutral-950 p-6 transition-colors hover:bg-neutral-900"
+        >
+          <img src="/logo_blanc.png" alt="Nimli" className="h-10 w-10 shrink-0 rounded-lg object-contain" />
+          <div>
+            <p className="text-sm font-semibold" style={{ color: "#E8DCD0" }}>
+              Fait b&eacute;n&eacute;volement par <span style={{ color: "#D4637A" }}>Nimli</span>
+            </p>
+            <p className="text-xs text-neutral-400 transition-colors group-hover:text-neutral-300">
+              nimli.fr &rarr;
+            </p>
+          </div>
+        </a>
       </section>
     </div>
   );
