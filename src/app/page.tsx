@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSimulation } from "@/lib/simulation-context";
@@ -31,10 +32,12 @@ function CandidatePhoto({
 
       {/* Photo overlay */}
       {candidate.photoUrl && (
-        <img
+        <Image
           src={candidate.photoUrl}
           alt={candidate.name}
-          className="absolute inset-0 h-full w-full object-cover object-top"
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="object-cover object-top"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}

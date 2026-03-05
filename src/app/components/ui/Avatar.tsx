@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { PartyColors, CandidatVariant } from "@/types/simulation";
 
 interface AvatarProps {
@@ -8,7 +9,6 @@ interface AvatarProps {
 }
 
 export function Avatar({ candidate, colors, size = 14, grayscale = false }: AvatarProps) {
-  const sizeClass = `h-${size} w-${size}`;
   const px = size * 4;
   const fontSize = size <= 7 ? "10px" : size <= 8 ? "12px" : size <= 10 ? "14px" : candidate.initials.length > 2 ? "14px" : "18px";
 
@@ -28,13 +28,13 @@ export function Avatar({ candidate, colors, size = 14, grayscale = false }: Avat
         {candidate.initials}
       </div>
       {candidate.photoUrl && (
-        <img
+        <Image
           src={candidate.photoUrl}
           alt={candidate.name}
-          className="absolute inset-0 rounded-full object-cover"
+          fill
+          sizes={`${px * 2}px`}
+          className="rounded-full object-cover"
           style={{
-            width: px,
-            height: px,
             filter: grayscale ? "grayscale(0.8)" : "none",
           }}
           aria-hidden="true"

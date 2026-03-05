@@ -8,6 +8,15 @@ const withSerwist = withSerwistInit({
 });
 
 export default withSerwist({
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "gqaymlbxwlvxcvbunuxp.supabase.co",
+        pathname: "/storage/v1/object/public/photos/**",
+      },
+    ],
+  },
   async headers() {
     return [
       {
