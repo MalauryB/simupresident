@@ -37,7 +37,7 @@ export default function ResultatsPage() {
   const [error, setError] = useState<string | null>(null);
   const [showTutoResults, setShowTutoResults] = useState(false);
   const [focusedTag, setFocusedTag] = useState<string | null>(null);
-  const [dateMode, setDateMode] = useState<"jours" | "dates">("jours");
+  const [dateMode, setDateMode] = useState<"jours" | "dates">("dates");
 
   useEffect(() => {
     if (!localStorage.getItem("tutoResultsSeen")) {
@@ -183,17 +183,17 @@ export default function ResultatsPage() {
               <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 text-xs font-medium">
                 <button
                   type="button"
-                  onClick={() => setDateMode("jours")}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                >
-                  J0, J1&hellip;
-                </button>
-                <button
-                  type="button"
                   onClick={() => setDateMode("dates")}
                   className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "dates" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
                 >
                   Dates
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDateMode("jours")}
+                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                >
+                  J &minus; T
                 </button>
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function ResultatsPage() {
                       const d = new Date(Date.now() + v * 86_400_000);
                       return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
                     }
-                    return `J${v}`;
+                    return `J-${days - v}`;
                   }}
                   tick={{ fontSize: 11, fill: "#999" }}
                 />
@@ -224,7 +224,7 @@ export default function ResultatsPage() {
                       const d = new Date(Date.now() + Number(label) * 86_400_000);
                       return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
                     }
-                    return `Jour ${label}`;
+                    return `J-${days - Number(label)}`;
                   }}
                   contentStyle={{
                     borderRadius: "8px",
@@ -335,9 +335,6 @@ export default function ResultatsPage() {
                 repr&eacute;sentent l&rsquo;intervalle de confiance &agrave; 80%&nbsp;:
                 dans 8 simulations sur 10, le score du candidat se situe dans
                 cette zone. Plus la zone est large, plus l&rsquo;incertitude est grande.
-              </p>
-              <p className="mt-2 text-xs leading-relaxed text-gray-600">
-                Cliquez sur une courbe pour l&rsquo;isoler.
               </p>
               <Link
                 href="/methodologie"
@@ -558,6 +555,13 @@ export default function ResultatsPage() {
               simplificatrices et ne constitue pas une pr&eacute;vision
               &eacute;lectorale. C&rsquo;est avant tout un outil
               d&rsquo;analyse et de strat&eacute;gie politique.
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-amber-700">
+              <strong>Candidats sond&eacute;s directement&nbsp;:</strong> Roussel,
+              M&eacute;lenchon, Tondelier, Glucksmann, Philippe, Attal,
+              Retailleau, Bardella, Le&nbsp;Pen, Zemmour. Les points de
+              d&eacute;part des autres candidats sont des valeurs
+              estim&eacute;es.
             </p>
           </div>
         </div>
