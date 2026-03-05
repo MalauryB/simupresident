@@ -41,3 +41,6 @@ next-env.d.ts
 # Serwist generated service worker
 public/sw*
 public/swe-worker*
+
+# Claude Code
+.claude/
