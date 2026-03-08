@@ -1,5 +1,6 @@
 export interface CandidatVariant {
   name: string;
+  shortName: string;
   initials: string;
   polled: boolean;
   pollGroup: string | null;

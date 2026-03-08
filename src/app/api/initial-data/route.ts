@@ -38,6 +38,7 @@ export async function GET() {
     selectedIdx: 0,
     variants: (candidatsByParti[p.tag] ?? []).map((c) => ({
       name: c.nom,
+      shortName: c.nom_court ?? c.nom.split(" ").pop() ?? c.nom,
       initials: c.initiales ?? "",
       polled: c.sonde_individuellement ?? false,
       pollGroup: c.groupe_sondage ?? null,

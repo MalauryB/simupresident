@@ -37,6 +37,7 @@ export interface Database {
           parti_tag: string;
           indice_variante: number;
           nom: string;
+          nom_court: string | null;
           initiales: string | null;
           sonde_individuellement: boolean;
           groupe_sondage: string | null;
@@ -56,6 +57,7 @@ export interface Database {
           parti_tag: string;
           indice_variante?: number;
           nom: string;
+          nom_court?: string | null;
           initiales?: string | null;
           sonde_individuellement?: boolean;
           groupe_sondage?: string | null;
@@ -75,6 +77,7 @@ export interface Database {
           parti_tag?: string;
           indice_variante?: number;
           nom?: string;
+          nom_court?: string | null;
           initiales?: string | null;
           sonde_individuellement?: boolean;
           groupe_sondage?: string | null;

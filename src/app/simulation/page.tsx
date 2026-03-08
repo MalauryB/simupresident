@@ -197,7 +197,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
               <Avatar candidate={c} colors={col} size={8} grayscale={!isActive} />
               <div className="min-w-0">
                 <div className={`truncate text-xs font-bold ${isActive ? "text-primary-dark" : "text-gray-500"}`}>
-                  {c.name.split(" ").pop()}
+                  {c.shortName}
                 </div>
                 <div
                   className="truncate text-[10px] font-semibold"
@@ -261,7 +261,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
           className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-500 transition-colors hover:bg-white hover:text-primary-dark disabled:opacity-0"
         >
           <ChevronLeft />
-          {idx > 0 ? getSelected(activeParties[idx - 1]).name.split(" ").pop() : ""}
+          {idx > 0 ? getSelected(activeParties[idx - 1]).shortName : ""}
         </button>
         <span className="text-xs text-gray-400">
           {idx + 1} / {activeParties.length}
@@ -272,7 +272,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
           disabled={idx === activeParties.length - 1}
           className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-500 transition-colors hover:bg-white hover:text-primary-dark disabled:opacity-0"
         >
-          {idx < activeParties.length - 1 ? getSelected(activeParties[idx + 1]).name.split(" ").pop() : ""}
+          {idx < activeParties.length - 1 ? getSelected(activeParties[idx + 1]).shortName : ""}
           <ChevronRight />
         </button>
       </div>

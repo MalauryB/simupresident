@@ -20,6 +20,7 @@ CREATE TABLE candidat (
   parti_tag VARCHAR NOT NULL REFERENCES parti(tag) ON DELETE CASCADE,
   indice_variante INT NOT NULL DEFAULT 0,
   nom VARCHAR NOT NULL,
+  nom_court VARCHAR,
   initiales VARCHAR,
   sonde_individuellement BOOLEAN DEFAULT false,
   groupe_sondage VARCHAR,
