@@ -26,7 +26,7 @@ export default function AProposPage() {
         </h1>
         <p className="text-gray-600">
           D&eacute;couvrez la mission derri&egrave;re
-          quipr&eacute;sident.fr.
+          quiserapr&eacute;sident.fr.
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export default function AProposPage() {
             Notre mission
           </h2>
           <p className="text-sm leading-relaxed text-gray-600">
-            quipr&eacute;sident.fr a pour objectif de rendre
+            quiserapr&eacute;sident.fr a pour objectif de rendre
             l&rsquo;analyse &eacute;lectorale accessible &agrave; tous.
             Gr&acirc;ce &agrave; notre simulateur interactif, chacun peut
             explorer les diff&eacute;rents sc&eacute;narios de

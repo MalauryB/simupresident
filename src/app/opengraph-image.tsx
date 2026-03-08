@@ -1,8 +1,19 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Qui pour l\u2019\u00c9lys\u00e9e\u202f? \u2014 Simulateur pr\u00e9sidentielle 2027";
+export const alt =
+  "Qui sera pr\u00e9sident\u202f? \u2014 Simulateur pr\u00e9sidentielle 2027";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const PARTIES = [
+  { tag: "LFI", color: "#cc2443" },
+  { tag: "EELV", color: "#00c000" },
+  { tag: "PS", color: "#ff8080" },
+  { tag: "REN", color: "#ffeb00" },
+  { tag: "LR", color: "#0066cc" },
+  { tag: "RN", color: "#0d378a" },
+  { tag: "REC", color: "#1a1a2e" },
+];
 
 export default function OGImage() {
   return new ImageResponse(
@@ -13,88 +24,159 @@ export default function OGImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(135deg, #556C96 0%, #3d4f70 100%)",
+          background: "#1a1f2e",
           fontFamily: "sans-serif",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
+        {/* Decorative gradient orbs */}
+        <div
+          style={{
+            position: "absolute",
+            top: "-120px",
+            right: "-80px",
+            width: "500px",
+            height: "500px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(85,108,150,0.4) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-100px",
+            left: "-60px",
+            width: "400px",
+            height: "400px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(255,88,77,0.15) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Main content */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            gap: "24px",
+            justifyContent: "center",
+            flex: 1,
+            padding: "60px 80px",
+            gap: "28px",
           }}
         >
+          {/* Badge */}
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                fontSize: "16px",
+                fontWeight: 700,
+                color: "#FF584D",
+                background: "rgba(255,88,77,0.12)",
+                border: "1px solid rgba(255,88,77,0.25)",
+                padding: "6px 20px",
+                borderRadius: "999px",
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+              }}
+            >
+              {`Pr\u00e9sidentielle 2027`}
+            </div>
+          </div>
+
+          {/* Title */}
+          <div
+            style={{
+              fontSize: "68px",
+              fontWeight: 800,
+              color: "#ffffff",
+              lineHeight: 1.05,
+              letterSpacing: "-1px",
+            }}
+          >
+            {`Qui sera pr\u00e9sident\u202f?`}
+          </div>
+
+          {/* Subtitle */}
           <div
             style={{
               fontSize: "24px",
-              fontWeight: 700,
-              color: "#FF584D",
-              background: "rgba(255,255,255,0.15)",
-              padding: "8px 24px",
-              borderRadius: "999px",
-              letterSpacing: "2px",
+              color: "rgba(255,255,255,0.55)",
+              lineHeight: 1.4,
+              maxWidth: "700px",
             }}
           >
-            PR\u00c9SIDENTIELLE 2027
+            {`Simulez l\u2019\u00e9lection avec notre mod\u00e8le Monte-Carlo interactif`}
           </div>
-          <div
-            style={{
-              fontSize: "72px",
-              fontWeight: 800,
-              color: "#ffffff",
-              textAlign: "center",
-              lineHeight: 1.1,
-            }}
-          >
-            {`Qui pour l\u2019\u00c9lys\u00e9e\u202f?`}
-          </div>
-          <div
-            style={{
-              fontSize: "28px",
-              color: "rgba(255,255,255,0.8)",
-              textAlign: "center",
-              maxWidth: "800px",
-            }}
-          >
-            {`Simulez l\u2019\u00e9lection avec notre mod\u00e8le interactif`}
-          </div>
+
+          {/* Party color bar */}
           <div
             style={{
               display: "flex",
-              gap: "12px",
-              marginTop: "16px",
+              gap: "4px",
+              marginTop: "8px",
             }}
           >
-            {["LFI", "EELV", "PS", "REN", "LR", "RN", "REC"].map((tag) => (
+            {PARTIES.map((p) => (
               <div
-                key={tag}
+                key={p.tag}
                 style={{
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  background: "rgba(255,255,255,0.15)",
-                  color: "#ffffff",
-                  fontSize: "16px",
-                  fontWeight: 700,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "8px",
                 }}
               >
-                {tag}
+                <div
+                  style={{
+                    width: "80px",
+                    height: "6px",
+                    borderRadius: "3px",
+                    background: p.color,
+                  }}
+                />
+                <div
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    color: "rgba(255,255,255,0.4)",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  {p.tag}
+                </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Bottom bar */}
         <div
           style={{
-            position: "absolute",
-            bottom: "32px",
-            right: "40px",
-            fontSize: "18px",
-            color: "rgba(255,255,255,0.5)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 80px 40px",
           }}
         >
-          quipresident.fr
+          <div
+            style={{
+              fontSize: "16px",
+              color: "rgba(255,255,255,0.3)",
+              fontWeight: 600,
+            }}
+          >
+            quiserapresident.fr
+          </div>
+          <div
+            style={{
+              fontSize: "14px",
+              color: "rgba(255,255,255,0.2)",
+              fontWeight: 500,
+            }}
+          >
+            par Nimli
+          </div>
         </div>
       </div>
     ),

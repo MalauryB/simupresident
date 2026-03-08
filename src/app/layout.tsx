@@ -5,7 +5,7 @@ import { Header } from "@/app/components/layout/Header";
 import { Footer } from "@/app/components/layout/Footer";
 import { SimulationProvider } from "@/lib/simulation-context";
 
-const SITE_URL = "https://quipresident.fr";
+const SITE_URL = "https://www.quiserapresident.fr";
 const APP_NAME = "Qui pour l\u2019\u00c9lys\u00e9e\u202f?";
 const APP_DESCRIPTION =
   "Simulez l\u2019\u00e9lection pr\u00e9sidentielle 2027 gr\u00e2ce \u00e0 notre mod\u00e8le de simulation interactif. Probabilit\u00e9s, trajectoires et sc\u00e9narios de second tour.";
