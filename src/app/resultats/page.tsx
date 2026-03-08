@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSimulation } from "@/lib/simulation-context";
-import { generateSimData, getSelected } from "@/lib/simulation";
+import { getSelected } from "@/lib/simulation";
+import { useSimulationWorker } from "@/lib/use-simulation-worker";
 import { TutorialOverlay, RESULTS_TUTORIAL_STEPS } from "@/app/components/ui/TutorialOverlay";
 import { BackLink } from "@/app/components/ui/BackLink";
 import { GuideButton } from "@/app/components/ui/GuideButton";
 import { ScrollableContainer } from "@/app/components/ui/ScrollableContainer";
 import { SIM_COUNT } from "@/lib/constants";
-import type { SimulationData } from "@/types/simulation";
 import {
   LineChart,
   Line,
@@ -32,9 +32,10 @@ import {
 export default function ResultatsPage() {
   const { activeParties, pollSource, partyColors, gammaRejetED, gammaRejetEG, days } = useSimulation();
 
-  const [simData, setSimData] = useState<SimulationData | null>(null);
-  const [computing, setComputing] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { simData, computing, error } = useSimulationWorker(
+    activeParties, pollSource, days, gammaRejetED, gammaRejetEG,
+  );
+
   const [showTutoResults, setShowTutoResults] = useState(false);
   const [focusedTag, setFocusedTag] = useState<string | null>(null);
   const [dateMode, setDateMode] = useState<"jours" | "dates">("dates");
@@ -45,21 +46,6 @@ export default function ResultatsPage() {
     }
   }, []);
 
-  useEffect(() => {
-    setComputing(true);
-    // setTimeout pour permettre le rendu du loading state avant le calcul lourd
-    const timer = setTimeout(() => {
-      try {
-        const result = generateSimData(activeParties, pollSource, days, gammaRejetED, gammaRejetEG);
-        setSimData(result);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Erreur inattendue");
-      } finally {
-        setComputing(false);
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [activeParties, pollSource, days, gammaRejetED, gammaRejetEG]);
 
   /* PDF download via print */
   const handleDownloadPDF = () => {
