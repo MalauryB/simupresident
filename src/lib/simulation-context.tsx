@@ -32,7 +32,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [parties, setParties] = useState<PartyData[]>(DEFAULT_PARTIES);
   const [partyColors, setPartyColors] = useState<Record<string, PartyColors>>(PARTY_COLORS);
   const [pollSources, setPollSources] = useState<PollSource[]>(POLL_SOURCES);
-  const [pollSource, setPollSource] = useState("agrege");
+  const [pollSource, setPollSource] = useState("custom");
   const [loading, setLoading] = useState(true);
   const [gammaRejetED, setGammaRejetED] = useState(4.909881);
   const [gammaRejetEG, setGammaRejetEG] = useState(2.240084);

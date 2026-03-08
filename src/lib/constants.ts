@@ -77,8 +77,7 @@ export const DEFAULT_PARTIES: PartyData[] = [
 ];
 
 export const POLL_SOURCES: PollSource[] = [
-  { id: "agrege", label: "Sondage agrégé", desc: "Moyenne pondérée des derniers sondages publiés par les instituts majeurs.", icon: "📊" },
-  { id: "custom", label: "Personnalisable", desc: "Définissez librement les points de départ de chaque candidat.", icon: "✏️" },
+  { id: "custom", label: "Points de départ", desc: "Les valeurs par défaut sont basées sur les derniers sondages.", icon: "📊" },
 ];
 
 export const WIZARD_STEPS = ["Candidats", "Paramètres", "Point de départ", "Barrage", "Résumé"];
