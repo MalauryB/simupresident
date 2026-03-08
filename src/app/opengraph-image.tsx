@@ -182,7 +182,7 @@ export default function OGImage() {
               opacity: 0.35,
             }}
           >
-            par Nimli
+            par quiserapresident.fr
           </div>
         </div>
       </div>

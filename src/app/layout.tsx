@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     "Monte Carlo élection",
     "probabilités présidentielle",
   ],
-  authors: [{ name: "Nimli", url: "https://nimli.fr" }],
-  creator: "Nimli",
+  authors: [{ name: "quiserapresident.fr", url: "https://quiserapresident.fr.fr" }],
+  creator: "quiserapresident.fr",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -84,8 +84,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               inLanguage: "fr",
               author: {
                 "@type": "Organization",
-                name: "Nimli",
-                url: "https://nimli.fr",
+                name: "quiserapresident.fr",
+                url: "https://quiserapresident.fr.fr",
               },
               offers: {
                 "@type": "Offer",
