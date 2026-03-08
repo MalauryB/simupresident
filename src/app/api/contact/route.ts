@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
-// Simple in-memory rate limiter: max 5 messages per IP per 15 minutes
+// In-memory rate limiter: max 5 messages per IP per 15 minutes
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
