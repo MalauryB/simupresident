@@ -613,8 +613,8 @@ export function generateSimData(
     start: c.v0,
     dynamique: c.dynamique,
     final: finalShares[k],
-    pQualif: pQualif[k],
-    pVictoire: pVictoire[k],
+    probaQualif: pQualif[k],
+    probaVictoire: pVictoire[k],
   }));
 
   // 4. Duels les plus probables

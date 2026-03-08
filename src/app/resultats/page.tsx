@@ -100,10 +100,10 @@ export default function ResultatsPage() {
 
   /* Sorted for charts */
   const sortedByQualif = [...probabilities].sort(
-    (a, b) => b.pQualif - a.pQualif,
+    (a, b) => b.probaQualif - a.probaQualif,
   );
   const sortedByVictoire = [...probabilities].sort(
-    (a, b) => b.pVictoire - a.pVictoire,
+    (a, b) => b.probaVictoire - a.probaVictoire,
   );
 
   const topDuels = duels.slice(0, 5);
@@ -380,7 +380,7 @@ export default function ResultatsPage() {
                     fontSize: "12px",
                   }}
                 />
-                <Bar dataKey="pQualif" radius={[0, 6, 6, 0]} barSize={24}>
+                <Bar dataKey="probaQualif" radius={[0, 6, 6, 0]} barSize={24}>
                   {sortedByQualif.map((entry) => (
                     <Cell
                       key={entry.tag}
@@ -433,7 +433,7 @@ export default function ResultatsPage() {
                     fontSize: "12px",
                   }}
                 />
-                <Bar dataKey="pVictoire" radius={[0, 6, 6, 0]} barSize={24}>
+                <Bar dataKey="probaVictoire" radius={[0, 6, 6, 0]} barSize={24}>
                   {sortedByVictoire.map((entry) => (
                     <Cell
                       key={entry.tag}

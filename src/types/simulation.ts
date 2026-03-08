@@ -50,8 +50,8 @@ export interface TrajectoryPoint {
 
 export interface ProbabilityResult extends SimCandidate {
   final: number;
-  pQualif: number;
-  pVictoire: number;
+  probaQualif: number;
+  probaVictoire: number;
 }
 
 export interface DuelProbability {
