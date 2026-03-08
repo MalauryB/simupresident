@@ -30,27 +30,6 @@ export default function AProposPage() {
       </div>
 
       <div className="space-y-8">
-        {/* ---- Mission ---- */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <h2 className="mb-3 text-lg font-bold text-primary-dark">
-            Notre mission
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-700">
-            quiserapr&eacute;sident.fr a pour objectif de rendre
-            l&rsquo;analyse &eacute;lectorale accessible &agrave; tous.
-            Gr&acirc;ce &agrave; notre simulateur interactif, chacun peut
-            explorer les diff&eacute;rents sc&eacute;narios de
-            l&rsquo;&eacute;lection pr&eacute;sidentielle 2027, comprendre
-            l&rsquo;impact des param&egrave;tres sur les r&eacute;sultats et se
-            familiariser avec les m&eacute;thodes de simulation statistique.
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-gray-700">
-            Nous croyons que la transparence m&eacute;thodologique est
-            essentielle : tous nos mod&egrave;les sont document&eacute;s et les
-            param&egrave;tres sont ajustables par l&rsquo;utilisateur.
-          </p>
-        </div>
-
         {/* ---- How it works ---- */}
         <div>
           <h2 className="mb-4 text-lg font-bold text-primary-dark">
