@@ -404,20 +404,6 @@ export default function MethodologiePage() {
           </div>
         </div>
 
-        {/* ---- Sources ---- */}
-        <SectionCard title="Sources des donn&eacute;es">
-          <p>
-            <strong>Sondage agr&eacute;g&eacute; :</strong> Moyenne
-            pond&eacute;r&eacute;e des sondages publi&eacute;s par les
-            principaux instituts (IFOP, Ipsos, Elabe, Harris Interactive,
-            OpinionWay).
-          </p>
-          <p>
-            <strong>Personnalisable :</strong> Permet &agrave;
-            l&rsquo;utilisateur de d&eacute;finir librement les points de
-            d&eacute;part.
-          </p>
-        </SectionCard>
       </div>
     </div>
   );
