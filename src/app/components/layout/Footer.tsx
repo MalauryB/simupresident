@@ -20,9 +20,21 @@ export function Footer() {
             </Link>
           ))}
         </nav>
-        <p className="text-center">
-          &copy; quiserapresident.fr 2026
-        </p>
+        <div className="text-center space-y-1">
+          <p>&copy; quiserapresident.fr 2026</p>
+          <p className="text-xs">
+            Sous licence{" "}
+            <a
+              href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-900"
+            >
+              CC BY-NC-SA 4.0
+            </a>
+            {" "}&mdash; Usage non commercial uniquement
+          </p>
+        </div>
       </div>
     </footer>
   );

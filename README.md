@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# quiserapresident.fr
 
-## Getting Started
+Simulateur interactif de l'élection présidentielle française 2027.
 
-First, run the development server:
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## 🎯 À propos
+
+quiserapresident.fr est un outil de simulation statistique qui permet d'explorer différents scénarios de l'élection présidentielle 2027. Le modèle utilise des simulations de Monte-Carlo pour estimer les probabilités de qualification au second tour et de victoire finale de chaque candidat.
+
+## ✨ Fonctionnalités
+
+- 🗳️ **Simulation interactive** : Configurez les candidats, leurs paramètres et lancez 500 simulations
+- 📊 **Visualisations** : Graphiques des trajectoires, probabilités et duels possibles
+- ⚙️ **Personnalisable** : Ajustez les points de départ, la dynamique et les paramètres de vote barrage
+- 📖 **Transparent** : Méthodologie documentée et code open source
+
+## 🚀 Installation
 
 ```bash
+# Cloner le dépôt
+git clone https://github.com/MalauryB/quiserapresident.git
+cd quiserapresident
+
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technologies
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 16** - Framework React
+- **TypeScript** - Typage statique
+- **Tailwind CSS** - Styles
+- **Recharts** - Graphiques
+- **Supabase** - Base de données
 
-## Learn More
+## 📝 Méthodologie
 
-To learn more about Next.js, take a look at the following resources:
+Le modèle de simulation repose sur :
+- Des blocs idéologiques stables
+- Des dynamiques de campagne aléatoires (marche aléatoire)
+- Le vote utile en fin de campagne
+- Les reports de voix au second tour avec effet de barrage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Consultez la [page méthodologie](https://www.quiserapresident.fr/methodologie) pour plus de détails.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📄 Licence
 
-## Deploy on Vercel
+Ce projet est sous licence **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International** (CC BY-NC-SA 4.0).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Usage non commercial uniquement** - Vous pouvez partager et adapter ce projet librement pour un usage non commercial, à condition de créditer l'œuvre originale et de partager vos modifications sous la même licence.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 🤝 Contribuer
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+- Ouvrir une issue pour signaler un bug ou proposer une amélioration
+- Soumettre une pull request
+
+## 📧 Contact
+
+Une idée d'amélioration ? [Contactez-nous](https://www.quiserapresident.fr/contact)
+
+---
+
+© quiserapresident.fr 2026
