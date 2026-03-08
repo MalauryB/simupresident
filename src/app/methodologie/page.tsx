@@ -15,9 +15,9 @@ function SectionCard({
   return (
     <div
       id={id}
-      className="rounded-xl border border-gray-200 bg-white p-6"
+      className="border-l-4 border-l-primary bg-white p-6 shadow-sm"
     >
-      <h2 className="mb-3 text-lg font-bold text-primary-dark">{title}</h2>
+      <h2 className="mb-4 text-base font-bold text-primary-dark">{title}</h2>
       <div className="space-y-3 text-sm leading-relaxed text-gray-700">
         {children}
       </div>
@@ -34,25 +34,18 @@ export default function MethodologiePage() {
       {/* Back */}
       <BackLink href="/" />
 
-      {/* Badge */}
-      <div className="mb-4 text-center">
-        <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
-          DOCUMENTATION
-        </span>
-      </div>
-
       {/* Title */}
-      <div className="mb-12 text-center">
-        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
+      <div className="mb-12 border-b border-gray-200 pb-8">
+        <h1 className="mb-3 text-3xl font-bold text-primary-dark">
           Note m&eacute;thodologique
         </h1>
-        <p className="text-gray-600">
+        <p className="mb-4 text-base text-gray-600">
           Mod&egrave;le de simulation d&rsquo;une &eacute;lection pr&eacute;sidentielle &agrave; deux tours
         </p>
         <a
           href="/Note_technique.pdf"
           download
-          className="mt-4 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
+          className="inline-flex items-center gap-2 border-b-2 border-primary pb-0.5 text-sm font-medium text-primary transition-colors hover:border-primary-dark hover:text-primary-dark"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -83,7 +76,7 @@ export default function MethodologiePage() {
 
         {/* ---- I. Premier tour ---- */}
         <div>
-          <h2 className="mb-4 text-xl font-extrabold text-primary-dark">
+          <h2 className="mb-4 text-xl font-bold text-primary-dark border-b-2 border-primary pb-2">
             I. Le mod&egrave;le de premier tour
           </h2>
           <div className="space-y-6">
@@ -95,8 +88,8 @@ export default function MethodologiePage() {
                 (par exemple : gauche, centre, droite, extr&ecirc;me droite).
               </p>
               <p>L&rsquo;id&eacute;e centrale est simple :</p>
-              <div className="rounded-xl bg-primary/5 p-4">
-                <p className="text-xs font-medium text-primary-dark">
+              <div className="border-l-2 border-gray-300 bg-gray-50 pl-4 py-3 italic">
+                <p className="text-sm text-gray-700">
                   Les &eacute;lecteurs votent tr&egrave;s majoritairement pour un candidat
                   appartenant &agrave; leur bloc id&eacute;ologique, et beaucoup plus rarement
                   pour un candidat d&rsquo;un bloc oppos&eacute;.
@@ -148,7 +141,7 @@ export default function MethodologiePage() {
                 prestation m&eacute;diatique. Ces chocs affectent uniquement le candidat concern&eacute;.
               </p>
 
-              <div className="rounded-xl bg-gray-50 p-4">
+              <div className="border border-gray-200 bg-gray-50 p-4">
                 <h3 className="mb-1 text-xs font-bold text-primary-dark">Calibration des param&egrave;tres</h3>
                 <p className="text-xs text-gray-600">
                   L&rsquo;intensit&eacute; de ces chocs n&rsquo;est pas choisie arbitrairement.
@@ -247,7 +240,7 @@ export default function MethodologiePage() {
 
         {/* ---- II. Second tour ---- */}
         <div>
-          <h2 className="mb-4 text-xl font-extrabold text-primary-dark">
+          <h2 className="mb-4 text-xl font-bold text-primary-dark border-b-2 border-primary pb-2">
             II. Le mod&egrave;le de second tour
           </h2>
           <div className="space-y-6">
@@ -260,7 +253,7 @@ export default function MethodologiePage() {
               <p>
                 Les &eacute;lecteurs du second tour adoptent l&rsquo;un des trois comportements :
               </p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: "Voter pour A", color: "#556C96" },
                   { label: "Voter pour B", color: "#B6CDE8" },
@@ -268,14 +261,14 @@ export default function MethodologiePage() {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-lg border p-3 text-center"
-                    style={{ borderColor: `${item.color}40` }}
+                    className="border p-3 text-center"
+                    style={{ borderColor: item.color }}
                   >
                     <div
-                      className="mx-auto mb-1 h-2 w-8 rounded-full"
+                      className="mx-auto mb-2 h-1 w-12"
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="text-xs font-medium text-gray-600">
+                    <span className="text-xs font-medium text-gray-700">
                       {item.label}
                     </span>
                   </div>
@@ -315,7 +308,7 @@ export default function MethodologiePage() {
                 les seconds tours pass&eacute;s, o&ugrave; certains &eacute;lecteurs votent non pas
                 pour soutenir un candidat, mais pour emp&ecirc;cher l&rsquo;autre de gagner.
               </p>
-              <div className="rounded-xl bg-gray-50 p-4">
+              <div className="border border-gray-200 bg-gray-50 p-4">
                 <p className="text-xs text-gray-600">
                   Les valeurs par d&eacute;faut de ces param&egrave;tres sont estim&eacute;es &agrave;
                   partir des comportements observ&eacute;s lors des &eacute;lections l&eacute;gislatives de 2024.
@@ -355,11 +348,11 @@ export default function MethodologiePage() {
         </SectionCard>
 
         {/* ---- Limites du modele ---- */}
-        <div className="rounded-xl border-2 border-accent/30 bg-accent/5 p-6">
+        <div className="border-l-4 border-l-amber-500 bg-amber-50/50 p-6 shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
               <svg
-                className="h-5 w-5"
+                className="h-6 w-6 text-amber-600"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
