@@ -554,13 +554,6 @@ export default function ResultatsPage() {
               &eacute;lectorale. C&rsquo;est avant tout un outil
               d&rsquo;analyse et de strat&eacute;gie politique.
             </p>
-            <p className="mt-2 text-xs leading-relaxed text-amber-700">
-              <strong>Candidats sond&eacute;s directement&nbsp;:</strong> Roussel,
-              M&eacute;lenchon, Tondelier, Glucksmann, Philippe, Attal,
-              Retailleau, Bardella, Le&nbsp;Pen, Zemmour. Les points de
-              d&eacute;part des autres candidats sont des valeurs
-              estim&eacute;es.
-            </p>
           </div>
         </div>
       </section>
