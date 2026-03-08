@@ -21,7 +21,7 @@ export function Footer() {
           ))}
         </nav>
         <p className="text-center">
-          © {new Date().getFullYear()} quiserapresident.fr — quiserapresident.fr
+          &copy; quiserapresident.fr 2026
         </p>
       </div>
     </footer>
