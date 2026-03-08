@@ -461,6 +461,18 @@ export default function ResultatsPage() {
           </ScrollableContainer>
         </div>
 
+        <p className="mt-4 text-xs leading-relaxed text-gray-500">
+          Ces deux probabilit&eacute;s sont <strong>ind&eacute;pendantes</strong> l&rsquo;une
+          de l&rsquo;autre. La probabilit&eacute; de qualification mesure les chances
+          d&rsquo;acc&eacute;der au second tour, tandis que la probabilit&eacute; de
+          victoire int&egrave;gre &eacute;galement le second tour. Un candidat peut
+          avoir une forte probabilit&eacute; de qualification mais une faible
+          probabilit&eacute; de victoire s&rsquo;il perd syst&eacute;matiquement au
+          second tour, et inversement. La strat&eacute;gie de premier tour (vote
+          utile, fragmentation d&rsquo;un camp) influence qui se qualifie, mais le
+          r&eacute;sultat du second tour d&eacute;pend d&rsquo;autres facteurs
+          (reports de voix, vote barrage, abstention).
+        </p>
       </section>
 
       {/* ---- Section 3: Duels les plus probables ---- */}
