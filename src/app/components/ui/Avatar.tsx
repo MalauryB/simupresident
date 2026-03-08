@@ -10,23 +10,18 @@ interface AvatarProps {
 
 export function Avatar({ candidate, colors, size = 14, grayscale = false }: AvatarProps) {
   const px = size * 4;
-  const fontSize = size <= 7 ? "10px" : size <= 8 ? "12px" : size <= 10 ? "14px" : candidate.initials.length > 2 ? "14px" : "18px";
 
   return (
     <div className="relative flex-shrink-0" style={{ width: px, height: px }}>
       <div
-        className="flex items-center justify-center rounded-full font-bold"
+        className="rounded-full"
         style={{
           width: px,
           height: px,
           backgroundColor: colors.bg,
-          color: colors.fg,
-          fontSize,
           filter: grayscale ? "grayscale(0.8)" : "none",
         }}
-      >
-        {candidate.initials}
-      </div>
+      />
       {candidate.photoUrl && (
         <Image
           src={candidate.photoUrl}
