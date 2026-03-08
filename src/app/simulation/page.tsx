@@ -90,26 +90,24 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
 
       {hasVariants && party.active ? (
         <div className="mt-2 px-2.5 pb-3">
-          <div
-            className="flex overflow-hidden rounded-[10px]"
-            style={{ background: `${colors.bg}10`, border: `1px solid ${colors.accent}20` }}
+          <select
+            value={party.selectedIdx}
+            onChange={(e) => { e.stopPropagation(); switchVariant(party.tag, Number(e.target.value)); }}
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`Choisir le candidat ${party.party}`}
+            className="w-full cursor-pointer rounded-[10px] border px-2 py-[7px] text-[11px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            style={{
+              borderColor: `${colors.accent}40`,
+              color: colors.accent,
+              backgroundColor: `${colors.bg}08`,
+            }}
           >
             {party.variants.map((v, idx) => (
-              <button
-                key={v.name}
-                type="button"
-                onClick={(e) => { e.stopPropagation(); switchVariant(party.tag, idx); }}
-                aria-label={`Choisir ${v.name}`}
-                className="flex-1 truncate py-[7px] px-1 text-[11px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                style={{
-                  background: party.selectedIdx === idx ? colors.accent : "transparent",
-                  color: party.selectedIdx === idx ? colors.fg : colors.bg,
-                }}
-              >
-                {v.name.split(" ").pop()}
-              </button>
+              <option key={v.name} value={idx}>
+                {v.name}
+              </option>
             ))}
-          </div>
+          </select>
         </div>
       ) : (
         <div className="h-3.5" />
