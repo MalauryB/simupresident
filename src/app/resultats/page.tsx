@@ -369,7 +369,7 @@ export default function ResultatsPage() {
                 <YAxis
                   type="category"
                   dataKey="initials"
-                  width={40}
+                  width={100}
                   tick={{ fontSize: 12, fontWeight: 600, fill: "#475465" }}
                 />
                 <Tooltip
@@ -422,7 +422,7 @@ export default function ResultatsPage() {
                 <YAxis
                   type="category"
                   dataKey="initials"
-                  width={40}
+                  width={100}
                   tick={{ fontSize: 12, fontWeight: 600, fill: "#475465" }}
                 />
                 <Tooltip
