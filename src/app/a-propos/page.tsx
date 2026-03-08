@@ -11,22 +11,11 @@ export default function AProposPage() {
       {/* Back */}
       <BackLink href="/" />
 
-      {/* Badge */}
-      <div className="mb-4 text-center">
-        <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-primary">
-          QUI SOMMES-NOUS
-        </span>
-      </div>
-
       {/* Title */}
       <div className="mb-12 text-center">
         <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
           &Agrave; propos
         </h1>
-        <p className="text-gray-600">
-          D&eacute;couvrez la mission derri&egrave;re
-          quiserapr&eacute;sident.fr.
-        </p>
       </div>
 
       <div className="space-y-8">
