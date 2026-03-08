@@ -12,7 +12,7 @@ const PARTIES = [
   { tag: "REN", color: "#ffeb00" },
   { tag: "LR", color: "#0066cc" },
   { tag: "RN", color: "#0d378a" },
-  { tag: "REC", color: "#1a1a2e" },
+  { tag: "REC", color: "#8b5cf6" },
 ];
 
 export default function OGImage() {
@@ -24,7 +24,7 @@ export default function OGImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "#1a1f2e",
+          background: "#EEEDFF",
           fontFamily: "sans-serif",
           position: "relative",
           overflow: "hidden",
@@ -39,7 +39,7 @@ export default function OGImage() {
             width: "500px",
             height: "500px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(85,108,150,0.4) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(85,108,150,0.2) 0%, transparent 70%)",
           }}
         />
         <div
@@ -50,7 +50,7 @@ export default function OGImage() {
             width: "400px",
             height: "400px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(255,88,77,0.15) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,88,77,0.08) 0%, transparent 70%)",
           }}
         />
 
@@ -62,7 +62,7 @@ export default function OGImage() {
             justifyContent: "center",
             flex: 1,
             padding: "60px 80px",
-            gap: "28px",
+            gap: "24px",
           }}
         >
           {/* Badge */}
@@ -72,36 +72,39 @@ export default function OGImage() {
                 fontSize: "16px",
                 fontWeight: 700,
                 color: "#FF584D",
-                background: "rgba(255,88,77,0.12)",
-                border: "1px solid rgba(255,88,77,0.25)",
+                background: "rgba(255,88,77,0.1)",
+                border: "1px solid rgba(255,88,77,0.2)",
                 padding: "6px 20px",
                 borderRadius: "999px",
                 letterSpacing: "3px",
-                textTransform: "uppercase",
               }}
             >
-              {`Pr\u00e9sidentielle 2027`}
+              {`PR\u00c9SIDENTIELLE 2027`}
             </div>
           </div>
 
           {/* Title */}
           <div
             style={{
+              display: "flex",
               fontSize: "68px",
               fontWeight: 800,
-              color: "#ffffff",
+              color: "#475465",
               lineHeight: 1.05,
               letterSpacing: "-1px",
             }}
           >
-            {`Qui sera pr\u00e9sident\u202f?`}
+            <span>Qui sera </span>
+            <span style={{ color: "#FF584D" }}>
+              {`pr\u00e9sident\u202f?`}
+            </span>
           </div>
 
           {/* Subtitle */}
           <div
             style={{
               fontSize: "24px",
-              color: "rgba(255,255,255,0.55)",
+              color: "#556C96",
               lineHeight: 1.4,
               maxWidth: "700px",
             }}
@@ -113,7 +116,7 @@ export default function OGImage() {
           <div
             style={{
               display: "flex",
-              gap: "4px",
+              gap: "6px",
               marginTop: "8px",
             }}
           >
@@ -133,14 +136,16 @@ export default function OGImage() {
                     height: "6px",
                     borderRadius: "3px",
                     background: p.color,
+                    opacity: 0.7,
                   }}
                 />
                 <div
                   style={{
-                    fontSize: "12px",
+                    fontSize: "11px",
                     fontWeight: 700,
-                    color: "rgba(255,255,255,0.4)",
+                    color: "#556C96",
                     letterSpacing: "1px",
+                    opacity: 0.6,
                   }}
                 >
                   {p.tag}
@@ -162,8 +167,9 @@ export default function OGImage() {
           <div
             style={{
               fontSize: "16px",
-              color: "rgba(255,255,255,0.3)",
+              color: "#556C96",
               fontWeight: 600,
+              opacity: 0.5,
             }}
           >
             quiserapresident.fr
@@ -171,8 +177,9 @@ export default function OGImage() {
           <div
             style={{
               fontSize: "14px",
-              color: "rgba(255,255,255,0.2)",
+              color: "#556C96",
               fontWeight: 500,
+              opacity: 0.35,
             }}
           >
             par Nimli
