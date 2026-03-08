@@ -85,7 +85,7 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
       {/* Header row */}
       <div className="mb-2 flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-700">
-          Tendance long terme
+          Dynamique
         </span>
         <div className="flex items-center gap-2">
           <span
@@ -140,7 +140,7 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
             max={1}
             step={0.01}
             value={value}
-            aria-label="Tendance long terme"
+            aria-label="Dynamique"
             onChange={(e) => onChange(parseFloat(e.target.value))}
             className="absolute z-10 h-full w-full cursor-pointer appearance-none bg-transparent
               [&::-moz-range-thumb]:h-0 [&::-moz-range-thumb]:w-0 [&::-moz-range-thumb]:appearance-none

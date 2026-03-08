@@ -10,6 +10,7 @@ import type {
 
 // ================================================================
 // Port TypeScript du modèle R « simulations : courbes + 2nd tour »
+// Version 2 : paramètre unique delta (dynamique)
 // ================================================================
 
 // ===== PRNG (Linear Congruential Generator) =====
@@ -66,25 +67,34 @@ function quantile(sorted: number[], p: number): number {
   return sorted[lo] + (idx - lo) * (sorted[hi] - sorted[lo]);
 }
 
+/** Logistic function (R: plogis) */
+function plogis(x: number): number {
+  return 1 / (1 + Math.exp(-x));
+}
+
+/** Logit function (R: qlogis) */
+function qlogis(p: number): number {
+  return Math.log(p / (1 - p));
+}
+
 // ===== Simulation Configuration =====
 
 interface SimConfig {
   T: number;
   S: number;
-  sigma_f: [number, number, number];
+  sigma_f: number;
   sigma_eps: number;
   // Vote utile (1er tour)
-  lambda_cos: number;
-  beta_viab: number;
-  T0_offset: number;
+  days_on: number;
   s_tau: number;
-  psi_scale: number;
-  drift_scale: number;
-  q0: number;
+  lambda_cos: number;
+  beta_utile: number;
   sig_q: number;
+  sig_r: number;
   r_min: number;
   r_max: number;
   // Drift
+  drift_scale: number;
   lambda_drift: number;
   // Second tour (3 issues : A, B, non-exprimés)
   beta_2: number;
@@ -97,19 +107,18 @@ interface SimConfig {
 const DEFAULT_CONFIG: SimConfig = {
   T: 365,
   S: 500,
-  sigma_f: [0.01368569, 0.01368569, 0.01368569],
+  sigma_f: 0.01368569,
   sigma_eps: 0.01910283,
-  lambda_cos: 6,
-  beta_viab: 5,
-  T0_offset: 7,
+  days_on: 10,
   s_tau: 7,
-  psi_scale: 4,
+  lambda_cos: 5,
+  beta_utile: 10,
+  sig_q: 0.05,
+  sig_r: 0.01,
+  r_min: 0.5,
+  r_max: 0.9,
   drift_scale: 0.001,
-  q0: 0.15,
-  sig_q: 0.20,
-  r_min: 0.65,
-  r_max: 0.95,
-  lambda_drift: 6,
+  lambda_drift: 5,
   beta_2: 7,
   alpha_nonexpr: -2.259515,
   gamma_rejet_ED: 4.909898,
@@ -124,8 +133,7 @@ interface CandidateInput {
   name: string;
   initials: string;
   v0: number;
-  tendance: number;
-  attractivite: number;
+  dynamique: number;
   W: number[];
 }
 
@@ -207,34 +215,47 @@ function applyDriftVec(
 }
 
 // ===== Vote Utile Transform =====
-// Mirrors R: vote_utile_transform_vec(v, W, psi, ...)
+// Mirrors R: vote_utile_transform_vec2(v, W, delta, v_ref, ...)
 
 function voteUtileTransform(
   v: number[],
   cosMat: number[][],
-  psi: number[],
+  delta: number[],
+  v_ref: number[],
   cfg: SimConfig,
 ): number[] {
   const K = v.length;
 
-  // Enjeu gaussien : plus grand près de q0
-  const enjeu = v.map(
-    (vk) => Math.exp(-0.5 * ((vk - cfg.q0) / cfg.sig_q) ** 2),
-  );
+  // 1) Seuil endogène : 2ème plus haut score de v_ref
+  const sorted_ref = [...v_ref].sort((a, b) => b - a);
+  const q0 = Math.max(sorted_ref[1] ?? 0, 1e-12);
 
-  // Rétention : r = r_max - (r_max-r_min)*enjeu, clampé [0,1]
-  const r = enjeu.map((e) => {
-    const val = cfg.r_max - (cfg.r_max - cfg.r_min) * e;
-    return Math.min(Math.max(val, 0), 1);
+  // Enjeu gaussien (plus grand près de q0), normalisé
+  const enjeuRaw = v.map(
+    (vk) => Math.exp(-0.5 * ((vk - q0) / cfg.sig_q) ** 2),
+  );
+  const enjeuSum = enjeuRaw.reduce((a, b) => a + b, 0);
+  const enjeu = enjeuSum > 0 ? enjeuRaw.map((e) => e / enjeuSum) : enjeuRaw.map(() => 1 / K);
+
+  // 2) Rétention logistique (R: plogis(((q0 - v) / sig_r) + b))
+  const b = qlogis(0.05);
+  const r = v.map((vk) => {
+    const raw = plogis((q0 - vk) / cfg.sig_r + b);
+    return Math.min(Math.max(cfg.r_max - (cfg.r_max - cfg.r_min) * raw, 0), 1);
   });
 
   const m = v.map((vk, i) => (1 - r[i]) * vk);
   const v_keep = v.map((vk, i) => r[i] * vk);
 
-  // Attractivité : exp(psi + beta_viab * enjeu)  [R: exp(4*psi + beta_utile*enjeu)]
-  const att = psi.map((p, k) =>
-    Math.exp(p + cfg.beta_viab * enjeu[k]),
+  // Similarité / noyau
+  // Kern = max(cosMat, 0)^lambda_cos
+
+  // Attractivité : exp(beta_utile * enjeu + 5 * delta * enjeu)
+  const attRaw = delta.map((d, k) =>
+    Math.exp(cfg.beta_utile * enjeu[k] + 5 * d * enjeu[k]),
   );
+  const attSum = attRaw.reduce((a, b) => a + b, 0);
+  const att = attSum > 0 ? attRaw.map((a) => a / attSum) : attRaw.map(() => 1 / K);
 
   // Scores[j][k] = Kern[j][k] * att[k], normalisé par ligne
   const v_new = [...v_keep];
@@ -266,12 +287,11 @@ function voteUtileTransform(
 }
 
 // ===== Simulate One Path (1er tour) =====
-// Mirrors R: simulate_one()
+// Mirrors R: simulate_one() — two-pass structure
 
 function simulateOne(
   candidates: CandidateInput[],
   ideoW: number[][],
-  psi: number[],
   cosMat: number[][],
   cfg: SimConfig,
   rng: PRNG,
@@ -279,13 +299,11 @@ function simulateOne(
   const K = candidates.length;
   const B = 3;
   const T = cfg.T;
-  const T0 = T - cfg.T0_offset;
-  const tau0 = T - T0;
 
   // Initialiser logits relatifs (baseline = dernier candidat)
   const v0 = candidates.map((c) => c.v0);
   const eta: number[][] = [];
-  const v_obs: number[][] = [];
+  const v_base: number[][] = [];
 
   // eta[0] = log(v0[k] / v0[K-1]) pour k=0..K-2
   const eta0: number[] = [];
@@ -294,21 +312,22 @@ function simulateOne(
     eta0.push(Math.log(Math.max(v0[k], 1e-8) / baselineV0));
   }
   eta.push(eta0);
-  v_obs.push(softmax([...eta0, 0]));
+  v_base.push(softmax([...eta0, 0]));
 
-  // Drift par candidat
-  const drift = candidates.map(
-    (c) => c.tendance * cfg.drift_scale,
-  );
+  // Drift par candidat (delta * drift_scale)
+  const drift = candidates.map((c) => c.dynamique * cfg.drift_scale);
+  // Raw delta for vote utile
+  const delta = candidates.map((c) => c.dynamique);
 
+  // === PASS 1 : trajectoires de base (sans vote utile) ===
   for (let t = 1; t < T; t++) {
-    // Chocs factoriels: nu ~ N(0, Qf)
+    // Chocs factoriels: nu ~ N(0, sigma_f²·I_B)
     const nu: number[] = [];
     for (let b = 0; b < B; b++) {
-      nu.push(rng.randn() * cfg.sigma_f[b]);
+      nu.push(rng.randn() * cfg.sigma_f);
     }
 
-    // Chocs idiosyncratiques: eps ~ N(0, D)
+    // Chocs idiosyncratiques: eps ~ N(0, sigma_eps²·I_K)
     const eps: number[] = [];
     for (let k = 0; k < K; k++) {
       eps.push(rng.randn() * cfg.sigma_eps);
@@ -334,23 +353,32 @@ function simulateOne(
     }
     eta.push(eta_t);
 
-    // Parts de base
-    const v_base = softmax([...eta_t, 0]);
+    v_base.push(softmax([...eta_t, 0]));
+  }
 
+  // === PASS 2 : application du vote utile ===
+  const t0 = Math.max(0, T - 1 - cfg.days_on);
+  const v_ref = v_base[t0];
+  const T0 = T - cfg.days_on;
+  const tau0 = T - T0;
+
+  const v_obs: number[][] = [v_base[0]];
+
+  for (let t = 1; t < T; t++) {
     // Activation vote utile (sigmoïde temporelle)
     const tau_t = T - t;
     const a_t = 1 / (1 + Math.exp((tau_t - tau0) / cfg.s_tau));
 
     // Transformation vote utile
-    const v_tilde = voteUtileTransform(v_base, cosMat, psi, cfg);
+    const v_tilde = voteUtileTransform(v_base[t], cosMat, delta, v_ref, cfg);
 
     // Mixture
     const v_mix: number[] = [];
     for (let k = 0; k < K; k++) {
-      v_mix.push((1 - a_t) * v_base[k] + a_t * v_tilde[k]);
+      v_mix.push((1 - a_t) * v_base[t][k] + a_t * v_tilde[k]);
     }
 
-    // Normalisation (guard division by zero)
+    // Normalisation
     const total = v_mix.reduce((a, b) => a + b, 0);
     v_obs.push(total > 0 ? v_mix.map((x) => x / total) : v_mix.map(() => 1 / K));
   }
@@ -408,7 +436,7 @@ function simulateSecondRound(
     }
   }
 
-  // Parts exprimées (guard division by zero)
+  // Parts exprimées
   const expr = V2_ins[0] + V2_ins[1];
   const V2_expr: [number, number] = expr > 0
     ? [V2_ins[0] / expr, V2_ins[1] / expr]
@@ -456,8 +484,7 @@ export function generateSimData(
       name: c.name,
       initials: c.initials,
       v0: startRaw / 100,
-      tendance: c.tendance,
-      attractivite: c.attractivite,
+      dynamique: c.dynamique,
       W: w,
     };
   });
@@ -473,13 +500,7 @@ export function generateSimData(
   // Matrice W (K × 3)
   const W = candidates.map((c) => c.W);
 
-  // Psi : biais structurel pour le vote utile
-  const rawPsi = candidates.map((c) => c.attractivite * cfg.psi_scale);
-  const meanPsi = rawPsi.reduce((a, b) => a + b, 0) / K;
-  const psi = rawPsi.map((p) => p - meanPsi);
-
-  // Rho : pénalité barrage pour le second tour (modèle R)
-  // rho[k] = gamma_rejet_ED * W[k, droite] + gamma_rejet_EG * W[k, gauche]
+  // Rho : pénalité barrage pour le second tour
   const rho = W.map((w) => cfg.gamma_rejet_ED * w[2] + cfg.gamma_rejet_EG * w[0]);
 
   // Matrice de similarité cosinus (pré-calculée)
@@ -507,7 +528,7 @@ export function generateSimData(
   const V2_ins_arr: number[][] = [];
 
   for (let s = 0; s < S; s++) {
-    const v_obs = simulateOne(candidates, W, psi, cosMat, cfg, rng);
+    const v_obs = simulateOne(candidates, W, cosMat, cfg, rng);
     vobs_arr.push(v_obs);
 
     if (K >= 2) {
@@ -592,8 +613,7 @@ export function generateSimData(
     name: c.name,
     initials: c.initials,
     start: c.v0,
-    tendance: c.tendance,
-    attractivite: c.attractivite,
+    dynamique: c.dynamique,
     final: finalShares[k],
     pQualif: pQualif[k],
     pVictoire: pVictoire[k],
@@ -652,7 +672,6 @@ export function generateSimData(
   let secondRound: SecondRoundSummary;
 
   if (K >= 2 && V2_ins_arr.length > 0) {
-    // participation = 1 - nonexpr (3-outcome model: A, B, nonexpr)
     const turnout = V2_ins_arr
       .map((v) => v[0] + v[1])
       .sort((a, b) => a - b);

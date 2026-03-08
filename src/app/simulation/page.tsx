@@ -244,18 +244,10 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
                 onChange={(v) => updateVariant(party.tag, "ideology", v)}
               />
             </div>
-            <div {...(isTutorial ? { "data-tuto": "tendance" } : {})}>
+            <div {...(isTutorial ? { "data-tuto": "dynamique" } : {})}>
               <TrendSlider
-                value={candidate.tendance}
-                onChange={(v) => updateVariant(party.tag, "tendance", v)}
-              />
-            </div>
-            <div {...(isTutorial ? { "data-tuto": "attractivite" } : {})}>
-              <Slider
-                label="Effet vote utile"
-                value={candidate.attractivite}
-                onChange={(v) => updateVariant(party.tag, "attractivite", v)}
-                color={colors.accent}
+                value={candidate.dynamique}
+                onChange={(v) => updateVariant(party.tag, "dynamique", v)}
               />
             </div>
           </div>
@@ -467,8 +459,7 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
             <th className="px-4 py-3 font-semibold text-gray-600">Candidat</th>
             <th className="px-4 py-3 font-semibold text-gray-600">Parti</th>
             <th className="px-4 py-3 text-right font-semibold text-gray-600">Départ</th>
-            <th className="px-4 py-3 text-right font-semibold text-gray-600">Tendance</th>
-            <th className="px-4 py-3 text-right font-semibold text-gray-600">Vote utile</th>
+            <th className="px-4 py-3 text-right font-semibold text-gray-600">Dynamique</th>
           </tr>
         </thead>
         <tbody>
@@ -490,12 +481,9 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
                 </td>
                 <td className="px-4 py-3 text-right font-mono font-semibold text-primary-dark">{total > 0 ? (c[field] / total * 100).toFixed(1) : 0}%</td>
                 <td className="px-4 py-3 text-right">
-                  <span className="font-mono font-semibold" style={{ color: getTrendColor(c.tendance) }}>
-                    {c.tendance.toFixed(2)}
+                  <span className="font-mono font-semibold" style={{ color: getTrendColor(c.dynamique) }}>
+                    {c.dynamique.toFixed(2)}
                   </span>
-                </td>
-                <td className="px-4 py-3 text-right font-mono font-semibold text-primary-dark">
-                  {c.attractivite.toFixed(1)}
                 </td>
               </tr>
             );

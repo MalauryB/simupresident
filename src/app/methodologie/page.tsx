@@ -159,11 +159,12 @@ export default function MethodologiePage() {
               </div>
             </SectionCard>
 
-            {/* 3) Tendance */}
-            <SectionCard title="3) La tendance de long terme (effet structurel)">
+            {/* 3) Dynamique structurelle */}
+            <SectionCard title="3) La dynamique structurelle">
               <p>
                 Au-del&agrave; des al&eacute;as quotidiens, certains candidats peuvent &ecirc;tre
-                port&eacute;s par une dynamique de fond.
+                port&eacute;s par une dynamique de fond. Ce param&egrave;tre peut &ecirc;tre
+                choisi par l&rsquo;utilisateur pour chaque candidat.
               </p>
               <p>Exemples :</p>
               <ul className="ml-4 list-disc space-y-1">
@@ -208,22 +209,17 @@ export default function MethodologiePage() {
 
               <h3 className="mt-2 text-sm font-bold text-primary-dark">a) L&rsquo;enjeu</h3>
               <p>
-                Plus un candidat est proche du seuil estim&eacute; de qualification (fix&eacute;
-                dans les simulations &agrave; 15&nbsp;%), plus l&rsquo;&laquo;&nbsp;enjeu&nbsp;&raquo;
-                est &eacute;lev&eacute;. Un candidat &agrave; 14&ndash;16&nbsp;% d&eacute;clenche
-                donc davantage de vote utile qu&rsquo;un candidat &agrave; 5&nbsp;% ou &agrave; 30&nbsp;%.
+                Plus un candidat est proche du seuil estim&eacute; de qualification,
+                plus l&rsquo;&laquo;&nbsp;enjeu&nbsp;&raquo; est &eacute;lev&eacute;.
+                Le seuil est d&eacute;termin&eacute; automatiquement &agrave; partir du
+                deuxi&egrave;me score le plus &eacute;lev&eacute; en fin de campagne.
               </p>
 
               <h3 className="mt-2 text-sm font-bold text-primary-dark">b) La capacit&eacute; &agrave; capter le vote utile</h3>
               <p>
                 Tous les candidats ne b&eacute;n&eacute;ficient pas &eacute;galement du vote utile.
-                Un param&egrave;tre sp&eacute;cifique mesure la cr&eacute;dibilit&eacute;,
-                l&rsquo;exp&eacute;rience, la perception de capacit&eacute; &agrave; gouverner et
-                la stature pr&eacute;sidentielle.
-              </p>
-              <p>
-                Ainsi, deux candidats &agrave; 14&nbsp;% ne capteront pas n&eacute;cessairement
-                la m&ecirc;me quantit&eacute; de vote utile.
+                Les candidats ayant une plus grande dynamique sont plus susceptibles de capter
+                le vote utile.
               </p>
             </SectionCard>
 
@@ -335,7 +331,9 @@ export default function MethodologiePage() {
           <ul className="ml-4 list-disc space-y-1">
             <li>la probabilit&eacute; de qualification au second tour de chaque candidat,</li>
             <li>la probabilit&eacute; de chaque duel possible,</li>
-            <li>la probabilit&eacute; de victoire finale.</li>
+            <li>la probabilit&eacute; de victoire finale,</li>
+            <li>une estimation de la participation au second tour,</li>
+            <li>des intervalles d&rsquo;incertitude sur les marges de victoire.</li>
           </ul>
         </SectionCard>
 

@@ -15,14 +15,9 @@ export const PARAMS_TUTORIAL_STEPS: TutorialStep[] = [
     desc: "Position du candidat sur l\u2019axe gauche\u2011centre\u2011droite. Ce vecteur d\u00e9termine les reports de voix et le vote barrage au second tour.",
   },
   {
-    target: "tendance",
-    title: "Tendance",
-    desc: "Repr\u00e9sente la dynamique de long terme du candidat. Au-dessus de 0, il progresse dans les sondages\u00a0; en dessous, il recule.",
-  },
-  {
-    target: "attractivite",
-    title: "Effet vote utile",
-    desc: "Sur les derniers jours de la campagne, une portion des \u00e9lecteurs d\u00e9cide de voter pour le candidat le mieux plac\u00e9 pour se qualifier au second tour. Plus l\u2019effet vote utile est \u00e9lev\u00e9, plus le candidat capte les \u00e9lecteurs strat\u00e9giques.",
+    target: "dynamique",
+    title: "Dynamique",
+    desc: "Param\u00e8tre unique repr\u00e9sentant la tendance du candidat. Au-dessus de 0, il progresse dans les sondages et capte davantage le vote utile\u00a0; en dessous, il recule et perd des \u00e9lecteurs strat\u00e9giques.",
   },
 ];
 

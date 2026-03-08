@@ -3,8 +3,7 @@ export interface CandidatVariant {
   initials: string;
   polled: boolean;
   pollGroup: string | null;
-  attractivite: number;
-  tendance: number;
+  dynamique: number;
   left: number;
   center: number;
   right: number;
@@ -40,8 +39,7 @@ export interface SimCandidate {
   name: string;
   initials: string;
   start: number;
-  tendance: number;
-  attractivite: number;
+  dynamique: number;
 }
 
 export interface TrajectoryPoint {

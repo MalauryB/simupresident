@@ -40,8 +40,8 @@ export interface Database {
           initiales: string | null;
           sonde_individuellement: boolean;
           groupe_sondage: string | null;
-          attractivite: number;
-          tendance: number;
+          dynamique: number;
+          tendance: number; // legacy, mapped to dynamique
           ideologie_gauche: number;
           ideologie_centre: number;
           ideologie_droite: number;
@@ -59,8 +59,8 @@ export interface Database {
           initiales?: string | null;
           sonde_individuellement?: boolean;
           groupe_sondage?: string | null;
-          attractivite?: number;
-          tendance?: number;
+          dynamique?: number;
+          tendance?: number; // legacy
           ideologie_gauche?: number;
           ideologie_centre?: number;
           ideologie_droite?: number;
@@ -78,8 +78,8 @@ export interface Database {
           initiales?: string | null;
           sonde_individuellement?: boolean;
           groupe_sondage?: string | null;
-          attractivite?: number;
-          tendance?: number;
+          dynamique?: number;
+          tendance?: number; // legacy
           ideologie_gauche?: number;
           ideologie_centre?: number;
           ideologie_droite?: number;
@@ -161,8 +161,8 @@ export interface Database {
           parti_tag: string;
           indice_variante: number;
           point_depart: number;
-          attractivite: number;
-          tendance: number;
+          dynamique: number;
+          tendance: number; // legacy, mapped to dynamique
           taux_barrage: number;
           ideologie_g: number;
           ideologie_c: number;
@@ -173,8 +173,8 @@ export interface Database {
           parti_tag: string;
           indice_variante?: number;
           point_depart?: number;
-          attractivite?: number;
-          tendance?: number;
+          dynamique?: number;
+          tendance?: number; // legacy
           taux_barrage?: number;
           ideologie_g?: number;
           ideologie_c?: number;
@@ -185,8 +185,8 @@ export interface Database {
           parti_tag?: string;
           indice_variante?: number;
           point_depart?: number;
-          attractivite?: number;
-          tendance?: number;
+          dynamique?: number;
+          tendance?: number; // legacy
           taux_barrage?: number;
           ideologie_g?: number;
           ideologie_c?: number;
