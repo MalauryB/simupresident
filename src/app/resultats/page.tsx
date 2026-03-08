@@ -480,7 +480,7 @@ export default function ResultatsPage() {
                     Probabilit&eacute;
                   </th>
                   <th className="px-4 py-3 text-right font-semibold text-gray-600">
-                    P(victoire)
+                    Probabilit&eacute; de victoire
                   </th>
                   <th className="px-4 py-3 text-right font-semibold text-gray-600">
                     Score moyen (exprim&eacute;s)

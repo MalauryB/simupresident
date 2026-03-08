@@ -68,12 +68,12 @@ export const RESULTS_TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     target: "res-qualif",
-    title: "P(qualification)",
+    title: "Probabilit\u00e9 de qualification",
     desc: "Fr\u00e9quence \u00e0 laquelle le candidat termine dans les deux premiers au 1er tour, sur l\u2019ensemble des simulations. Plus la barre est longue, plus il a de chances d\u2019acc\u00e9der au second tour.",
   },
   {
     target: "res-victoire",
-    title: "P(victoire)",
+    title: "Probabilit\u00e9 de victoire",
     desc: "Fr\u00e9quence \u00e0 laquelle le candidat remporte le second tour, en tenant compte des reports de voix, de l\u2019abstention et du vote barrage.",
   },
   {
