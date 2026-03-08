@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BackLink } from "@/app/components/ui/BackLink";
 import { SIM_COUNT } from "@/lib/constants";
@@ -141,7 +142,7 @@ export default function AProposPage() {
                       src/lib/simulation.ts
                     </code>.{" "}
                     <a
-                      href="https://github.com/MalauryB/simupresident"
+                      href="https://github.com/MalauryB/quiserapresident"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-accent hover:text-accent/80"
@@ -184,7 +185,7 @@ export default function AProposPage() {
               rel="noopener noreferrer"
               className="group flex items-center gap-4 rounded-xl border border-neutral-800 bg-neutral-950 p-6 transition-colors hover:bg-neutral-900"
             >
-              <img src="/logo_blanc.png" alt="Nimli" className="h-10 w-10 shrink-0 rounded-lg object-contain" />
+              <Image src="/logo_blanc.png" alt="Nimli" width={40} height={40} className="shrink-0 rounded-lg object-contain" />
               <div>
                 <p className="text-sm font-semibold" style={{ color: "#E8DCD0" }}>
                   Fait b&eacute;n&eacute;volement par <span style={{ color: "#D4637A" }}>Nimli</span>
@@ -208,7 +209,7 @@ export default function AProposPage() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a
-              href="https://github.com/MalauryB/simupresident"
+              href="https://github.com/MalauryB/quiserapresident"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"

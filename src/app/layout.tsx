@@ -47,20 +47,11 @@ export const metadata: Metadata = {
       template: `%s | ${APP_NAME}`,
     },
     description: APP_DESCRIPTION,
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Qui pour l\u2019\u00c9lys\u00e9e\u202f? \u2014 Simulateur pr\u00e9sidentielle 2027",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: APP_NAME,
     description: APP_DESCRIPTION,
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: SITE_URL,
@@ -71,7 +62,6 @@ export const viewport: Viewport = {
   themeColor: "#556C96",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
