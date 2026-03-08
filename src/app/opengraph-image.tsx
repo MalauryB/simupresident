@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const alt = "Qui pour l\u2019\u00c9lys\u00e9e\u202f? \u2014 Simulateur pr\u00e9sidentielle 2027";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -50,7 +49,7 @@ export default function OGImage() {
               lineHeight: 1.1,
             }}
           >
-            Qui pour l&rsquo;\u00c9lys\u00e9e ?
+            {`Qui pour l\u2019\u00c9lys\u00e9e\u202f?`}
           </div>
           <div
             style={{
@@ -60,7 +59,7 @@ export default function OGImage() {
               maxWidth: "800px",
             }}
           >
-            Simulez l&rsquo;\u00e9lection avec notre mod\u00e8le interactif
+            {`Simulez l\u2019\u00e9lection avec notre mod\u00e8le interactif`}
           </div>
           <div
             style={{
