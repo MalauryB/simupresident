@@ -230,12 +230,10 @@ function voteUtileTransform(
   const sorted_ref = [...v_ref].sort((a, b) => b - a);
   const q0 = Math.max(sorted_ref[1] ?? 0, 1e-12);
 
-  // Enjeu gaussien (plus grand près de q0), normalisé
-  const enjeuRaw = v.map(
+  // Enjeu gaussien (plus grand près de q0) — pas de normalisation (§5.3 Note technique)
+  const enjeu = v.map(
     (vk) => Math.exp(-0.5 * ((vk - q0) / cfg.sig_q) ** 2),
   );
-  const enjeuSum = enjeuRaw.reduce((a, b) => a + b, 0);
-  const enjeu = enjeuSum > 0 ? enjeuRaw.map((e) => e / enjeuSum) : enjeuRaw.map(() => 1 / K);
 
   // 2) Rétention logistique (R: plogis(((q0 - v) / sig_r) + b))
   const b = qlogis(0.05);
