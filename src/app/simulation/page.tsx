@@ -463,20 +463,10 @@ function ReviewTable({ parties }: { parties: PartyData[] }) {
 }
 
 function StepSummary() {
-  const { activeParties, pollSources, pollSource } = useSimulation();
-  const selectedSource = useMemo(() => pollSources.find((s) => s.id === pollSource), [pollSources, pollSource]);
+  const { activeParties } = useSimulation();
 
   return (
     <div className="space-y-6">
-      {selectedSource && (
-        <div className="flex items-center gap-2 rounded-xl bg-primary/5 px-4 py-3">
-          <span className="text-xl">{selectedSource.icon}</span>
-          <div>
-            <p className="text-sm font-bold text-primary-dark">{selectedSource.label}</p>
-            <p className="text-xs text-gray-600">{selectedSource.desc}</p>
-          </div>
-        </div>
-      )}
       <ReviewTable parties={activeParties} />
     </div>
   );
