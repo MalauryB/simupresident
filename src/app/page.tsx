@@ -133,9 +133,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---- Bottom banner cards ---- */}
-      <section className="grid gap-6 sm:grid-cols-2">
-        {/* Suggestion card */}
+      {/* ---- Bottom banner ---- */}
+      <section>
         <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h3 className="mb-2 text-lg font-bold text-primary-dark">
             Une id&eacute;e d&rsquo;am&eacute;lioration ?
@@ -151,24 +150,6 @@ export default function HomePage() {
             Nous &eacute;crire &rarr;
           </Link>
         </div>
-
-        {/* Project card */}
-        <a
-          href="https://nimli.fr"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex items-center gap-4 rounded-xl border border-neutral-800 bg-neutral-950 p-6 transition-colors hover:bg-neutral-900"
-        >
-          <Image src="/logo_blanc.png" alt="Nimli" width={40} height={40} className="shrink-0 rounded-lg object-contain" />
-          <div>
-            <p className="text-sm font-semibold" style={{ color: "#E8DCD0" }}>
-              Fait b&eacute;n&eacute;volement par <span style={{ color: "#D4637A" }}>Nimli</span>
-            </p>
-            <p className="text-xs text-neutral-400 transition-colors group-hover:text-neutral-300">
-              nimli.fr &rarr;
-            </p>
-          </div>
-        </a>
       </section>
     </div>
   );
