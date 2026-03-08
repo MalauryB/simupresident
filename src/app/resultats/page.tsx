@@ -117,7 +117,7 @@ export default function ResultatsPage() {
         <button
           type="button"
           onClick={handleDownloadPDF}
-          className="no-print inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
+          className="no-print inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
         >
           <svg
             className="h-4 w-4"
@@ -170,14 +170,14 @@ export default function ResultatsPage() {
                 <button
                   type="button"
                   onClick={() => setDateMode("dates")}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "dates" ? "bg-white text-primary-dark shadow-sm" : "text-gray-600 hover:text-gray-700"}`}
+                  className={`rounded-md px-2.5 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 ${dateMode === "dates" ? "bg-white text-primary-dark shadow-sm" : "text-gray-600 hover:text-gray-700"}`}
                 >
                   Dates
                 </button>
                 <button
                   type="button"
                   onClick={() => setDateMode("jours")}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-600 hover:text-gray-700"}`}
+                  className={`rounded-md px-2.5 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-600 hover:text-gray-700"}`}
                 >
                   J &minus; T
                 </button>

@@ -343,7 +343,7 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
             key={src.id}
             type="button"
             onClick={() => setPollSource(src.id)}
-            className={`rounded-xl border-2 p-5 text-left transition-colors duration-200 ${
+            className={`rounded-xl border-2 p-5 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
               pollSource === src.id ? "border-accent bg-white" : "border-gray-200 bg-white/60 hover:border-accent/50"
             }`}
           >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,9 +19,31 @@ const navItems: NavItem[] = [
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
-  const closeMenu = () => setIsOpen(false);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  // Focus close button when menu opens, return focus when it closes
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => closeButtonRef.current?.focus(), 100);
+    }
+  }, [isOpen]);
+
+  // Escape key to close
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeMenu();
+        hamburgerRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, closeMenu]);
 
   return (
     <nav aria-label="Navigation principale">
@@ -43,6 +65,7 @@ export function Navigation() {
 
       {/* Mobile hamburger button */}
       <button
+        ref={hamburgerRef}
         type="button"
         className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:hidden"
         onClick={toggleMenu}
@@ -92,9 +115,10 @@ export function Navigation() {
         <div className="flex items-center justify-between border-b border-gray-200 p-4">
           <span className="text-lg font-semibold text-primary">Menu</span>
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={closeMenu}
-            className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
+            className="rounded-md p-2 text-gray-600 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label="Fermer le menu"
           >
             <svg

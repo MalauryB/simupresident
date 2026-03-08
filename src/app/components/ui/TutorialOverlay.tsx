@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export interface TutorialStep {
   target: string;
@@ -141,6 +141,27 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
     }
   };
 
+  // Focus trap
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = tooltipRef.current;
+    if (!el) return;
+    const focusable = el.querySelectorAll<HTMLElement>("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+    if (focusable.length > 0) focusable[focusable.length - 1].focus();
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    window.addEventListener("keydown", handleTab);
+    return () => window.removeEventListener("keydown", handleTab);
+  }, [currentStep, rect]);
+
   if (!rect) return null;
 
   const PAD = 8;
@@ -182,6 +203,9 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
 
       {/* Tooltip bubble */}
       <div
+        ref={tooltipRef}
+        role="dialog"
+        aria-label={step.title}
         className="fixed z-[52] w-80 rounded-xl border border-gray-200 bg-white p-4 shadow-2xl"
         style={{ top: tooltipTop, left: tooltipLeft }}
       >
@@ -210,14 +234,14 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
           <button
             type="button"
             onClick={handleClose}
-            className="text-xs font-medium text-gray-500 transition-colors hover:text-gray-700"
+            className="rounded-md px-2 py-1 text-xs font-medium text-gray-500 transition-colors hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             Passer
           </button>
           <button
             type="button"
             onClick={handleNext}
-            className="rounded-lg bg-primary px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary-dark"
+            className="rounded-lg bg-primary px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             {currentStep < steps.length - 1 ? "Suivant \u25B6" : "Compris \u2713"}
           </button>
