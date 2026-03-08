@@ -534,7 +534,7 @@ export default function SimulationPage() {
   const stepSubtitles = [
     "Sélectionnez les candidats à inclure dans la simulation.",
     "Ajustez les paramètres de chaque candidat.",
-    "Choisissez la source de sondages et vérifiez les points de départ.",
+    "Choisissez les points de départ des candidats.",
     "Configurez l'intensité du vote barrage au second tour.",
     "Vérifiez la configuration avant de lancer la simulation.",
   ];
