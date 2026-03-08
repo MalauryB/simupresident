@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Qui sera pr\u00e9sident\u202f? \u2014 Simulateur pr\u00e9sidentielle 2027";
+  "Qui sera pr\u00e9sident\u202f? \u2014 Simulateur \u00e9lection pr\u00e9sidentielle 2027";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
