@@ -336,28 +336,12 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
     entries.forEach((e, i) => updateVariant(e.tag, "startCustom", normalized[i]));
   }, [activeParties, total, updateVariant]);
   return (
-    <div className="space-y-8">
-      <div className="grid gap-4 sm:grid-cols-3" {...(showTutorial ? { "data-tuto": "source-sondage" } : {})}>
-        {pollSources.map((src) => (
-          <button
-            key={src.id}
-            type="button"
-            onClick={() => setPollSource(src.id)}
-            className={`rounded-xl border-2 p-5 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
-              pollSource === src.id ? "border-accent bg-white" : "border-gray-200 bg-white/60 hover:border-accent/50"
-            }`}
-          >
-            <div className="mb-2 text-2xl">{src.icon}</div>
-            <h3 className="mb-1 text-sm font-bold text-primary-dark">{src.label}</h3>
-            <p className="text-xs text-gray-600">{src.desc}</p>
-          </button>
-        ))}
-      </div>
-
+    <div className="space-y-6">
       <div>
-        <h3 className="mb-3 text-sm font-bold text-primary-dark" {...(showTutorial ? { "data-tuto": "points-depart" } : {})}>
+        <h3 className="mb-1 text-sm font-bold text-primary-dark" {...(showTutorial ? { "data-tuto": "points-depart" } : {})}>
           Points de départ
         </h3>
+        <p className="mb-3 text-xs text-gray-600">Les valeurs par défaut sont basées sur les derniers sondages.</p>
         <div className="space-y-2">
           {activeParties.map((p) => (
             <StartingPointRow key={p.tag} party={p} sourceId={pollSource} total={total} />
