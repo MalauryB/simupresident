@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/app/components/layout/Header";
 import { Footer } from "@/app/components/layout/Footer";
+import { Analytics } from "@vercel/analytics/react";
 import { SimulationProvider } from "@/lib/simulation-context";
 
 const SITE_URL = "https://www.quiserapresident.fr";
@@ -119,6 +120,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main id="main-content" className="flex-1">{children}</main>
           <Footer />
         </SimulationProvider>
+        <Analytics />
       </body>
     </html>
   );
