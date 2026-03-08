@@ -90,7 +90,7 @@ export default function AProposPage() {
               },
               {
                 q: "Pourquoi seulement 8 candidats ?",
-                a: "Nous avons limit\u00e9 le nombre de candidats pour que le mod\u00e8le reste lisible et ne devienne pas trop complexe. Ajouter davantage de candidats augmenterait consid\u00e9rablement le nombre d\u2019interactions \u00e0 mod\u00e9liser.",
+                a: "Nous avons limit\u00e9 le nombre de candidats pour que le mod\u00e8le reste lisible et ne devienne pas trop complexe.",
               },
               {
                 q: "Pourquoi ces param\u00e8tres par d\u00e9faut ?",
