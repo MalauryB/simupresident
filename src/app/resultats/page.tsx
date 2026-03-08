@@ -91,7 +91,7 @@ export default function ResultatsPage() {
         <p className="text-sm font-medium text-gray-600">
           Simulation en cours&hellip;
         </p>
-        <p className="text-xs text-gray-500">{SIM_COUNT} simulations &times; {days} jours</p>
+        <p className="text-xs text-gray-600">{SIM_COUNT} simulations &times; {days} jours</p>
       </div>
     );
   }
@@ -170,14 +170,14 @@ export default function ResultatsPage() {
                 <button
                   type="button"
                   onClick={() => setDateMode("dates")}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "dates" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "dates" ? "bg-white text-primary-dark shadow-sm" : "text-gray-600 hover:text-gray-700"}`}
                 >
                   Dates
                 </button>
                 <button
                   type="button"
                   onClick={() => setDateMode("jours")}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                  className={`rounded-md px-2.5 py-1 transition-colors ${dateMode === "jours" ? "bg-white text-primary-dark shadow-sm" : "text-gray-600 hover:text-gray-700"}`}
                 >
                   J &minus; T
                 </button>
@@ -345,7 +345,7 @@ export default function ResultatsPage() {
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; d&rsquo;acc&eacute;der au second tour
             </h3>
-            <p className="mb-4 text-xs text-gray-500">
+            <p className="mb-4 text-xs text-gray-600">
               Probabilit&eacute; de qualification au 2nd tour
             </p>
             <div className="min-w-[400px]">
@@ -398,7 +398,7 @@ export default function ResultatsPage() {
             <h3 className="mb-1 text-sm font-bold text-primary-dark">
               Probabilit&eacute; de remporter l&rsquo;&eacute;lection
             </h3>
-            <p className="mb-4 text-xs text-gray-500">
+            <p className="mb-4 text-xs text-gray-600">
               Probabilit&eacute; de victoire finale
             </p>
             <div className="min-w-[400px]">
@@ -447,7 +447,7 @@ export default function ResultatsPage() {
           </ScrollableContainer>
         </div>
 
-        <p className="mt-4 text-xs leading-relaxed text-gray-500">
+        <p className="mt-4 text-xs leading-relaxed text-gray-600">
           Ces deux probabilit&eacute;s sont <strong>ind&eacute;pendantes</strong> l&rsquo;une
           de l&rsquo;autre. La probabilit&eacute; de qualification mesure les chances
           d&rsquo;acc&eacute;der au second tour, tandis que la probabilit&eacute; de
@@ -505,7 +505,7 @@ export default function ResultatsPage() {
                         <span className="font-medium text-gray-700">
                           {d.nameA}
                         </span>
-                        <span className="text-xs text-gray-500">vs</span>
+                        <span className="text-xs text-gray-600">vs</span>
                         <span
                           className="inline-block h-2.5 w-2.5 rounded-full"
                           style={{

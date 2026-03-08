@@ -80,8 +80,8 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
         <span
           className="mt-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
           style={{
-            background: party.active ? `${colors.bg}15` : "rgba(209,213,219,0.25)",
-            color: party.active ? colors.bg : "#9ca3af",
+            background: party.active ? `${colors.accent}15` : "rgba(209,213,219,0.25)",
+            color: party.active ? colors.accent : "#6b7280",
           }}
         >
           {party.party}
@@ -167,7 +167,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
   if (activeParties.length === 0) {
     return (
       <div className="rounded-xl border-2 border-dashed border-gray-200 py-12 text-center">
-        <p className="text-gray-400">Aucun candidat sélectionné. Retournez à l&apos;étape précédente.</p>
+        <p className="text-gray-500">Aucun candidat sélectionné. Retournez à l&apos;étape précédente.</p>
       </div>
     );
   }
@@ -201,7 +201,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
                 </div>
                 <div
                   className="truncate text-[10px] font-semibold"
-                  style={{ color: isActive ? col.accent : "#9ca3af" }}
+                  style={{ color: isActive ? col.accent : "#6b7280" }}
                 >
                   {p.tag}
                 </div>
@@ -222,7 +222,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
             <Avatar candidate={candidate} colors={colors} size={10} />
             <div className="flex-1">
               <h3 className="text-sm font-bold text-primary-dark">{candidate.name}</h3>
-              <p className="text-xs text-gray-400">{party.party}</p>
+              <p className="text-xs text-gray-500">{party.party}</p>
             </div>
             <span
               className="rounded-full px-2.5 py-0.5 text-xs font-bold"
@@ -263,7 +263,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
           <ChevronLeft />
           {idx > 0 ? getSelected(activeParties[idx - 1]).shortName : ""}
         </button>
-        <span className="text-xs text-gray-400">
+        <span className="text-xs text-gray-500">
           {idx + 1} / {activeParties.length}
         </span>
         <button
@@ -576,7 +576,7 @@ export default function SimulationPage() {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h1 className="text-sm font-bold text-primary-dark">Configurer la simulation</h1>
-            <p className="mt-0.5 text-xs text-gray-500">{stepSubtitles[step]}</p>
+            <p className="mt-0.5 text-xs text-gray-600">{stepSubtitles[step]}</p>
           </div>
           {step <= 3 && <GuideButton onClick={openGuide} />}
         </div>
@@ -607,7 +607,7 @@ export default function SimulationPage() {
         <aside className="hidden w-72 shrink-0 flex-col px-6 py-5 lg:flex">
           <div className="flex-1">
             <h1 className="text-sm font-bold text-primary-dark">Configurer la simulation</h1>
-            <p className="mt-0.5 min-h-[2rem] text-xs text-gray-500">{stepSubtitles[step]}</p>
+            <p className="mt-0.5 min-h-[2rem] text-xs text-gray-600">{stepSubtitles[step]}</p>
             <div className="mt-2 min-h-[28px]">
               {step <= 3 && <GuideButton onClick={openGuide} />}
             </div>

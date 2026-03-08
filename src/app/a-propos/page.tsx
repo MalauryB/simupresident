@@ -36,7 +36,7 @@ export default function AProposPage() {
           <h2 className="mb-3 text-lg font-bold text-primary-dark">
             Notre mission
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600">
+          <p className="text-sm leading-relaxed text-gray-700">
             quiserapr&eacute;sident.fr a pour objectif de rendre
             l&rsquo;analyse &eacute;lectorale accessible &agrave; tous.
             Gr&acirc;ce &agrave; notre simulateur interactif, chacun peut
@@ -45,7 +45,7 @@ export default function AProposPage() {
             l&rsquo;impact des param&egrave;tres sur les r&eacute;sultats et se
             familiariser avec les m&eacute;thodes de simulation statistique.
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600">
+          <p className="mt-3 text-sm leading-relaxed text-gray-700">
             Nous croyons que la transparence m&eacute;thodologique est
             essentielle : tous nos mod&egrave;les sont document&eacute;s et les
             param&egrave;tres sont ajustables par l&rsquo;utilisateur.
@@ -65,7 +65,7 @@ export default function AProposPage() {
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Configurez
               </h3>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-700">
                 S&eacute;lectionnez les candidats et ajustez les
                 param&egrave;tres de la simulation.
               </p>
@@ -78,7 +78,7 @@ export default function AProposPage() {
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Simulez
               </h3>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-700">
                 {SIM_COUNT} simulations sont
                 g&eacute;n&eacute;r&eacute;es en quelques secondes.
               </p>
@@ -91,7 +91,7 @@ export default function AProposPage() {
               <h3 className="mb-1 text-sm font-bold text-primary-dark">
                 Analysez
               </h3>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-700">
                 Explorez les trajectoires, probabilit&eacute;s et intervalles
                 de confiance.
               </p>
@@ -131,11 +131,11 @@ export default function AProposPage() {
                   {faq.q}
                 </h3>
                 {faq.a ? (
-                  <p className="text-xs leading-relaxed text-gray-600">
+                  <p className="text-xs leading-relaxed text-gray-700">
                     {faq.a}
                   </p>
                 ) : (
-                  <p className="text-xs leading-relaxed text-gray-600">
+                  <p className="text-xs leading-relaxed text-gray-700">
                     Oui ! Le projet est enti&egrave;rement open source. Le code
                     sp&eacute;cifique du mod&egrave;le se trouve dans le fichier{" "}
                     <code className="rounded bg-gray-100 px-1 py-0.5 text-[11px] font-medium text-primary-dark">
@@ -167,7 +167,7 @@ export default function AProposPage() {
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Une id&eacute;e d&rsquo;am&eacute;lioration ?
               </h3>
-              <p className="mb-3 text-xs text-gray-600">
+              <p className="mb-3 text-xs text-gray-700">
                 Partagez vos suggestions pour am&eacute;liorer la plateforme.
               </p>
               <Link
