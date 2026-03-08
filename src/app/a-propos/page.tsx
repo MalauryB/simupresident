@@ -12,8 +12,8 @@ export default function AProposPage() {
       <BackLink href="/" />
 
       {/* Title */}
-      <div className="mb-12 text-center">
-        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary-dark sm:text-4xl">
+      <div className="mb-12 border-b border-gray-200 pb-8">
+        <h1 className="text-3xl font-bold text-primary-dark">
           &Agrave; propos
         </h1>
       </div>
@@ -21,44 +21,44 @@ export default function AProposPage() {
       <div className="space-y-8">
         {/* ---- How it works ---- */}
         <div>
-          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+          <h2 className="mb-4 text-base font-bold text-primary-dark border-b-2 border-primary pb-2">
             Comment &ccedil;a marche
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-xl font-bold text-primary">
+            <div className="border-l-4 border-l-primary bg-white p-5 shadow-sm">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center border-2 border-primary text-lg font-bold text-primary">
                 1
               </div>
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+              <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Configurez
               </h3>
-              <p className="text-xs text-gray-700">
+              <p className="text-xs leading-relaxed text-gray-700">
                 S&eacute;lectionnez les candidats et ajustez les
                 param&egrave;tres de la simulation.
               </p>
             </div>
 
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-xl font-bold text-accent">
+            <div className="border-l-4 border-l-accent bg-white p-5 shadow-sm">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center border-2 border-accent text-lg font-bold text-accent">
                 2
               </div>
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+              <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Simulez
               </h3>
-              <p className="text-xs text-gray-700">
+              <p className="text-xs leading-relaxed text-gray-700">
                 {SIM_COUNT} simulations sont
                 g&eacute;n&eacute;r&eacute;es en quelques secondes.
               </p>
             </div>
 
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
+            <div className="border-l-4 border-l-green-600 bg-white p-5 shadow-sm">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center border-2 border-green-600 text-lg font-bold text-green-600">
                 3
               </div>
-              <h3 className="mb-1 text-sm font-bold text-primary-dark">
+              <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Analysez
               </h3>
-              <p className="text-xs text-gray-700">
+              <p className="text-xs leading-relaxed text-gray-700">
                 Explorez les trajectoires, probabilit&eacute;s et intervalles
                 de confiance.
               </p>
@@ -68,7 +68,7 @@ export default function AProposPage() {
 
         {/* ---- FAQ ---- */}
         <div>
-          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+          <h2 className="mb-4 text-base font-bold text-primary-dark border-b-2 border-primary pb-2">
             Questions fr&eacute;quentes
           </h2>
           <div className="space-y-3">
@@ -92,7 +92,7 @@ export default function AProposPage() {
             ].map((faq) => (
               <div
                 key={faq.q}
-                className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+                className="border-l-4 border-l-gray-300 bg-white p-4 shadow-sm"
               >
                 <h3 className="mb-1 text-sm font-bold text-primary-dark">
                   {faq.q}
@@ -105,7 +105,7 @@ export default function AProposPage() {
                   <p className="text-xs leading-relaxed text-gray-700">
                     Oui ! Le projet est enti&egrave;rement open source. Le code
                     sp&eacute;cifique du mod&egrave;le se trouve dans le fichier{" "}
-                    <code className="rounded bg-gray-100 px-1 py-0.5 text-[11px] font-medium text-primary-dark">
+                    <code className="bg-gray-100 px-1.5 py-0.5 text-[11px] font-mono text-primary-dark">
                       src/lib/simulation.ts
                     </code>.{" "}
                     <a
@@ -125,19 +125,19 @@ export default function AProposPage() {
 
         {/* ---- Contact ---- */}
         <div>
-          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+          <h2 className="mb-4 text-base font-bold text-primary-dark border-b-2 border-primary pb-2">
             Contact
           </h2>
-          <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <div className="border-l-4 border-l-primary bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Une id&eacute;e d&rsquo;am&eacute;lioration ?
               </h3>
-              <p className="mb-3 text-xs text-gray-700">
+              <p className="mb-3 text-xs leading-relaxed text-gray-700">
                 Partagez vos suggestions pour am&eacute;liorer la plateforme.
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-accent transition-colors hover:text-accent/80"
+                className="inline-flex items-center gap-1 border-b-2 border-accent pb-0.5 text-xs font-medium text-accent transition-colors hover:border-accent/80 hover:text-accent/80"
               >
                 Nous &eacute;crire &rarr;
               </Link>
@@ -145,31 +145,31 @@ export default function AProposPage() {
         </div>
 
         {/* ---- Bottom banner ---- */}
-        <div className="rounded-xl bg-primary-dark p-8 text-center">
-          <h2 className="mb-2 text-xl font-bold text-white">
+        <div className="border-t-4 border-t-primary-dark bg-gray-900 p-8">
+          <h2 className="mb-3 text-xl font-bold text-white">
             Envie de contribuer ?
           </h2>
-          <p className="mb-4 text-sm text-primary-light/80">
+          <p className="mb-6 text-sm text-gray-300">
             Le projet est open source et en d&eacute;veloppement actif.
             Consultez le code, ouvrez une issue ou proposez une pull request.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             <a
               href="https://github.com/MalauryB/quiserapresident"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="inline-flex items-center gap-2 border-2 border-white px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-gray-900"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
               </svg>
-              Code source sur GitHub &rarr;
+              Code source sur GitHub
             </a>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="inline-flex items-center gap-2 border-2 border-white px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-gray-900"
             >
-              Nous contacter &rarr;
+              Nous contacter
             </Link>
           </div>
         </div>

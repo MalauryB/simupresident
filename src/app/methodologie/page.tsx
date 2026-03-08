@@ -15,7 +15,7 @@ function SectionCard({
   return (
     <div
       id={id}
-      className="border-l-4 border-l-primary bg-white p-6 shadow-sm"
+      className="rounded-md border-l-4 border-l-primary bg-white p-6 shadow-sm"
     >
       <h2 className="mb-4 text-base font-bold text-primary-dark">{title}</h2>
       <div className="space-y-3 text-sm leading-relaxed text-gray-700">
@@ -45,7 +45,7 @@ export default function MethodologiePage() {
         <a
           href="/Note_technique.pdf"
           download
-          className="inline-flex items-center gap-2 border-b-2 border-primary pb-0.5 text-sm font-medium text-primary transition-colors hover:border-primary-dark hover:text-primary-dark"
+          className="inline-flex items-center gap-2 rounded border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-white"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -88,7 +88,7 @@ export default function MethodologiePage() {
                 (par exemple : gauche, centre, droite, extr&ecirc;me droite).
               </p>
               <p>L&rsquo;id&eacute;e centrale est simple :</p>
-              <div className="border-l-2 border-gray-300 bg-gray-50 pl-4 py-3 italic">
+              <div className="rounded border-l-2 border-gray-300 bg-gray-50 pl-4 py-3 italic">
                 <p className="text-sm text-gray-700">
                   Les &eacute;lecteurs votent tr&egrave;s majoritairement pour un candidat
                   appartenant &agrave; leur bloc id&eacute;ologique, et beaucoup plus rarement
@@ -141,7 +141,7 @@ export default function MethodologiePage() {
                 prestation m&eacute;diatique. Ces chocs affectent uniquement le candidat concern&eacute;.
               </p>
 
-              <div className="border border-gray-200 bg-gray-50 p-4">
+              <div className="rounded border border-gray-200 bg-gray-50 p-4">
                 <h3 className="mb-1 text-xs font-bold text-primary-dark">Calibration des param&egrave;tres</h3>
                 <p className="text-xs text-gray-600">
                   L&rsquo;intensit&eacute; de ces chocs n&rsquo;est pas choisie arbitrairement.
@@ -261,7 +261,7 @@ export default function MethodologiePage() {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="border p-3 text-center"
+                    className="rounded border p-3 text-center"
                     style={{ borderColor: item.color }}
                   >
                     <div
@@ -308,7 +308,7 @@ export default function MethodologiePage() {
                 les seconds tours pass&eacute;s, o&ugrave; certains &eacute;lecteurs votent non pas
                 pour soutenir un candidat, mais pour emp&ecirc;cher l&rsquo;autre de gagner.
               </p>
-              <div className="border border-gray-200 bg-gray-50 p-4">
+              <div className="rounded border border-gray-200 bg-gray-50 p-4">
                 <p className="text-xs text-gray-600">
                   Les valeurs par d&eacute;faut de ces param&egrave;tres sont estim&eacute;es &agrave;
                   partir des comportements observ&eacute;s lors des &eacute;lections l&eacute;gislatives de 2024.
@@ -348,7 +348,7 @@ export default function MethodologiePage() {
         </SectionCard>
 
         {/* ---- Limites du modele ---- */}
-        <div className="border-l-4 border-l-amber-500 bg-amber-50/50 p-6 shadow-sm">
+        <div className="rounded-md border-l-4 border-l-amber-500 bg-amber-50/50 p-6 shadow-sm">
           <div className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center">
               <svg
