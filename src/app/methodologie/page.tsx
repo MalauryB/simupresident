@@ -318,35 +318,6 @@ export default function MethodologiePage() {
           </div>
         </div>
 
-        {/* ---- III. Ce que produit le modèle ---- */}
-        <SectionCard title="III. Ce que produit le mod&egrave;le">
-          <p>&Agrave; l&rsquo;issue des simulations, le mod&egrave;le fournit :</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>la probabilit&eacute; de qualification au second tour de chaque candidat,</li>
-            <li>la probabilit&eacute; de chaque duel possible,</li>
-            <li>la probabilit&eacute; de victoire finale,</li>
-            <li>une estimation de la participation au second tour,</li>
-            <li>des intervalles d&rsquo;incertitude sur les marges de victoire.</li>
-          </ul>
-        </SectionCard>
-
-        {/* ---- IV. Philosophie ---- */}
-        <SectionCard title="IV. Philosophie g&eacute;n&eacute;rale du mod&egrave;le">
-          <p>Ce mod&egrave;le repose sur quatre id&eacute;es structurantes :</p>
-          <ul className="ml-4 list-decimal space-y-1">
-            <li>L&rsquo;&eacute;lectorat est organis&eacute; en blocs relativement stables.</li>
-            <li>Les campagnes sont domin&eacute;es par l&rsquo;incertitude et les chocs impr&eacute;visibles.</li>
-            <li>Des tendances structurelles peuvent modifier lentement les &eacute;quilibres.</li>
-            <li>Le vote utile et les logiques de barrage modifient les comportements &agrave; l&rsquo;approche du scrutin.</li>
-          </ul>
-          <p>Il ne pr&eacute;tend pas pr&eacute;dire l&rsquo;avenir avec certitude. Il vise &agrave; :</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>mesurer l&rsquo;incertitude,</li>
-            <li>quantifier les sc&eacute;narios plausibles,</li>
-            <li>&eacute;clairer les dynamiques possibles.</li>
-          </ul>
-        </SectionCard>
-
         {/* ---- Limites du modele ---- */}
         <div className="rounded-md border-l-4 border-l-amber-500 bg-amber-50/50 p-6 shadow-sm">
           <div className="flex items-start gap-3">
