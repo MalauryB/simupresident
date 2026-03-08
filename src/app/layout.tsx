@@ -5,17 +5,30 @@ import { Header } from "@/app/components/layout/Header";
 import { Footer } from "@/app/components/layout/Footer";
 import { SimulationProvider } from "@/lib/simulation-context";
 
+const SITE_URL = "https://quipresident.fr";
 const APP_NAME = "Qui pour l\u2019\u00c9lys\u00e9e\u202f?";
 const APP_DESCRIPTION =
-  "Simulez l'élection présidentielle 2027 grâce à notre modèle de simulation interactif.";
+  "Simulez l\u2019\u00e9lection pr\u00e9sidentielle 2027 gr\u00e2ce \u00e0 notre mod\u00e8le de simulation interactif. Probabilit\u00e9s, trajectoires et sc\u00e9narios de second tour.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   applicationName: APP_NAME,
   title: {
     default: APP_NAME,
     template: `%s | ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
+  keywords: [
+    "élection présidentielle 2027",
+    "simulation élection",
+    "sondages présidentielle",
+    "qui sera président",
+    "simulateur élection France",
+    "Monte Carlo élection",
+    "probabilités présidentielle",
+  ],
+  authors: [{ name: "Nimli", url: "https://nimli.fr" }],
+  creator: "Nimli",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -26,12 +39,31 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
+    locale: "fr_FR",
+    url: SITE_URL,
     siteName: APP_NAME,
     title: {
       default: APP_NAME,
       template: `%s | ${APP_NAME}`,
     },
     description: APP_DESCRIPTION,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Qui pour l\u2019\u00c9lys\u00e9e\u202f? \u2014 Simulateur pr\u00e9sidentielle 2027",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: SITE_URL,
   },
 };
 
@@ -45,7 +77,33 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" dir="ltr">
-      <head />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              name: APP_NAME,
+              url: SITE_URL,
+              description: APP_DESCRIPTION,
+              applicationCategory: "UtilitiesApplication",
+              operatingSystem: "Any",
+              inLanguage: "fr",
+              author: {
+                "@type": "Organization",
+                name: "Nimli",
+                url: "https://nimli.fr",
+              },
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "EUR",
+              },
+            }),
+          }}
+        />
+      </head>
       <body className="flex min-h-screen flex-col bg-secondary text-primary-dark antialiased">
         <a
           href="#main-content"
