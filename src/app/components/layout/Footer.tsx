@@ -12,7 +12,7 @@ export function Footer() {
   return (
     <footer role="contentinfo" className="mt-12">
       <div className="h-px bg-gray-200" />
-      <div className="mx-auto max-w-5xl px-4 py-8 text-sm text-gray-500">
+      <div className="mx-auto max-w-5xl px-4 py-8 text-sm text-gray-600">
         <nav aria-label="Pied de page" className="mb-4 flex flex-wrap justify-center gap-x-6 gap-y-2">
           {NAV_LINKS.map(({ href, label }) => (
             <Link key={href} href={href} className="hover:text-gray-700 transition-colors">

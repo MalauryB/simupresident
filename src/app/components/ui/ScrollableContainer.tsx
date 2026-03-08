@@ -63,7 +63,7 @@ export function ScrollableContainer({ children, className = "", ...rest }: Scrol
             height="16"
             viewBox="0 0 16 16"
             fill="none"
-            className="animate-pulse text-gray-400"
+            className="animate-pulse text-gray-500"
           >
             <path
               d="M6 3l5 5-5 5"

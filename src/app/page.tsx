@@ -76,7 +76,7 @@ export default function HomePage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-600">
+        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-700">
           Simulez l&rsquo;&eacute;lection pr&eacute;sidentielle gr&acirc;ce
           &agrave; notre mod&egrave;le math&eacute;matique.
         </p>
@@ -123,7 +123,7 @@ export default function HomePage() {
                   </span>
 
                   {/* Party name */}
-                  <p className="text-center text-xs text-gray-500">
+                  <p className="text-center text-xs text-gray-600">
                     {party.party}
                   </p>
                 </div>

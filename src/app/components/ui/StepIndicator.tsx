@@ -36,7 +36,7 @@ export function StepIndicator({ current, labels, onStepClick, vertical }: StepIn
                     ? "bg-accent text-white"
                     : isActive
                       ? "bg-accent text-white shadow-sm"
-                      : "border-2 border-gray-200 bg-white text-gray-400 hover:border-accent/50 hover:text-accent/70"
+                      : "border-2 border-gray-200 bg-white text-gray-500 hover:border-accent/50 hover:text-accent/70"
                 } ${!vertical ? "h-7 w-7 text-xs sm:h-8 sm:w-8 sm:text-sm" : ""}`}
               >
                 {isCompleted ? (
@@ -64,7 +64,7 @@ export function StepIndicator({ current, labels, onStepClick, vertical }: StepIn
                     ? "text-accent"
                     : isCompleted
                       ? "text-gray-600"
-                      : "text-gray-400"
+                      : "text-gray-500"
                 } ${vertical ? "" : "hidden sm:block"}`}
               >
                 {label}

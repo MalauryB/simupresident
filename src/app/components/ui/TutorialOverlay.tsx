@@ -199,7 +199,7 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
 
         <div className="flex items-start justify-between gap-2">
           <h4 className="text-sm font-bold text-primary-dark">{step.title}</h4>
-          <span className="whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">
+          <span className="whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">
             {currentStep + 1}/{steps.length}
           </span>
         </div>
@@ -210,7 +210,7 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
           <button
             type="button"
             onClick={handleClose}
-            className="text-xs font-medium text-gray-400 transition-colors hover:text-gray-600"
+            className="text-xs font-medium text-gray-500 transition-colors hover:text-gray-700"
           >
             Passer
           </button>

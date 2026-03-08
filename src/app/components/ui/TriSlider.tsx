@@ -8,9 +8,9 @@ interface TriSliderProps {
 }
 
 const AXES = [
-  { key: "left" as const, label: "Gauche", color: "#E63946" },
-  { key: "center" as const, label: "Centre", color: "#FFB800" },
-  { key: "right" as const, label: "Droite", color: "#0066CC" },
+  { key: "left" as const, label: "Gauche", color: "#E63946", labelColor: "#E63946" },
+  { key: "center" as const, label: "Centre", color: "#FFB800", labelColor: "#9A6700" },
+  { key: "right" as const, label: "Droite", color: "#0066CC", labelColor: "#0066CC" },
 ];
 
 export function TriSlider({ left, center, right, onChange }: TriSliderProps) {
@@ -57,7 +57,7 @@ export function TriSlider({ left, center, right, onChange }: TriSliderProps) {
       <div className="grid grid-cols-3 gap-2.5">
         {AXES.map((axis) => (
           <div key={axis.key} className="flex flex-col items-center">
-            <span className="text-[11px] font-semibold" style={{ color: axis.color }}>
+            <span className="text-[11px] font-semibold" style={{ color: axis.labelColor }}>
               {axis.label}
             </span>
             <div

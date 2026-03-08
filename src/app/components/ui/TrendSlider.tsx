@@ -164,7 +164,7 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
 
       {/* Monthly approximation legend */}
       <div className="mt-1.5 text-right">
-        <span className="text-[11px] text-gray-400">
+        <span className="text-[11px] text-gray-500">
           &asymp; {monthlyStr} pts/mois
         </span>
       </div>

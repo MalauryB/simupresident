@@ -18,7 +18,7 @@ function SectionCard({
       className="rounded-xl border border-gray-200 bg-white p-6"
     >
       <h2 className="mb-3 text-lg font-bold text-primary-dark">{title}</h2>
-      <div className="space-y-3 text-sm leading-relaxed text-gray-600">
+      <div className="space-y-3 text-sm leading-relaxed text-gray-700">
         {children}
       </div>
     </div>
