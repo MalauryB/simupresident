@@ -25,7 +25,7 @@ export default function AProposPage() {
             Comment &ccedil;a marche
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="border-l-4 border-l-primary bg-white p-5 shadow-sm">
+            <div className="rounded-xl border-l-4 border-l-primary bg-white p-5 shadow-sm">
               <div className="mb-3 flex h-10 w-10 items-center justify-center border-2 border-primary text-lg font-bold text-primary">
                 1
               </div>
@@ -38,7 +38,7 @@ export default function AProposPage() {
               </p>
             </div>
 
-            <div className="border-l-4 border-l-accent bg-white p-5 shadow-sm">
+            <div className="rounded-xl border-l-4 border-l-accent bg-white p-5 shadow-sm">
               <div className="mb-3 flex h-10 w-10 items-center justify-center border-2 border-accent text-lg font-bold text-accent">
                 2
               </div>
@@ -51,7 +51,7 @@ export default function AProposPage() {
               </p>
             </div>
 
-            <div className="border-l-4 border-l-green-600 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border-l-4 border-l-green-600 bg-white p-5 shadow-sm">
               <div className="mb-3 flex h-10 w-10 items-center justify-center border-2 border-green-600 text-lg font-bold text-green-600">
                 3
               </div>
@@ -92,7 +92,7 @@ export default function AProposPage() {
             ].map((faq) => (
               <div
                 key={faq.q}
-                className="border-l-4 border-l-gray-300 bg-white p-4 shadow-sm"
+                className="rounded-xl border-l-4 border-l-gray-300 bg-white p-4 shadow-sm"
               >
                 <h3 className="mb-1 text-sm font-bold text-primary-dark">
                   {faq.q}
@@ -128,7 +128,7 @@ export default function AProposPage() {
           <h2 className="mb-4 text-base font-bold text-primary-dark border-b-2 border-primary pb-2">
             Contact
           </h2>
-          <div className="border-l-4 border-l-primary bg-white p-6 shadow-sm">
+          <div className="rounded-xl border-l-4 border-l-primary bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-sm font-bold text-primary-dark">
                 Une id&eacute;e d&rsquo;am&eacute;lioration ?
               </h3>
@@ -145,7 +145,7 @@ export default function AProposPage() {
         </div>
 
         {/* ---- Bottom banner ---- */}
-        <div className="border-t-4 border-t-primary-dark bg-gray-900 p-8">
+        <div className="rounded-xl border-t-4 border-t-primary-dark bg-gray-900 p-8">
           <h2 className="mb-3 text-xl font-bold text-white">
             Envie de contribuer ?
           </h2>
