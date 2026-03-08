@@ -35,7 +35,6 @@ export const DEFAULT_PARTIES: PartyData[] = [
       { name: "François Ruffin", shortName: "Ruffin", initials: "FR", polled: false, pollGroup: "Debout", dynamique: 0.1, left: 0.8, center: 0.2, right: 0.0, startAgrege: 7, startCustom: 7, photoUrl: `${PHOTO_BASE}francois-ruffin.jpg` },
       { name: "Clémentine Autain", shortName: "Autain", initials: "CA", polled: false, pollGroup: "L'Après", dynamique: 0.0, left: 0.8, center: 0.2, right: 0.0, startAgrege: 5, startCustom: 5, photoUrl: `${PHOTO_BASE}clementine-autain.jpg` },
       { name: "Olivier Faure", shortName: "Faure", initials: "OF", polled: false, pollGroup: "Parti Socialiste", dynamique: 0.1, left: 0.6, center: 0.4, right: 0.0, startAgrege: 7, startCustom: 7, photoUrl: `${PHOTO_BASE}olivier-faure.jpg` },
-      { name: "BadMulch", shortName: "BadMulch", initials: "BM", polled: false, pollGroup: null, dynamique: 1.0, left: 1.0, center: 0.0, right: 0.0, startAgrege: 20, startCustom: 20, photoUrl: `${PHOTO_BASE}badmulch.jpg` },
     ],
   },
   {
