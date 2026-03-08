@@ -42,5 +42,5 @@ next-env.d.ts
 public/sw*
 public/swe-worker*
 
-# Claude Code
+# AI tools
 .claude/
