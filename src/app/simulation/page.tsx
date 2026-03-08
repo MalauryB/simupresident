@@ -320,7 +320,7 @@ function StartingPointRow({ party, sourceId, total }: { party: PartyData; source
 }
 
 function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutorial: boolean; onCloseTutorial: () => void; total: number }) {
-  const { activeParties, pollSource, pollSources, setPollSource, unpolledActive, updateVariant } = useSimulation();
+  const { activeParties, pollSource, pollSources, setPollSource, updateVariant } = useSimulation();
   const isCustom = pollSource === "custom";
 
   const normalizeCustom = useCallback(() => {
@@ -353,20 +353,6 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
           </button>
         ))}
       </div>
-
-      {unpolledActive.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-          <div className="flex items-start gap-2">
-            <span className="text-lg" aria-hidden="true">&#9888;&#65039;</span>
-            <div>
-              <p className="text-sm font-medium text-amber-800">Candidats non sondés directement</p>
-              <p className="mt-0.5 text-xs text-amber-600">
-                {unpolledActive.map((p) => getSelected(p).name).join(", ")} — leurs points de départ sont estimés.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div>
         <h3 className="mb-3 text-sm font-bold text-primary-dark" {...(showTutorial ? { "data-tuto": "points-depart" } : {})}>
