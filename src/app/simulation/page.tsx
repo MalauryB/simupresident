@@ -337,6 +337,16 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
     }
     entries.forEach((e, i) => updateVariant(e.tag, "startCustom", normalized[i]));
   }, [activeParties, total, updateVariant]);
+
+  // Auto-normaliser à l'arrivée sur cette étape
+  const hasNormalized = useRef(false);
+  useEffect(() => {
+    if (!hasNormalized.current && isCustom && total > 0 && total !== 100) {
+      hasNormalized.current = true;
+      normalizeCustom();
+    }
+  }, [isCustom, total, normalizeCustom]);
+
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-gray-200 bg-white p-5">
