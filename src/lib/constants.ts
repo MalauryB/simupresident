@@ -47,10 +47,10 @@ export const DEFAULT_PARTIES: PartyData[] = [
     ],
   },
   {
-    tag: "REN", party: "Renaissance / Horizons", active: true, selectedIdx: 0,
+    tag: "REN", party: "Renaissance / Horizons", active: true, selectedIdx: 1,
     variants: [
       { name: "Gabriel Attal", shortName: "Attal", initials: "Attal", polled: true, pollGroup: "Renaissance", dynamique: -0.5, left: 0.0, center: 1.0, right: 0.0, startAgrege: 12, startCustom: 12.6, photoUrl: `${PHOTO_BASE}gabriel-attal.jpg` },
-      { name: "Édouard Philippe", shortName: "Philippe", initials: "Philippe", polled: true, pollGroup: "Horizons", dynamique: -0.5, left: 0.0, center: 0.8, right: 0.2, startAgrege: 17, startCustom: 17, photoUrl: `${PHOTO_BASE}edouard-philippe.jpg` },
+      { name: "Édouard Philippe", shortName: "Philippe", initials: "Philippe", polled: true, pollGroup: "Horizons", dynamique: -0.5, left: 0.0, center: 0.8, right: 0.2, startAgrege: 19, startCustom: 19, photoUrl: `${PHOTO_BASE}edouard-philippe.jpg` },
     ],
   },
   {
