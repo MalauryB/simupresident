@@ -95,13 +95,35 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
 
   const step = steps[currentStep];
 
+  const handleClose = useCallback(() => {
+    localStorage.setItem(storageKey, "1");
+    onClose();
+  }, [storageKey, onClose]);
+
   const updateRect = useCallback(() => {
     const el = document.querySelector(`[data-tuto="${step.target}"]`);
     if (el) {
       setRect(el.getBoundingClientRect());
       el.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      setRect(null);
     }
   }, [step.target]);
+
+  // Skip steps whose target element doesn't exist in the DOM
+  useEffect(() => {
+    const el = document.querySelector(`[data-tuto="${step.target}"]`);
+    if (!el) {
+      const timer = setTimeout(() => {
+        if (currentStep < steps.length - 1) {
+          setCurrentStep((s) => s + 1);
+        } else {
+          handleClose();
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [step.target, currentStep, steps.length, handleClose]);
 
   useEffect(() => {
     updateRect();
@@ -118,11 +140,6 @@ export function TutorialOverlay({ steps, storageKey, onClose }: TutorialOverlayP
     const timer = setTimeout(updateRect, 350);
     return () => clearTimeout(timer);
   }, [currentStep, updateRect]);
-
-  const handleClose = useCallback(() => {
-    localStorage.setItem(storageKey, "1");
-    onClose();
-  }, [storageKey, onClose]);
 
   // Escape key to close
   useEffect(() => {

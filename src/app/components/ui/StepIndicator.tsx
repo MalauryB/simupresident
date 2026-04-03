@@ -65,7 +65,7 @@ export function StepIndicator({ current, labels, onStepClick, vertical }: StepIn
                     : isCompleted
                       ? "text-gray-600"
                       : "text-gray-500"
-                } ${vertical ? "" : "hidden sm:block"}`}
+                } ${vertical ? "" : isActive ? "block" : "hidden sm:block"}`}
               >
                 {label}
               </span>

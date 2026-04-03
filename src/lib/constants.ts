@@ -80,7 +80,7 @@ export const POLL_SOURCES: PollSource[] = [
   { id: "custom", label: "Points de départ", desc: "Les valeurs par défaut sont basées sur les derniers sondages.", icon: "📊" },
 ];
 
-export const WIZARD_STEPS = ["Candidats", "Paramètres", "Point de départ", "Barrage", "Résumé"];
+export const WIZARD_STEPS = ["Candidats", "Paramètres", "Point de départ", "Barrage"];
 
 export const ALLIANCE_PRESETS = [
   { id: "all", label: "Tous séparés", desc: "Chaque parti présente son candidat", inactive: [] as string[] },

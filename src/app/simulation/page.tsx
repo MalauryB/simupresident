@@ -51,7 +51,7 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl transition-all duration-200"
+      className="relative flex h-full flex-col overflow-hidden rounded-xl transition-all duration-200"
       style={{
         background: party.active ? "#fff" : "rgba(243,244,246,0.13)",
         border: party.active ? `2px solid ${colors.accent}` : "2px solid transparent",
@@ -63,7 +63,7 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
         onClick={onToggle}
         aria-label={`${party.active ? "Désactiver" : "Activer"} ${candidate.name}`}
         aria-pressed={party.active}
-        className="w-full px-4 pt-[18px] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        className="flex flex-1 flex-col items-center px-4 pt-[18px] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
       >
         <div
           className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-bold text-white"
@@ -74,7 +74,7 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
         <div className="mx-auto mb-2">
           <Avatar candidate={candidate} colors={colors} size={14} grayscale={!party.active} />
         </div>
-        <div className="flex min-h-[34px] items-center justify-center text-sm font-bold leading-tight text-primary-dark">
+        <div className="flex min-h-[34px] flex-1 items-center justify-center text-sm font-bold leading-tight text-primary-dark">
           {candidate.name}
         </div>
         <span
@@ -88,8 +88,8 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
         </span>
       </button>
 
-      {hasVariants && party.active ? (
-        <div className="mt-2 px-2.5 pb-3">
+      <div className="mt-2 h-[42px] px-2.5 pb-3">
+        {hasVariants && party.active ? (
           <select
             value={party.selectedIdx}
             onChange={(e) => { e.stopPropagation(); switchVariant(party.tag, Number(e.target.value)); }}
@@ -108,10 +108,8 @@ function PartySelectCard({ party, onToggle }: { party: PartyData; onToggle: () =
               </option>
             ))}
           </select>
-        </div>
-      ) : (
-        <div className="h-3.5" />
-      )}
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -128,6 +126,10 @@ function StepCandidats({ showTutorial, onCloseTutorial }: { showTutorial: boolea
 
   return (
     <div>
+      <p className="mb-4 text-xs leading-relaxed text-gray-600">
+        Cliquez sur une carte pour activer ou d&eacute;sactiver un candidat.
+        Certains partis proposent plusieurs candidats possibles &mdash; choisissez le v&ocirc;tre via le menu d&eacute;roulant.
+      </p>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {parties.map((party, i) => {
           const tutoAttr = showTutorial && i === 0
@@ -175,7 +177,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
   return (
     <div>
       {/* Candidate tabs */}
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+      <ScrollableContainer className="mb-6 flex gap-2 pb-1">
         {activeParties.map((p, i) => {
           const c = getSelected(p);
           const col = partyColors[p.tag];
@@ -209,7 +211,7 @@ function StepParams({ showTutorial, onCloseTutorial }: { showTutorial: boolean; 
             </button>
           );
         })}
-      </div>
+      </ScrollableContainer>
 
       {/* Selected candidate parameters */}
       {party && candidate && colors && (
@@ -337,7 +339,7 @@ function StepStartingPoint({ showTutorial, onCloseTutorial, total }: { showTutor
   }, [activeParties, total, updateVariant]);
   return (
     <div className="space-y-6">
-      <div>
+      <div className="rounded-xl border border-gray-200 bg-white p-5">
         <h3 className="mb-1 text-sm font-bold text-primary-dark" {...(showTutorial ? { "data-tuto": "points-depart" } : {})}>
           Points de départ
         </h3>
@@ -467,7 +469,17 @@ function StepSummary() {
 
   return (
     <div className="space-y-6">
-      <ReviewTable parties={activeParties} />
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="mb-4 flex items-center gap-2">
+          <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+            R&eacute;capitulatif
+          </span>
+          <span className="text-xs text-gray-500">
+            V&eacute;rifiez la configuration avant de lancer la simulation.
+          </span>
+        </div>
+        <ReviewTable parties={activeParties} />
+      </div>
     </div>
   );
 }
@@ -509,6 +521,7 @@ export default function SimulationPage() {
 
   useEffect(() => {
     if (contentRef.current) contentRef.current.scrollTop = 0;
+    window.scrollTo({ top: 0 });
   }, [step]);
 
   const goToStep = useCallback((target: number) => {
@@ -535,12 +548,14 @@ export default function SimulationPage() {
       <div className="px-4 pt-4 pb-4 sm:px-6 lg:hidden">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h1 className="text-sm font-bold text-primary-dark">Configurer la simulation</h1>
+            <h1 className="text-sm font-bold text-primary-dark">
+              {step < WIZARD_STEPS.length ? "Configurer la simulation" : "R\u00e9capitulatif"}
+            </h1>
             <p className="mt-0.5 text-xs text-gray-600">{stepSubtitles[step]}</p>
           </div>
-          {step <= 3 && <GuideButton onClick={openGuide} />}
+          {step < WIZARD_STEPS.length && <GuideButton onClick={openGuide} />}
         </div>
-        <StepIndicator current={step} labels={WIZARD_STEPS} onStepClick={goToStep} />
+        <StepIndicator current={Math.min(step, WIZARD_STEPS.length)} labels={WIZARD_STEPS} onStepClick={goToStep} />
       </div>
 
       <div className="flex flex-1 overflow-hidden">
@@ -558,32 +573,34 @@ export default function SimulationPage() {
             {step === 3 && <StepBarrage showTutorial={activeTutorial === 3 && step === 3} onCloseTutorial={closeTutorial} />}
             {step === 4 && <StepSummary />}
 
-            {/* Spacer for bottom nav — only on steps with tall content */}
-            {(step <= 2 || step === 4) && <div className="h-20" />}
+            {/* Spacer for bottom nav on mobile */}
+            {step <= 3 && <div className="h-16 lg:hidden" />}
           </div>
         </div>
 
         {/* Sidebar droite — desktop only */}
         <aside className="hidden w-72 shrink-0 flex-col px-6 py-5 lg:flex">
           <div className="flex-1">
-            <h1 className="text-sm font-bold text-primary-dark">Configurer la simulation</h1>
+            <h1 className="text-sm font-bold text-primary-dark">
+              {step < WIZARD_STEPS.length ? "Configurer la simulation" : "R\u00e9capitulatif"}
+            </h1>
             <p className="mt-0.5 min-h-[2rem] text-xs text-gray-600">{stepSubtitles[step]}</p>
             <div className="mt-2 min-h-[28px]">
-              {step <= 3 && <GuideButton onClick={openGuide} />}
+              {step < WIZARD_STEPS.length && <GuideButton onClick={openGuide} />}
             </div>
             <div className="mt-4 pt-4">
-              <StepIndicator vertical current={step} labels={WIZARD_STEPS} onStepClick={goToStep} />
+              <StepIndicator vertical current={Math.min(step, WIZARD_STEPS.length)} labels={WIZARD_STEPS} onStepClick={goToStep} />
             </div>
           </div>
 
           {/* Boutons navigation — dans la sidebar */}
           <div className="mt-4 flex flex-col gap-2 pt-4">
-            {step < WIZARD_STEPS.length - 1 ? (
+            {step < WIZARD_STEPS.length ? (
               <button
                 type="button"
-                onClick={() => goToStep(Math.min(WIZARD_STEPS.length - 1, step + 1))}
+                onClick={() => goToStep(step + 1)}
                 disabled={step === 2 && pollSource === "custom" && total !== 100}
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Suivant
                 <ChevronRight />
@@ -592,7 +609,7 @@ export default function SimulationPage() {
               <button
                 type="button"
                 onClick={() => router.push("/resultats")}
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-accent px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
                 Lancer la simulation
               </button>
@@ -601,7 +618,7 @@ export default function SimulationPage() {
               type="button"
               onClick={() => goToStep(Math.max(0, step - 1))}
               disabled={step === 0}
-              className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronLeft />
               Précédent
@@ -617,18 +634,18 @@ export default function SimulationPage() {
             type="button"
             onClick={() => goToStep(Math.max(0, step - 1))}
             disabled={step === 0}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <ChevronLeft />
             Précédent
           </button>
 
-          {step < WIZARD_STEPS.length - 1 ? (
+          {step < WIZARD_STEPS.length ? (
             <button
               type="button"
-              onClick={() => goToStep(Math.min(WIZARD_STEPS.length - 1, step + 1))}
+              onClick={() => goToStep(Math.min(WIZARD_STEPS.length, step + 1))}
               disabled={step === 2 && pollSource === "custom" && total !== 100}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Suivant
               <ChevronRight />
@@ -637,7 +654,7 @@ export default function SimulationPage() {
             <button
               type="button"
               onClick={() => router.push("/resultats")}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-accent px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               Lancer la simulation
             </button>

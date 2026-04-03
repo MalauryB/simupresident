@@ -40,9 +40,15 @@ export function TriSlider({ left, center, right, onChange }: TriSliderProps) {
 
   return (
     <div>
-      <div className="mb-2">
+      <div className="mb-2 flex items-center gap-1.5">
         <span className="text-sm font-semibold text-gray-700">
           Profil id&eacute;ologique
+        </span>
+        <span
+          className="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-[10px] font-bold text-gray-500"
+          title="Position du candidat sur l'axe gauche–centre–droite. Ce vecteur détermine les reports de voix et le vote barrage au second tour."
+        >
+          ?
         </span>
       </div>
 

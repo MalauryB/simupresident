@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/app/components/layout/Header";
 import { Footer } from "@/app/components/layout/Footer";
-import { Analytics } from "@vercel/analytics/react";
+import { AnalyticsWrapper } from "@/app/components/AnalyticsWrapper";
+import { CookieConsent } from "@/app/components/ui/CookieConsent";
 import { SimulationProvider } from "@/lib/simulation-context";
 
 const SITE_URL = "https://www.quiserapresident.fr";
@@ -95,18 +95,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             }),
           }}
         />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-45WV5RC03R"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-45WV5RC03R');
-          `}
-        </Script>
       </head>
       <body className="flex min-h-screen flex-col bg-secondary text-primary-dark antialiased">
         <a
@@ -120,7 +108,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main id="main-content" className="flex-1">{children}</main>
           <Footer />
         </SimulationProvider>
-        <Analytics />
+        <AnalyticsWrapper />
+        <CookieConsent />
       </body>
     </html>
   );

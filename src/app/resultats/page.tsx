@@ -111,13 +111,13 @@ export default function ResultatsPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       {/* ---- Header ---- */}
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <BackLink href="/simulation" label="Nouvelle simulation" className="no-print" />
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <BackLink href="/simulation" label="Nouvelle simulation" className="no-print mb-0" />
 
         <button
           type="button"
           onClick={handleDownloadPDF}
-          className="no-print inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="no-print inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
         >
           <svg
             className="h-4 w-4"

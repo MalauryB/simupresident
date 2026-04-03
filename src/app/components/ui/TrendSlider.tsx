@@ -84,8 +84,14 @@ export function TrendSlider({ value, onChange }: TrendSliderProps) {
     <div>
       {/* Header row */}
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-sm font-semibold text-gray-700">
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
           Dynamique
+          <span
+            className="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-[10px] font-bold text-gray-500"
+            title="Tendance du candidat : au-dessus de 0, il progresse dans les sondages et capte le vote utile ; en dessous, il recule et perd des électeurs stratégiques."
+          >
+            ?
+          </span>
         </span>
         <div className="flex items-center gap-2">
           <span
